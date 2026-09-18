@@ -78,6 +78,8 @@ struct Clip
     VectorSource vector;   // only meaningful when type == Vector
     Model3dSource model3d; // only meaningful when type == Model3d
 
+    QRectF sourceFrame{0, 0, 1, 1};
+
     QString path;
     QString thumbnailPath;
     QString filmstripPath;
