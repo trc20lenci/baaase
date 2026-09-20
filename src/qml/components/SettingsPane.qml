@@ -193,7 +193,7 @@ Item {
                         { id: "integrated", label: qsTr("Power saving (integrated GPU)") },
                         { id: "discrete", label: qsTr("High performance (discrete GPU)") }
                     ]
-                    tooltip: qsTr("Which graphics card Drift runs on. High performance keeps video decoded on an NVIDIA card on that card; power saving uses less battery. Takes effect after restart.")
+                    tooltip: qsTr("Which graphics card BASE runs on. High performance keeps video decoded on an NVIDIA card on that card; power saving uses less battery. Takes effect after restart.")
                     currentIndex: {
                         for (var i = 0; i < model.length; ++i) {
                             if (model[i].id === EditorState.preferredGpu)
@@ -266,7 +266,7 @@ Item {
                 ThemedLabel {
                     width: parent.width
                     visible: EditorState.uiScaleNeedsRestart
-                    text: qsTr("Restart Drift to apply this size.")
+                    text: qsTr("Restart BASE to apply this size.")
                     color: Theme.panelSecondaryForeground
                 }
 
@@ -342,7 +342,7 @@ Item {
                     ThemedSwitch {
                         checked: Updates.enabled
                         text: qsTr("Check on startup")
-                        tooltip: qsTr("Ask GitHub once a day whether a newer Drift has been released")
+                        tooltip: qsTr("Ask GitHub once a day whether a newer BASE has been released")
                         onToggled: Updates.enabled = checked
                     }
 
@@ -364,7 +364,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             text: Updates.status.length > 0
                                   ? Updates.status
-                                  : qsTr("Drift %1").arg(Updates.currentVersion)
+                                  : qsTr("BASE %1").arg(Updates.currentVersion)
                         }
                     }
                 }

@@ -835,8 +835,8 @@ endif()
 # It also collides with the <build>/Drift/ directory qt_add_qml_module(URI Drift) writes, which
 # on case-insensitive APFS fails the link with EISDIR.
 if(APPLE)
-    set(DRIFT_MACOS_EXECUTABLE "Drift")
-    set(DRIFT_MACOS_BUNDLE_ID "org.cutwire.Drift")
+    set(DRIFT_MACOS_EXECUTABLE "BASE")
+    set(DRIFT_MACOS_BUNDLE_ID "app.base.editor")
     set(DRIFT_MACOS_ICON_FILE "Drift.icns")
 
     # Not CMake's MACOSX_BUNDLE_* properties: the NS* and LSMinimumSystemVersion keys have none.
@@ -1068,6 +1068,9 @@ qt_add_qml_module(drift
         resources/fonts/InterUI-SemiBold.ttf
         resources/fonts/InterUI-Bold.ttf
         resources/fonts/InterUI-Italic.ttf
+        # BASE wordmark, one per theme (white art for dark mode, black for light).
+        resources/base_wordmark_light.png
+        resources/base_wordmark_dark.png
         ${DRIFT_LUCIDE_ICONS}
 )
 
@@ -1140,9 +1143,9 @@ if(ANDROID)
         list(APPEND _drift_android_extra_libs "${_crypto}" "${_ssl}")
     endforeach()
 
-    set(DRIFT_ANDROID_PACKAGE_NAME "org.cutwire.drift" CACHE STRING
-        "Android application id (use org.cutwire.drift.ci for side-by-side test builds)")
-    set(DRIFT_ANDROID_APP_NAME "Drift" CACHE STRING
+    set(DRIFT_ANDROID_PACKAGE_NAME "app.base.editor" CACHE STRING
+        "Android application id (use app.base.editor.ci for side-by-side test builds)")
+    set(DRIFT_ANDROID_APP_NAME "BASE" CACHE STRING
         "Launcher label")
     # versionName is PROJECT_VERSION — same string the desktop binary embeds as DRIFT_VERSION.
     # versionCode is the Play-Store integer; default tracks that semver so a desktop bump is an

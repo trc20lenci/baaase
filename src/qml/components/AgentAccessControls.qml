@@ -26,7 +26,7 @@ Column {
         size: "sm"
         wrapMode: Text.WordWrap
         visible: root.showIntro
-        text: qsTr("Let Cursor or Claude edit this project for you — add clips, change the timeline, and check how it looks. Only programs on this device. Off by default each time you open Drift, unless you turn on “Start agent on startup” below; turn it off here when you finish. The key stays the same between sessions, so a setup you pasted once keeps working.")
+        text: qsTr("Let Cursor or Claude edit this project for you — add clips, change the timeline, and check how it looks. Only programs on this device. Off by default each time you open BASE, unless you turn on “Start agent on startup” below; turn it off here when you finish. The key stays the same between sessions, so a setup you pasted once keeps working.")
     }
 
     ThemedSwitch {
@@ -44,7 +44,7 @@ Column {
         visible: EditorState.mcpRunning || EditorState.mcpStartOnLaunch
         checked: EditorState.mcpStartOnLaunch
         text: qsTr("Start agent on startup")
-        tooltip: qsTr("Skip the manual toggle next time you open Drift. Turning access off resets this.")
+        tooltip: qsTr("Skip the manual toggle next time you open BASE. Turning access off resets this.")
         onToggled: EditorState.mcpStartOnLaunch = checked
     }
 

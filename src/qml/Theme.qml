@@ -153,9 +153,9 @@ QtObject {
         panelAccent: "#262626",
         panelAccentForeground: "#ededed",
         panelMuted: "#383838",
-        panelSecondaryBg: "#26200a",
-        panelSecondaryBorder: "#4a3d00",
-        panelSecondaryForeground: "#ffcf4a"
+        panelSecondaryBg: "#06252b",
+        panelSecondaryBorder: "#0a4a54",
+        panelSecondaryForeground: "#4ae0f0"
     })
     readonly property var _light: ({
         appBackground: "#ffffff",
@@ -171,9 +171,9 @@ QtObject {
         panelAccent: "#ededed",
         panelAccentForeground: "#0d0d0d",
         panelMuted: "#d4d4d4",
-        panelSecondaryBg: "#fff6da",
-        panelSecondaryBorder: "#ffe7a3",
-        panelSecondaryForeground: "#9a6f00"
+        panelSecondaryBg: "#e2fbff",
+        panelSecondaryBorder: "#a9ecf6",
+        panelSecondaryForeground: "#00707e"
     })
     readonly property var _palette: darkMode ? _dark : _light
 
@@ -209,14 +209,14 @@ QtObject {
     readonly property color panelSecondaryForeground: _palette.panelSecondaryForeground
 
     // --- Colors: shared semantic (identical in both themes) -----------------------
-    readonly property color primary: "#F8B81C"
-    readonly property color primaryForeground: "#221900"
-    // `primary` as a *foreground* on a panel surface. The brand amber is a fill
-    // colour: on the light panel it lands at 1.69:1, so a selected tab tinted with
-    // it was effectively invisible. Dark mode keeps the amber (9.8:1); light mode
-    // uses the darkened brand tone (5.2:1). Only for text/glyphs on panels —
+    readonly property color primary: "#00CAE0"
+    readonly property color primaryForeground: "#00222a"
+    // `primary` as a *foreground* on a panel surface. The brand cyan is a fill
+    // colour: on the light panel it is far too pale to read as text, so a selected
+    // tab tinted with it would be effectively invisible. Dark mode keeps the cyan;
+    // light mode uses the darkened brand tone. Only for text/glyphs on panels —
     // fills, rings and progress arcs still use `primary` in both themes.
-    readonly property color accentOnPanel: darkMode ? primary : "#8a6300"
+    readonly property color accentOnPanel: darkMode ? primary : "#00707e"
     readonly property color destructive: "#e91616"
     readonly property color constructive: "#23d160"
     readonly property color warning: "#f97316"
@@ -227,9 +227,9 @@ QtObject {
 
     // Export CTA gradient stops (the documented inline-color exception, sourced
     // from here so the button still tracks the token system).
-    readonly property color exportGradientTop: "#ffcf4a"
-    readonly property color exportGradientBottom: "#f59e0b"
-    readonly property color exportGlow: "#fbbf24"
+    readonly property color exportGradientTop: "#3ee0f0"
+    readonly property color exportGradientBottom: "#00a8bd"
+    readonly property color exportGlow: "#22d3ee"
 
     // Scrims/overlays drawn over media (clip name bands, preview letterbox,
     // thumbnail duration badges). Fixed regardless of app theme because they sit

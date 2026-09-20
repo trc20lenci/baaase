@@ -60,12 +60,16 @@ Item {
                 width: pageColumn.contentWidth
                 spacing: 2
 
-                Text {
-                    text: "Drift"
-                    color: Theme.foreground
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 22
-                    font.weight: Font.Bold
+                Image {
+                    // Same per-theme wordmark used on the desktop start screen.
+                    source: Theme.darkMode
+                            ? "qrc:/qt/qml/Drift/resources/base_wordmark_light.png"
+                            : "qrc:/qt/qml/Drift/resources/base_wordmark_dark.png"
+                    height: 22
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    mipmap: true
+                    width: implicitWidth * (height / Math.max(implicitHeight, 1))
                 }
 
                 Text {

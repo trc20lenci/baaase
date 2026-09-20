@@ -162,12 +162,17 @@ Rectangle {
                 width: parent.width
                 spacing: Theme.spacingXs
 
-                Text {
-                    text: "Drift"
-                    color: Theme.foreground
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 26
-                    font.weight: Font.Bold
+                Image {
+                    // Wordmark art, swapped per theme so the logo keeps contrast
+                    // against the app background in both light and dark mode.
+                    source: Theme.darkMode
+                            ? "qrc:/qt/qml/Drift/resources/base_wordmark_light.png"
+                            : "qrc:/qt/qml/Drift/resources/base_wordmark_dark.png"
+                    height: 26
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    mipmap: true
+                    width: implicitWidth * (height / Math.max(implicitHeight, 1))
                 }
 
                 Text {

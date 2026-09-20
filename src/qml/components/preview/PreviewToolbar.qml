@@ -342,13 +342,13 @@ Item {
             ThemedLabel {
                 width: parent.width
                 visible: !EditorState.gpuPreferenceSupported && Qt.platform.os === "linux"
-                text: qsTr("Launching Drift with prime-run (or DRI_PRIME=1) puts OpenGL on the "
+                text: qsTr("Launching BASE with prime-run (or DRI_PRIME=1) puts OpenGL on the "
                            + "same card as the decoder.")
             }
 
             ThemedButton {
                 visible: EditorState.gpuPreferenceSupported
-                text: qsTr("Run Drift on the high-performance graphics card")
+                text: qsTr("Run BASE on the high-performance graphics card")
                 variant: "secondary"
                 // Leaves the decode mode alone: this is the other way out, not a confirmation.
                 onClicked: {
