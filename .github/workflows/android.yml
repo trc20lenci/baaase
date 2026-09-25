@@ -143,3 +143,15 @@ jobs:
         with:
           path: ~/.cache/ccache
           key: ccache-android-smoke-${{ env.ABI }}-${{ github.sha }}
+
+      - name: Find and gather APKs
+        run: |
+          mkdir -p final_apk_output
+          find /home/runner -type f \( -name "*.apk" -o -name "*.aab" \) -not -path "*/Android/Sdk/*" -not -path "*/.gradle/*" -exec cp {} final_apk_output/ \;
+          ls -la final_apk_output/
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-editor-apk
+          path: final_apk_output/
