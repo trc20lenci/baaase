@@ -3,35 +3,39 @@ import QtQuick.Controls.Basic
 import Drift
 import "components"
 
-// The home screen's start destination: what you were working on, and how to start something.
+// The project library: every project EditorState knows about (the same recentProjects
+// list Home's strip and the desktop's recents popup already use — there is no separate
+// on-disk project index to draw a bigger list from), searchable and sortable client-side.
 //
-// The layout picker used to sit here, above the recents and above the buttons, so the first
-// thing a returning user saw was a form asking about aspect ratios. It is gone: "New project"
-// opens the picker directly and the canvas is inferred from the first clip, which is what every
-// phone editor does and what the desktop's own "Decide later" path already allowed.
+// This used to be the home screen's own landing content (the create tiles + a two-column
+// grid of recents). That content now lives in AndroidHomePage; this page is the "see
+// everything" destination Home's "See all" link points at, matching the CapCut-style shell
+// where Home is for starting something and Projects is the full library.
 Item {
     id: root
 
     signal newProjectRequested()
-    signal quickEditRequested()
     signal openProjectRequested()
     signal openRecentRequested(string path)
 
-    // Quick edit leads: same first two taps as New project, minus the canvas question,
-    // so the shortest path is also the prominent one. New project keeps its own tile for
-    // the edit that starts empty rather than from a clip.
-    readonly property var tiles: [
-        { id: "quick", label: qsTr("Quick edit"), detail: qsTr("Pick a clip, start now"),
-          icon: Theme.icons.sparkles, primary: true },
-        { id: "new", label: qsTr("New project"), detail: qsTr("Choose a canvas, start empty"),
-          icon: Theme.icons.plus, primary: false }
-    ]
+    property string searchText: ""
+    property bool searchActive: false
+    // "recent": EditorState's own order (most recently used first).
+    // "name": alphabetical — the only two orderings the data supports, since recentProjects
+    // carries no timestamp or size, only path/name/exists.
+    property string sortMode: "recent"
 
-    function triggerTile(tileId) {
-        if (tileId === "quick")
-            root.quickEditRequested()
-        else if (tileId === "new")
-            root.newProjectRequested()
+    readonly property var filteredProjects: {
+        const all = EditorState.recentProjects
+        const needle = root.searchText.trim().toLowerCase()
+        const filtered = needle.length === 0
+            ? all
+            : all.filter(p => (p.name || "").toLowerCase().includes(needle))
+        if (root.sortMode !== "name")
+            return filtered
+        const copy = filtered.slice()
+        copy.sort((a, b) => (a.name || "").localeCompare(b.name || ""))
+        return copy
     }
 
     Flickable {
@@ -41,7 +45,7 @@ Item {
         anchors.leftMargin: root.SafeArea.margins.left
         anchors.rightMargin: root.SafeArea.margins.right
         contentWidth: width
-        contentHeight: pageColumn.implicitHeight + Theme.spacing2xl
+        contentHeight: pageColumn.implicitHeight + Theme.spacing2xl + fab.height
         clip: true
         boundsBehavior: Flickable.StopAtBounds
         flickableDirection: Flickable.VerticalFlick
@@ -49,147 +53,59 @@ Item {
         Column {
             id: pageColumn
             width: parent.width
-            spacing: Theme.spacing2xl
-            topPadding: Theme.spacing2xl
+            spacing: Theme.spacingLg
+            topPadding: Theme.spacingLg
             leftPadding: Theme.androidPagePadding
             rightPadding: Theme.androidPagePadding
 
             readonly property real contentWidth: width - leftPadding - rightPadding
 
-            Column {
+            // --- Header ---------------------------------------------------
+            Item {
                 width: pageColumn.contentWidth
-                spacing: 2
+                height: Math.max(titleLabel.implicitHeight, headerActions.height)
 
-                Image {
-                    // Same per-theme wordmark used on the desktop start screen.
-                    source: Theme.darkMode
-                            ? "qrc:/qt/qml/Drift/resources/base_wordmark_light.png"
-                            : "qrc:/qt/qml/Drift/resources/base_wordmark_dark.png"
-                    height: 22
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    mipmap: true
-                    width: implicitWidth * (height / Math.max(implicitHeight, 1))
+                ThemedLabel {
+                    id: titleLabel
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Projects")
+                    size: "lg"
                 }
 
-                Text {
-                    text: qsTr("Create polished videos fast")
-                    color: Theme.mutedForeground
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSizeSm
-                }
-            }
+                Row {
+                    id: headerActions
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Theme.spacingSm
 
-            // --- Start something ----------------------------------------------
-            Column {
-                width: pageColumn.contentWidth
-                spacing: Theme.androidTouchGap
-
-                Repeater {
-                    model: root.tiles
-
-                    delegate: AbstractButton {
-                        id: tile
-                        required property var modelData
-
-                        width: pageColumn.contentWidth
-                        height: Theme.androidHomeTileHeight
-                        hoverEnabled: true
-
-                        Accessible.role: Accessible.Button
-                        Accessible.name: modelData.label
-                        Accessible.description: modelData.detail
-
-                        scale: tile.down ? Theme.pressScale : 1.0
-                        Behavior on scale {
-                            NumberAnimation { duration: Theme.durationPress; easing.type: Theme.easing }
-                        }
-
+                    IconButton {
+                        buttonSize: Theme.iconButtonSize
+                        iconSize: Theme.iconSizeMd
+                        glyph: root.searchActive ? Theme.icons.x : Theme.icons.search
+                        variant: "text"
+                        tooltip: qsTr("Search projects")
                         onClicked: {
-                            Haptics.select()
-                            root.triggerTile(modelData.id)
-                        }
-
-                        background: Rectangle {
-                            radius: Theme.radiusMd
-                            color: tile.modelData.primary
-                                   ? (tile.down ? Qt.darker(Theme.primary, 1.15) : Theme.primary)
-                                   : (tile.down ? Theme.panelMuted : Theme.panelBackground)
-                            border.width: tile.modelData.primary ? 0 : Theme.borderWidth
-                            border.color: Theme.panelBorder
-                        }
-
-                        contentItem: Row {
-                            spacing: Theme.spacingLg
-                            leftPadding: Theme.spacingXl
-                            rightPadding: Theme.spacingXl
-
-                            IconGlyph {
-                                anchors.verticalCenter: parent.verticalCenter
-                                glyph: tile.modelData.icon
-                                iconSize: Theme.iconSizeLg
-                                iconColor: tile.modelData.primary
-                                           ? Theme.primaryForeground : Theme.panelForeground
-                            }
-
-                            Column {
-                                anchors.verticalCenter: parent.verticalCenter
-                                spacing: 2
-
-                                Text {
-                                    text: tile.modelData.label
-                                    color: tile.modelData.primary
-                                           ? Theme.primaryForeground : Theme.panelForeground
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: Theme.fontSizeBase
-                                    font.weight: Font.Medium
-                                }
-
-                                Text {
-                                    text: tile.modelData.detail
-                                    color: tile.modelData.primary
-                                           ? Theme.primaryForeground : Theme.mutedForeground
-                                    opacity: tile.modelData.primary ? 0.85 : 1
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: Theme.fontSizeXs
-                                }
-                            }
+                            root.searchActive = !root.searchActive
+                            if (!root.searchActive)
+                                root.searchText = ""
                         }
                     }
-                }
-            }
 
-            // --- Recent projects ----------------------------------------------
-            //
-            // A wrapping grid rather than the single horizontal strip this used to be. The strip
-            // showed two and a half cards and hid the rest behind a sideways flick with nothing
-            // saying so, which on the one screen whose whole job is "get back to your work" is
-            // the wrong trade. Opening a project from disk is the rarer case, so it loses its
-            // full-width tile and becomes the button beside this heading.
-            Column {
-                width: pageColumn.contentWidth
-                spacing: Theme.spacingMd
-
-                Item {
-                    width: parent.width
-                    height: Math.max(recentsLabel.implicitHeight, openButton.height)
-
-                    ThemedLabel {
-                        id: recentsLabel
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Recent projects")
-                        tone: "default"
-                        size: "sm"
+                    IconButton {
+                        buttonSize: Theme.iconButtonSize
+                        iconSize: Theme.iconSizeMd
+                        glyph: root.sortMode === "recent" ? Theme.icons.clock : Theme.icons.sortByName
+                        variant: "text"
+                        tooltip: root.sortMode === "recent" ? qsTr("Sorted by recent") : qsTr("Sorted by name")
+                        onClicked: root.sortMode = (root.sortMode === "recent" ? "name" : "recent")
                     }
 
-                    ThemedButton {
-                        id: openButton
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        variant: "secondary"
-                        glyph: Theme.icons.folder
-                        text: qsTr("Open")
+                    IconButton {
+                        buttonSize: Theme.iconButtonSize
+                        iconSize: Theme.iconSizeMd
+                        glyph: Theme.icons.folderInput
+                        variant: "text"
                         tooltip: qsTr("Open a project from this device")
                         onClicked: {
                             Haptics.select()
@@ -197,150 +113,225 @@ Item {
                         }
                     }
                 }
+            }
 
-                ThemedLabel {
-                    width: parent.width
-                    visible: EditorState.recentProjects.length === 0
-                    wrapMode: Text.WordWrap
-                    text: qsTr("Nothing here yet — projects you save will show up in this list.")
-                }
+            ThemedTextField {
+                width: pageColumn.contentWidth
+                visible: root.searchActive
+                placeholderText: qsTr("Search projects")
+                text: root.searchText
+                onTextChanged: root.searchText = text
+                focus: root.searchActive
+            }
 
-                Grid {
-                    id: recentGrid
-                    width: parent.width
-                    columns: 2
-                    spacing: Theme.spacingMd
-                    visible: EditorState.recentProjects.length > 0
+            ThemedLabel {
+                text: qsTr("%n project(s)", "", root.filteredProjects.length)
+                tone: "muted"
+                size: "sm"
+            }
 
-                    readonly property real cellWidth:
-                        (width - spacing * (columns - 1)) / columns
+            // --- Empty states ---------------------------------------------
+            ThemedLabel {
+                width: pageColumn.contentWidth
+                visible: EditorState.recentProjects.length === 0
+                wrapMode: Text.WordWrap
+                text: qsTr("Nothing here yet — projects you save will show up in this list.")
+            }
 
-                    Repeater {
-                        model: EditorState.recentProjects
+            ThemedLabel {
+                width: pageColumn.contentWidth
+                visible: EditorState.recentProjects.length > 0 && root.filteredProjects.length === 0
+                wrapMode: Text.WordWrap
+                text: qsTr("No projects match “%1”.").arg(root.searchText)
+            }
 
-                        delegate: Rectangle {
-                            id: card
-                            required property var modelData
-                            width: recentGrid.cellWidth
-                            height: Theme.androidHomeRecentCardHeight
-                            radius: Theme.radiusMd
-                            color: Theme.panelBackground
-                            border.width: Theme.borderWidth
-                            border.color: Theme.panelBorder
-                            opacity: modelData.exists === false ? 0.55 : 1
+            // --- The library, as full-width rows ---------------------------
+            Column {
+                width: pageColumn.contentWidth
+                spacing: Theme.spacingSm
 
-                            Accessible.role: Accessible.Button
-                            Accessible.name: card.projectLabel
+                Repeater {
+                    model: root.filteredProjects
 
-                            readonly property string projectLabel: {
-                                const n = card.modelData.name || ""
-                                return n.replace(/\.drift$/i, "") || qsTr("Untitled")
+                    delegate: Rectangle {
+                        id: row
+                        required property var modelData
+                        width: pageColumn.contentWidth
+                        height: 72
+                        radius: Theme.radiusMd
+                        color: Theme.panelBackground
+                        border.width: Theme.borderWidth
+                        border.color: Theme.panelBorder
+                        opacity: modelData.exists === false ? 0.55 : 1
+
+                        Accessible.role: Accessible.Button
+                        Accessible.name: row.projectLabel
+
+                        readonly property string projectLabel: {
+                            const n = row.modelData.name || ""
+                            return n.replace(/\.drift$/i, "") || qsTr("Untitled")
+                        }
+
+                        Row {
+                            anchors.left: parent.left
+                            anchors.right: rowMenu.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.leftMargin: Theme.spacingMd
+                            anchors.rightMargin: Theme.spacingSm
+                            spacing: Theme.spacingMd
+
+                            Rectangle {
+                                width: 52
+                                height: 52
+                                anchors.verticalCenter: parent.verticalCenter
+                                radius: Theme.radiusSm
+                                color: Theme.panelAccent
+
+                                IconGlyph {
+                                    anchors.centerIn: parent
+                                    glyph: Theme.icons.film
+                                    iconSize: Theme.iconSizeMd
+                                    iconColor: Theme.mutedForeground
+                                }
+
+                                Rectangle {
+                                    anchors.right: parent.right
+                                    anchors.top: parent.top
+                                    anchors.margins: 4
+                                    width: 8
+                                    height: 8
+                                    radius: 4
+                                    color: row.modelData.exists === false
+                                           ? Theme.mutedForeground : Theme.constructive
+                                }
                             }
 
                             Column {
-                                anchors.fill: parent
-                                anchors.margins: Theme.spacingLg
-                                spacing: Theme.spacingSm
-
-                                Rectangle {
-                                    width: parent.width
-                                    height: 32
-                                    radius: Theme.radiusSm
-                                    color: Theme.panelAccent
-
-                                    IconGlyph {
-                                        anchors.centerIn: parent
-                                        glyph: Theme.icons.film
-                                        iconSize: 18
-                                        iconColor: Theme.mutedForeground
-                                    }
-
-                                    // Same on-disk signal the desktop recents list carries;
-                                    // the card's dimming alone did not say what was wrong.
-                                    Rectangle {
-                                        anchors.right: parent.right
-                                        anchors.top: parent.top
-                                        anchors.margins: 4
-                                        width: 8
-                                        height: 8
-                                        radius: 4
-                                        color: card.modelData.exists === false
-                                               ? Theme.mutedForeground : Theme.constructive
-                                    }
-                                }
+                                width: parent.width - 52 - Theme.spacingMd
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: 2
 
                                 Text {
                                     width: parent.width
-                                    text: card.projectLabel
+                                    text: row.projectLabel
                                     color: Theme.panelForeground
                                     font.family: Theme.fontFamily
-                                    font.pixelSize: Theme.fontSizeXs
+                                    font.pixelSize: Theme.fontSizeBase
                                     font.weight: Font.Medium
                                     elide: Text.ElideMiddle
                                 }
 
-                                // Elided from the left: on a narrow card the tail — the folder
-                                // and file name — is the half that tells two projects apart.
                                 Text {
                                     width: parent.width
-                                    text: card.modelData.path
+                                    text: row.modelData.path
                                     color: Theme.mutedForeground
                                     font.family: Theme.fontFamily
                                     font.pixelSize: Theme.fontSizeXs
                                     elide: Text.ElideLeft
                                 }
                             }
+                        }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                pressAndHoldInterval: 450
-                                property bool heldMenu: false
-                                onPressed: heldMenu = false
-                                onPressAndHold: {
-                                    heldMenu = true
-                                    Haptics.pickUp()
-                                    cardMenu.popup()
-                                }
-                                onClicked: {
-                                    if (heldMenu)
-                                        return
-                                    if (card.modelData.exists === false) {
-                                        Toasts.warning(qsTr("That project file is missing."))
-                                        return
-                                    }
-                                    Haptics.select()
-                                    root.openRecentRequested(card.modelData.path)
-                                }
+                        IconButton {
+                            id: rowMenu
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.rightMargin: Theme.spacingXs
+                            buttonSize: Theme.iconButtonSize
+                            iconSize: Theme.iconSizeMd
+                            glyph: Theme.icons.ellipsis
+                            variant: "text"
+                            tooltip: qsTr("Project actions")
+                            onClicked: rowContextMenu.popup()
+                        }
+
+                        ThemedContextMenu {
+                            id: rowContextMenu
+
+                            ThemedMenuItem {
+                                text: qsTr("Remove from recents")
+                                icon.name: Theme.icons.trash
+                                onTriggered: EditorState.removeRecentProject(row.modelData.path)
                             }
+                        }
 
-                            // Long-press was the only way to reach this, which is a gesture
-                            // with no visible equivalent — the one rule the rest of the rail
-                            // already follows. The button is the equivalent; the long-press
-                            // stays as an accelerator.
-                            IconButton {
-                                anchors.right: parent.right
-                                anchors.top: parent.top
-                                anchors.margins: Theme.spacingXs
-                                buttonSize: Theme.iconButtonSize
-                                iconSize: Theme.iconSizeMd
-                                glyph: Theme.icons.ellipsis
-                                variant: "text"
-                                tooltip: qsTr("Project actions")
-                                onClicked: cardMenu.popup()
+                        MouseArea {
+                            anchors.fill: parent
+                            z: -1
+                            pressAndHoldInterval: 450
+                            property bool heldMenu: false
+                            onPressed: heldMenu = false
+                            onPressAndHold: {
+                                heldMenu = true
+                                Haptics.pickUp()
+                                rowContextMenu.popup()
                             }
-
-                            ThemedContextMenu {
-                                id: cardMenu
-
-                                ThemedMenuItem {
-                                    text: qsTr("Remove from recents")
-                                    icon.name: Theme.icons.trash
-                                    onTriggered: EditorState.removeRecentProject(card.modelData.path)
+                            onClicked: {
+                                if (heldMenu)
+                                    return
+                                if (row.modelData.exists === false) {
+                                    Toasts.warning(qsTr("That project file is missing."))
+                                    return
                                 }
+                                Haptics.select()
+                                root.openRecentRequested(row.modelData.path)
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+
+    // Floating "Create" action, the way the reference library screen keeps project
+    // creation reachable without scrolling back up to Home.
+    AbstractButton {
+        id: fab
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: Theme.spacing2xl
+        anchors.bottomMargin: Theme.spacing2xl + root.SafeArea.margins.bottom
+        width: implicitWidth
+        height: 48
+        hoverEnabled: true
+
+        Accessible.role: Accessible.Button
+        Accessible.name: qsTr("Create")
+
+        scale: fab.down ? Theme.pressScale : 1.0
+        Behavior on scale {
+            NumberAnimation { duration: Theme.durationPress; easing.type: Theme.easing }
+        }
+
+        onClicked: {
+            Haptics.select()
+            root.newProjectRequested()
+        }
+
+        background: Rectangle {
+            radius: height / 2
+            color: fab.down ? Qt.darker(Theme.primary, 1.15) : Theme.primary
+        }
+
+        contentItem: Row {
+            spacing: Theme.spacingSm
+            leftPadding: Theme.spacingLg
+            rightPadding: Theme.spacingXl
+
+            IconGlyph {
+                anchors.verticalCenter: parent.verticalCenter
+                glyph: Theme.icons.plus
+                iconSize: Theme.iconSizeMd
+                iconColor: Theme.primaryForeground
+            }
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("Create")
+                color: Theme.primaryForeground
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSizeBase
+                font.weight: Font.Medium
             }
         }
     }

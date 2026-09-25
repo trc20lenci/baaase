@@ -37,9 +37,63 @@ Item {
 
             readonly property real contentWidth: width - leftPadding - rightPadding
 
-            ThemedLabel {
-                text: qsTr("Me")
-                size: "lg"
+            Item {
+                width: pageColumn.contentWidth
+                height: avatarRow.implicitHeight
+
+                Row {
+                    id: avatarRow
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Theme.spacingMd
+
+                    Rectangle {
+                        width: 56
+                        height: 56
+                        radius: 28
+                        color: Theme.primary
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "B"
+                            color: Theme.primaryForeground
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 24
+                            font.weight: Font.Bold
+                        }
+                    }
+
+                    Column {
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 2
+
+                        ThemedLabel {
+                            text: qsTr("BASE")
+                            size: "lg"
+                        }
+
+                        ThemedLabel {
+                            text: qsTr("4K export \u2022 chroma key \u2022 auto captions")
+                            tone: "muted"
+                            size: "xs"
+                        }
+                    }
+                }
+
+                IconButton {
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    buttonSize: Theme.iconButtonSize
+                    iconSize: Theme.iconSizeMd
+                    glyph: Theme.icons.settings
+                    variant: "text"
+                    tooltip: qsTr("Settings")
+                    onClicked: {
+                        Haptics.select()
+                        root.host().openSettings()
+                    }
+                }
             }
 
             // Account state, when there is one. Per the marketplace contract Drift never shows
@@ -82,7 +136,6 @@ Item {
                     model: [
                         { id: "theme", label: Theme.darkMode ? qsTr("Light mode") : qsTr("Dark mode"),
                           icon: Theme.darkMode ? Theme.icons.sun : Theme.icons.moon, shown: true },
-                        { id: "settings", label: qsTr("Settings"), icon: Theme.icons.settings, shown: true },
                         { id: "extras", label: qsTr("Extras"), icon: Theme.icons.package, shown: true },
                         { id: "update", label: qsTr("Update available"), icon: Theme.icons.download,
                           shown: Updates.updateAvailable },
@@ -106,8 +159,6 @@ Item {
                             const win = root.host()
                             if (modelData.id === "theme")
                                 Theme.toggleDarkMode()
-                            else if (modelData.id === "settings")
-                                win.openSettings()
                             else if (modelData.id === "extras")
                                 win.openExtras()
                             else if (modelData.id === "update")

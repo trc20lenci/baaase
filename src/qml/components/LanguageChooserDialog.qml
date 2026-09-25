@@ -49,11 +49,14 @@ ThemedDialog {
 
     // Concrete languages only — "System default" is a later choice from the header
     // (desktop) or Settings (Android). First launch always writes an explicit code.
+    // First launch itself only offers English and Russian; every other language this
+    // build ships with (see i18n/) stays reachable afterwards from the header/Settings
+    // picker below, via pickerLanguages using the unfiltered list once fromHeader.
     readonly property var chooserLanguages: {
         const all = EditorState.uiLanguages
         const out = []
         for (let i = 0; i < all.length; ++i) {
-            if (all[i].id !== "")
+            if (all[i].id === "en" || all[i].id === "ru")
                 out.push(all[i])
         }
         return out

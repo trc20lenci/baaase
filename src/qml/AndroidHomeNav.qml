@@ -13,7 +13,7 @@ import "components"
 Item {
     id: root
 
-    property string current: "projects"
+    property string current: "home"
     property bool attention: false
 
     signal selected(string destinationId)
@@ -22,18 +22,16 @@ Item {
     readonly property real leftInset: root.SafeArea.margins.left
     readonly property real rightInset: root.SafeArea.margins.right
 
-    // Market drops out entirely in a build without a marketplace, rather than showing a
-    // destination whose only content is "unavailable". The slot width divides by this list's
-    // length, so the two that remain simply take half the bar each. AndroidHome keeps all three
-    // pages in its StackLayout so the indices behind `current` do not shift with it.
-    readonly property var destinations: {
-        const all = [
-            { id: "projects", label: qsTr("Projects"), icon: Theme.icons.film },
-            { id: "market", label: qsTr("Market"), icon: Theme.icons.store },
-            { id: "me", label: qsTr("Me"), icon: Theme.icons.settings }
-        ]
-        return Market.configured ? all : all.filter(d => d.id !== "market")
-    }
+    // Three fixed destinations. Market used to have a fourth slot here (shown only once
+    // Market.configured), but a bottom-nav storefront is not something this build wants —
+    // shared links still resolve into it (see AndroidHome.startLinkImport), it is just not
+    // a tab anyone taps into. AndroidHome keeps all four pages in its StackLayout so the
+    // indices behind `current` do not shift with which of them has a button here.
+    readonly property var destinations: [
+        { id: "home", label: qsTr("Home"), icon: Theme.icons.home },
+        { id: "projects", label: qsTr("Projects"), icon: Theme.icons.folder },
+        { id: "me", label: qsTr("Me"), icon: Theme.icons.userCircle }
+    ]
 
     implicitHeight: Theme.androidBottomRailHeight + bottomInset
 

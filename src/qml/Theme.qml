@@ -714,6 +714,10 @@ QtObject {
         brandTiktok: "brand-tiktok",
         brandSnapchat: "brand-snapchat",
         brandX: "brand-x",
-        brandLinkedin: "brand-linkedin"
+        brandLinkedin: "brand-linkedin",
+
+        // Bottom nav (phone home shell)
+        home: "house",
+        userCircle: "circle-user"
     })
 }

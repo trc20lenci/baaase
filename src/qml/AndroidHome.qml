@@ -7,9 +7,17 @@ import Drift
 // The home shell: a bottom-nav host over three destinations.
 //
 // This used to be one scrolling page whose middle band was the layout picker, so the first
-// thing on screen was a question about aspect ratios rather than the user's own work. Now
-// Projects is what you land on, and the two things that had nowhere else to live — the store
-// and the app's own settings — are peers rather than entries buried in the editor's overflow.
+// thing on screen was a question about aspect ratios rather than the user's own work. Then
+// Projects became the landing page itself. Now Home is a proper CapCut-style landing page
+// of its own (AndroidHomePage: start something, see what the app can do) and Projects is
+// the full library you land in from "See all" or the nav bar.
+//
+// Market lost its nav tab (nobody asked for an addon marketplace), but it is not deleted:
+// shared links still land there via startLinkImport below, so it stays in the internal
+// destination list without a button pointing at it. Deleting the market backend outright
+// would touch MarketClient/MarketEndpoint/MarketIdentity and the MCP dispatcher that other,
+// unrelated features (in-editor stock asset import) depend on — out of scope for a nav
+// change, and not something to gut without being able to rebuild and test it.
 Item {
     id: root
 
@@ -19,8 +27,8 @@ Item {
     signal newProjectRequested()
     signal quickEditRequested()
 
-    readonly property string startDestination: "projects"
-    property string current: "projects"
+    readonly property string startDestination: "home"
+    property string current: "home"
 
     readonly property bool needsAttention: {
         const win = root.Window.window
@@ -53,7 +61,7 @@ Item {
 
     // Android's convention: Back from a secondary destination returns to the start
     // destination rather than leaving the app. Market's own drill-down unwinds first, so a
-    // Back inside the store does not skip past it straight to Projects.
+    // Back mid-import does not skip past it straight to Home.
     function handleBack() {
         const market = marketLoader.item
         if (market && market.handleBack !== undefined && market.handleBack())
@@ -65,7 +73,7 @@ Item {
         return false
     }
 
-    readonly property var destinationIds: ["projects", "market", "me"]
+    readonly property var destinationIds: ["home", "projects", "market", "me"]
 
     StackLayout {
         id: pages
@@ -77,18 +85,24 @@ Item {
         // position across a switch instead of snapping back to the top.
         currentIndex: Math.max(0, root.destinationIds.indexOf(root.current))
 
-        AndroidProjectsPage {
+        AndroidHomePage {
             onNewProjectRequested: root.newProjectRequested()
             onQuickEditRequested: root.quickEditRequested()
             onOpenProjectRequested: root.openProjectRequested()
             onOpenRecentRequested: (path) => root.openRecentRequested(path)
+            onViewAllProjectsRequested: root.showDestination("projects")
         }
 
-        // Lazy, because the store is a network surface nobody has asked for until they select
-        // the destination — but latched, not unloaded on the way out. Binding `active` straight
-        // to the current destination destroyed the page on every switch away, which threw out
-        // the results and re-fetched the catalog on the way back; the sibling destinations are
-        // kept alive by the StackLayout for exactly that reason, and this matches them.
+        AndroidProjectsPage {
+            onNewProjectRequested: root.newProjectRequested()
+            onOpenProjectRequested: root.openProjectRequested()
+            onOpenRecentRequested: (path) => root.openRecentRequested(path)
+        }
+
+        // Lazy, because the store is a network surface nobody has asked for until a shared
+        // link needs somewhere to land — but latched, not unloaded on the way out. Binding
+        // `active` straight to the current destination destroyed the page on every switch
+        // away, which threw out results and re-fetched the catalog; kept alive here to match.
         Loader {
             id: marketLoader
             active: false

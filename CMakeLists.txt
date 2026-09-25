@@ -900,6 +900,7 @@ qt_add_qml_module(drift
         src/qml/MediaImport.qml
         src/qml/Main.qml
         src/qml/AndroidHomeNav.qml
+        src/qml/AndroidHomePage.qml
         src/qml/AndroidProjectsPage.qml
         src/qml/AndroidMePage.qml
         src/qml/AndroidMarket.qml
@@ -908,6 +909,7 @@ qt_add_qml_module(drift
         src/qml/DownloadFormat.qml
         src/qml/AndroidDownloadsSheet.qml
         src/qml/components/NavRailButton.qml
+        src/qml/components/MarqueeBanner.qml
         # Touch entry point, loaded instead of Main.qml on Android (see src/main.cpp).
         src/qml/AndroidLayoutSheet.qml
         src/qml/AndroidMain.qml
