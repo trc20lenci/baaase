@@ -91,9 +91,14 @@ Item {
             onOpenProjectRequested: root.openProjectRequested()
             onOpenRecentRequested: (path) => root.openRecentRequested(path)
             onViewAllProjectsRequested: root.showDestination("projects")
+            onSearchProjectsRequested: {
+                root.showDestination("projects")
+                projectsPage.searchActive = true
+            }
         }
 
         AndroidProjectsPage {
+            id: projectsPage
             onNewProjectRequested: root.newProjectRequested()
             onOpenProjectRequested: root.openProjectRequested()
             onOpenRecentRequested: (path) => root.openRecentRequested(path)

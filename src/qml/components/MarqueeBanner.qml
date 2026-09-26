@@ -14,6 +14,10 @@ Item {
 
     property var items: []
     property real pxPerSecond: 36
+    // Off when the strip sits directly on a coloured surface (Home's hero band) that
+    // already provides the tint, so it does not double up its own pill background.
+    property bool showBackground: true
+    property color textColor: Theme.accentOnPanel
 
     implicitHeight: Theme.androidTouchGap * 2 + Theme.iconSizeMd
 
@@ -24,6 +28,7 @@ Item {
         radius: Theme.radiusSm
         color: Theme.primary
         opacity: Theme.darkMode ? 0.16 : 0.12
+        visible: root.showBackground
     }
 
     property real _phase: 0
@@ -78,13 +83,13 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             glyph: Theme.icons.sparkles
             iconSize: Theme.iconSizeMd
-            iconColor: Theme.accentOnPanel
+            iconColor: root.textColor
         }
 
         Text {
             id: chipLabel
             anchors.verticalCenter: parent.verticalCenter
-            color: Theme.accentOnPanel
+            color: root.textColor
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSizeXs
             font.weight: Font.Medium
