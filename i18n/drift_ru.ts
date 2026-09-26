@@ -603,6 +603,10 @@
         <source>Me</source>
         <translation>Я</translation>
     </message>
+    <message>
+        <source>Home</source>
+        <translation>Главная</translation>
+    </message>
 </context>
 <context>
     <name>AndroidLayoutSheet</name>
@@ -800,18 +804,19 @@
     </message>
     <message numerus="yes">
         <source>%n coin(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%n монета</numerusform>
+            <numerusform>%n монеты</numerusform>
+            <numerusform>%n монет</numerusform>
         </translation>
     </message>
     <message>
         <source>Light mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Светлая тема</translation>
     </message>
     <message>
         <source>Dark mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Тёмная тема</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -828,6 +833,14 @@
     <message>
         <source>Debug info</source>
         <translation>Отладочная информация</translation>
+    </message>
+    <message>
+        <source>4K export • chroma key • auto captions</source>
+        <translation>Экспорт в 4K • хромакей • автосубтитры</translation>
+    </message>
+    <message>
+        <source>BASE</source>
+        <translation>BASE</translation>
     </message>
 </context>
 <context>
@@ -1254,7 +1267,7 @@
     </message>
     <message>
         <source>Open a project from this device</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть проект с этого устройства</translation>
     </message>
     <message>
         <source>Nothing here yet — projects you save will show up in this list.</source>
@@ -1266,7 +1279,7 @@
     </message>
     <message>
         <source>That project file is missing.</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл этого проекта не найден.</translation>
     </message>
     <message>
         <source>Project actions</source>
@@ -1275,6 +1288,38 @@
     <message>
         <source>Remove from recents</source>
         <translation>Убрать из недавних</translation>
+    </message>
+    <message>
+        <source>Create</source>
+        <translation>Создать</translation>
+    </message>
+    <message>
+        <source>No projects match “%1”.</source>
+        <translation>Нет проектов, соответствующих «%1».</translation>
+    </message>
+    <message>
+        <source>Projects</source>
+        <translation>Проекты</translation>
+    </message>
+    <message>
+        <source>Search projects</source>
+        <translation>Поиск по проектам</translation>
+    </message>
+    <message>
+        <source>Sorted by name</source>
+        <translation>Сортировка по алфавиту</translation>
+    </message>
+    <message>
+        <source>Sorted by recent</source>
+        <translation>Сортировка по недавним</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n project(s)</source>
+        <translation>
+            <numerusform>%n проект</numerusform>
+            <numerusform>%n проекта</numerusform>
+            <numerusform>%n проектов</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -11944,6 +11989,77 @@ The video preview cannot render. Updating your graphics driver may help.</source
 
 The video preview cannot render, and Drift may not start at all. Update your graphics driver, or run Drift on a machine with a newer GPU.</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AndroidHomePage</name>
+    <message>
+        <source>4K export</source>
+        <translation>Экспорт в 4K</translation>
+    </message>
+    <message>
+        <source>Auto captions</source>
+        <translation>Автосубтитры</translation>
+    </message>
+    <message>
+        <source>Chroma key</source>
+        <translation>Хромакей</translation>
+    </message>
+    <message>
+        <source>Effects library</source>
+        <translation>Библиотека эффектов</translation>
+    </message>
+    <message>
+        <source>Effects</source>
+        <translation>Эффекты</translation>
+    </message>
+    <message>
+        <source>Keyframe animation</source>
+        <translation>Анимация кейфреймами</translation>
+    </message>
+    <message>
+        <source>Keyframes</source>
+        <translation>Кейфреймы</translation>
+    </message>
+    <message>
+        <source>Masks</source>
+        <translation>Маски</translation>
+    </message>
+    <message>
+        <source>New video</source>
+        <translation>Новое видео</translation>
+    </message>
+    <message>
+        <source>Object cutout &amp; chroma key</source>
+        <translation>Вырезка объекта и хромакей</translation>
+    </message>
+    <message>
+        <source>Object cutout</source>
+        <translation>Вырезка объекта</translation>
+    </message>
+    <message>
+        <source>Quick edit</source>
+        <translation>Быстрый монтаж</translation>
+    </message>
+    <message>
+        <source>Search projects</source>
+        <translation>Поиск по проектам</translation>
+    </message>
+    <message>
+        <source>See all projects</source>
+        <translation>Все проекты</translation>
+    </message>
+    <message>
+        <source>That project file is missing.</source>
+        <translation>Файл этого проекта не найден.</translation>
+    </message>
+    <message>
+        <source>Transitions</source>
+        <translation>Переходы</translation>
+    </message>
+    <message>
+        <source>Untitled</source>
+        <translation>Без названия</translation>
     </message>
 </context>
 </TS>

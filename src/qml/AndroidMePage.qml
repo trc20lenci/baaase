@@ -130,21 +130,32 @@ Item {
 
             Column {
                 width: pageColumn.contentWidth
-                spacing: Theme.androidTouchGap
+                spacing: 0
+
+                readonly property var rows: [
+                    { id: "theme", label: Theme.darkMode ? qsTr("Light mode") : qsTr("Dark mode"),
+                      icon: Theme.darkMode ? Theme.icons.sun : Theme.icons.moon, shown: true },
+                    { id: "extras", label: qsTr("Extras"), icon: Theme.icons.package, shown: true },
+                    { id: "update", label: qsTr("Update available"), icon: Theme.icons.download,
+                      shown: Updates.updateAvailable },
+                    { id: "debug", label: qsTr("Debug info"), icon: Theme.icons.info, shown: true }
+                ]
+                readonly property int lastShownIndex: {
+                    let last = -1
+                    for (let i = 0; i < rows.length; ++i) {
+                        if (rows[i].shown)
+                            last = i
+                    }
+                    return last
+                }
 
                 Repeater {
-                    model: [
-                        { id: "theme", label: Theme.darkMode ? qsTr("Light mode") : qsTr("Dark mode"),
-                          icon: Theme.darkMode ? Theme.icons.sun : Theme.icons.moon, shown: true },
-                        { id: "extras", label: qsTr("Extras"), icon: Theme.icons.package, shown: true },
-                        { id: "update", label: qsTr("Update available"), icon: Theme.icons.download,
-                          shown: Updates.updateAvailable },
-                        { id: "debug", label: qsTr("Debug info"), icon: Theme.icons.info, shown: true }
-                    ]
+                    model: parent.rows
 
                     delegate: AbstractButton {
                         id: row
                         required property var modelData
+                        required property int index
 
                         width: pageColumn.contentWidth
                         height: Theme.androidAddRowHeight
@@ -168,10 +179,17 @@ Item {
                         }
 
                         background: Rectangle {
-                            radius: Theme.radiusMd
-                            color: row.down ? Theme.panelMuted : Theme.panelBackground
-                            border.width: Theme.borderWidth
-                            border.color: Theme.panelBorder
+                            color: row.down ? Theme.panelMuted : "transparent"
+
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                anchors.leftMargin: Theme.spacingXl + Theme.iconSizeLg + Theme.spacingLg
+                                height: Theme.borderWidth
+                                color: Theme.panelBorder
+                                visible: row.index !== row.parent.lastShownIndex
+                            }
                         }
 
                         contentItem: Row {
@@ -188,10 +206,20 @@ Item {
 
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
+                                width: parent.width - Theme.spacingXl * 2 - Theme.iconSizeLg
+                                       - Theme.spacingLg - Theme.iconSizeMd
                                 text: row.modelData.label
                                 color: Theme.panelForeground
                                 font.family: Theme.fontFamily
                                 font.pixelSize: Theme.fontSizeBase
+                                elide: Text.ElideRight
+                            }
+
+                            IconGlyph {
+                                anchors.verticalCenter: parent.verticalCenter
+                                glyph: Theme.icons.chevronRight
+                                iconSize: Theme.iconSizeMd
+                                iconColor: Theme.mutedForeground
                             }
                         }
                     }
