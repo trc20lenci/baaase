@@ -159,9 +159,7 @@ Item {
                         width: pageColumn.contentWidth
                         height: 72
                         radius: Theme.radiusMd
-                        color: Theme.panelBackground
-                        border.width: Theme.borderWidth
-                        border.color: Theme.panelBorder
+                        color: "transparent"
                         opacity: modelData.exists === false ? 0.55 : 1
 
                         Accessible.role: Accessible.Button
@@ -293,6 +291,8 @@ Item {
         anchors.bottomMargin: Theme.spacing2xl + root.SafeArea.margins.bottom
         width: implicitWidth
         height: 48
+        leftPadding: Theme.spacingLg
+        rightPadding: Theme.spacingXl
         hoverEnabled: true
 
         Accessible.role: Accessible.Button
@@ -313,25 +313,30 @@ Item {
             color: fab.down ? Qt.darker(Theme.primary, 1.15) : Theme.primary
         }
 
-        contentItem: Row {
-            spacing: Theme.spacingSm
-            leftPadding: Theme.spacingLg
-            rightPadding: Theme.spacingXl
+        contentItem: Item {
+            implicitWidth: fabRow.implicitWidth
+            implicitHeight: fabRow.implicitHeight
 
-            IconGlyph {
-                anchors.verticalCenter: parent.verticalCenter
-                glyph: Theme.icons.plus
-                iconSize: Theme.iconSizeMd
-                iconColor: Theme.primaryForeground
-            }
+            Row {
+                id: fabRow
+                anchors.centerIn: parent
+                spacing: Theme.spacingSm
 
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("Create")
-                color: Theme.primaryForeground
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSizeBase
-                font.weight: Font.Medium
+                IconGlyph {
+                    anchors.verticalCenter: parent.verticalCenter
+                    glyph: Theme.icons.plus
+                    iconSize: Theme.iconSizeMd
+                    iconColor: Theme.primaryForeground
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Create")
+                    color: Theme.primaryForeground
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSizeBase
+                    font.weight: Font.Medium
+                }
             }
         }
     }

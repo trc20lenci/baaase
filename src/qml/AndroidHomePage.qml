@@ -19,10 +19,8 @@ Item {
     signal viewAllProjectsRequested()
 
     readonly property var createTiles: [
-        { id: "new", label: qsTr("New video"), detail: qsTr("Choose a canvas, start empty"),
-          icon: Theme.icons.plus, primary: true },
-        { id: "quick", label: qsTr("Quick edit"), detail: qsTr("Pick a clip, start now"),
-          icon: Theme.icons.sparkles, primary: false }
+        { id: "new", label: qsTr("New video"), icon: Theme.icons.plus },
+        { id: "quick", label: qsTr("Quick edit"), icon: Theme.icons.sparkles }
     ]
 
     // Every entry here is a feature that already exists in the C++/QML editor. Tapping one
@@ -56,6 +54,12 @@ Item {
             root.newProjectRequested()
     }
 
+    // Pale tint of the brand colour, the way the tiles and recents strip below sit on a
+    // soft gradient rather than a flat panel in the reference screens.
+    function tintedPrimary(alpha) {
+        return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, alpha)
+    }
+
     Flickable {
         id: flick
         anchors.fill: parent
@@ -71,47 +75,42 @@ Item {
         Column {
             id: pageColumn
             width: parent.width
-            spacing: Theme.spacing2xl
-            topPadding: Theme.spacingLg
+            spacing: Theme.spacingLg
+            topPadding: Theme.spacingMd
             leftPadding: Theme.androidPagePadding
             rightPadding: Theme.androidPagePadding
 
             readonly property real contentWidth: width - leftPadding - rightPadding
 
-            // --- Privileges ticker ----------------------------------------
-            MarqueeBanner {
+            // --- Privileges ticker, small wordmark alongside it ------------------
+            Row {
+                id: tickerRow
                 width: pageColumn.contentWidth
-                items: root.privileges
-            }
-
-            // --- Wordmark -----------------------------------------------------
-            Column {
-                width: pageColumn.contentWidth
-                spacing: 2
+                spacing: Theme.spacingMd
 
                 Image {
+                    id: wordmark
+                    anchors.verticalCenter: parent.verticalCenter
                     source: Theme.darkMode
                             ? "qrc:/qt/qml/Drift/resources/base_wordmark_light.png"
                             : "qrc:/qt/qml/Drift/resources/base_wordmark_dark.png"
-                    height: 22
+                    height: 14
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     mipmap: true
                     width: implicitWidth * (height / Math.max(implicitHeight, 1))
                 }
 
-                Text {
-                    text: qsTr("Create polished videos fast")
-                    color: Theme.mutedForeground
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSizeSm
+                MarqueeBanner {
+                    width: tickerRow.width - tickerRow.spacing - wordmark.width
+                    items: root.privileges
                 }
             }
 
             // --- Start something, side by side --------------------------------
             Row {
                 width: pageColumn.contentWidth
-                spacing: Theme.androidTouchGap
+                spacing: Theme.spacingMd
 
                 Repeater {
                     model: root.createTiles
@@ -120,13 +119,12 @@ Item {
                         id: tile
                         required property var modelData
 
-                        width: (pageColumn.contentWidth - Theme.androidTouchGap) / 2
+                        width: (pageColumn.contentWidth - parent.spacing) / 2
                         height: Theme.androidHomeTileHeight * 1.3
                         hoverEnabled: true
 
                         Accessible.role: Accessible.Button
                         Accessible.name: modelData.label
-                        Accessible.description: modelData.detail
 
                         scale: tile.down ? Theme.pressScale : 1.0
                         Behavior on scale {
@@ -139,45 +137,45 @@ Item {
                         }
 
                         background: Rectangle {
-                            radius: Theme.radiusMd
-                            color: tile.modelData.primary
-                                   ? (tile.down ? Qt.darker(Theme.primary, 1.15) : Theme.primary)
-                                   : (tile.down ? Theme.panelMuted : Theme.panelBackground)
-                            border.width: tile.modelData.primary ? 0 : Theme.borderWidth
-                            border.color: Theme.panelBorder
+                            radius: Theme.radiusLg
+                            gradient: Gradient {
+                                GradientStop { position: 0.0; color: root.tintedPrimary(tile.down ? 0.22 : 0.16) }
+                                GradientStop { position: 1.0; color: root.tintedPrimary(tile.down ? 0.10 : 0.05) }
+                            }
                         }
 
-                        contentItem: Column {
-                            spacing: Theme.spacingSm
-                            topPadding: Theme.spacingXl
+                        contentItem: Item {
+                            implicitWidth: tileContent.implicitWidth
+                            implicitHeight: tileContent.implicitHeight
 
-                            IconGlyph {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                glyph: tile.modelData.icon
-                                iconSize: Theme.iconSizeLg
-                                iconColor: tile.modelData.primary
-                                           ? Theme.primaryForeground : Theme.panelForeground
-                            }
+                            Column {
+                                id: tileContent
+                                anchors.centerIn: parent
+                                spacing: Theme.spacingMd
 
-                            Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: tile.modelData.label
-                                color: tile.modelData.primary
-                                       ? Theme.primaryForeground : Theme.panelForeground
-                                font.family: Theme.fontFamily
-                                font.pixelSize: Theme.fontSizeBase
-                                font.weight: Font.Medium
-                            }
+                                Rectangle {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    width: 44
+                                    height: 44
+                                    radius: Theme.radiusMd
+                                    color: Theme.panelForeground
 
-                            Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: tile.modelData.detail
-                                color: tile.modelData.primary
-                                       ? Theme.primaryForeground : Theme.mutedForeground
-                                opacity: tile.modelData.primary ? 0.85 : 1
-                                font.family: Theme.fontFamily
-                                font.pixelSize: Theme.fontSizeXs
-                                horizontalAlignment: Text.AlignHCenter
+                                    IconGlyph {
+                                        anchors.centerIn: parent
+                                        glyph: tile.modelData.icon
+                                        iconSize: Theme.iconSizeMd
+                                        iconColor: Theme.panelBackground
+                                    }
+                                }
+
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: tile.modelData.label
+                                    color: Theme.panelForeground
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: Theme.fontSizeBase
+                                    font.weight: Font.Medium
+                                }
                             }
                         }
                     }
@@ -185,159 +183,157 @@ Item {
             }
 
             // --- Recent projects, a scrolling strip ----------------------------
-            Column {
-                width: pageColumn.contentWidth
-                spacing: Theme.spacingMd
+            ListView {
+                width: parent.width
+                height: Theme.androidHomeRecentCardHeight
+                orientation: ListView.Horizontal
+                leftMargin: pageColumn.leftPadding
+                rightMargin: pageColumn.rightPadding
+                spacing: Theme.spacingSm
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
                 visible: EditorState.recentProjects.length > 0
+                model: EditorState.recentProjects
 
-                Item {
-                    width: parent.width
-                    height: recentsLabel.implicitHeight
+                delegate: Rectangle {
+                    id: card
+                    required property var modelData
+                    width: Theme.androidHomeRecentCardHeight * 0.72
+                    height: Theme.androidHomeRecentCardHeight
+                    radius: Theme.radiusMd
+                    color: Theme.panelAccent
+                    opacity: modelData.exists === false ? 0.55 : 1
 
-                    ThemedLabel {
-                        id: recentsLabel
-                        anchors.left: parent.left
-                        text: qsTr("Recent projects")
-                        tone: "default"
-                        size: "sm"
+                    Accessible.role: Accessible.Button
+                    Accessible.name: card.projectLabel
+
+                    readonly property string projectLabel: {
+                        const n = card.modelData.name || ""
+                        return n.replace(/\.drift$/i, "") || qsTr("Untitled")
                     }
 
-                    Text {
-                        anchors.right: parent.right
-                        text: qsTr("See all")
-                        color: Theme.accentOnPanel
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeXs
-                        font.weight: Font.Medium
+                    IconGlyph {
+                        anchors.centerIn: parent
+                        glyph: Theme.icons.film
+                        iconSize: Theme.iconSizeLg
+                        iconColor: Theme.mutedForeground
+                    }
 
-                        MouseArea {
-                            anchors.fill: parent
-                            anchors.margins: -Theme.spacingSm
-                            onClicked: root.viewAllProjectsRequested()
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.bottom: parent.bottom
+                        anchors.margins: Theme.spacingXs
+                        radius: Theme.radiusSm
+                        color: Qt.rgba(0, 0, 0, 0.55)
+                        width: badgeRow.implicitWidth + Theme.spacingSm
+                        height: badgeRow.implicitHeight + 4
+
+                        Row {
+                            id: badgeRow
+                            anchors.centerIn: parent
+                            spacing: 3
+
+                            IconGlyph {
+                                anchors.verticalCenter: parent.verticalCenter
+                                glyph: Theme.icons.scissors
+                                iconSize: 12
+                                iconColor: "white"
+                            }
+
+                            Text {
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: card.projectLabel
+                                color: "white"
+                                font.family: Theme.fontFamily
+                                font.pixelSize: Theme.fontSizeXs
+                                elide: Text.ElideRight
+                                width: Math.min(implicitWidth, 64)
+                            }
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (card.modelData.exists === false) {
+                                Toasts.warning(qsTr("That project file is missing."))
+                                return
+                            }
+                            Haptics.select()
+                            root.openRecentRequested(card.modelData.path)
                         }
                     }
                 }
 
-                ListView {
-                    width: parent.width
-                    height: Theme.androidHomeRecentCardHeight + 28
-                    orientation: ListView.Horizontal
-                    spacing: Theme.spacingMd
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
-                    model: EditorState.recentProjects
+                footer: AbstractButton {
+                    width: Theme.androidHomeRecentCardHeight * 0.4
+                    height: Theme.androidHomeRecentCardHeight
+                    hoverEnabled: true
 
-                    delegate: Rectangle {
-                        id: card
-                        required property var modelData
-                        width: Theme.androidHomeRecentCardHeight
-                        height: Theme.androidHomeRecentCardHeight + 24
+                    Accessible.role: Accessible.Button
+                    Accessible.name: qsTr("See all projects")
+
+                    onClicked: {
+                        Haptics.select()
+                        root.viewAllProjectsRequested()
+                    }
+
+                    background: Rectangle {
                         radius: Theme.radiusMd
-                        color: Theme.panelBackground
-                        border.width: Theme.borderWidth
-                        border.color: Theme.panelBorder
-                        opacity: modelData.exists === false ? 0.55 : 1
+                        color: Theme.panelMuted
+                    }
 
-                        Accessible.role: Accessible.Button
-                        Accessible.name: card.projectLabel
-
-                        readonly property string projectLabel: {
-                            const n = card.modelData.name || ""
-                            return n.replace(/\.drift$/i, "") || qsTr("Untitled")
-                        }
-
-                        Column {
-                            anchors.fill: parent
-                            anchors.margins: Theme.spacingSm
-                            spacing: Theme.spacingSm
-
-                            Rectangle {
-                                width: parent.width
-                                height: width
-                                radius: Theme.radiusSm
-                                color: Theme.panelAccent
-
-                                IconGlyph {
-                                    anchors.centerIn: parent
-                                    glyph: Theme.icons.film
-                                    iconSize: Theme.iconSizeLg
-                                    iconColor: Theme.mutedForeground
-                                }
-                            }
-
-                            Text {
-                                width: parent.width
-                                text: card.projectLabel
-                                color: Theme.panelForeground
-                                font.family: Theme.fontFamily
-                                font.pixelSize: Theme.fontSizeXs
-                                font.weight: Font.Medium
-                                elide: Text.ElideMiddle
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                if (card.modelData.exists === false) {
-                                    Toasts.warning(qsTr("That project file is missing."))
-                                    return
-                                }
-                                Haptics.select()
-                                root.openRecentRequested(card.modelData.path)
-                            }
-                        }
+                    contentItem: IconGlyph {
+                        anchors.centerIn: parent
+                        glyph: Theme.icons.chevronRight
+                        iconSize: Theme.iconSizeMd
+                        iconColor: Theme.mutedForeground
                     }
                 }
             }
 
             // --- Tools, a plain icon grid --------------------------------------
-            Column {
+            Grid {
                 width: pageColumn.contentWidth
-                spacing: Theme.spacingLg
+                columns: 3
+                columnSpacing: Theme.spacingMd
+                rowSpacing: Theme.spacingXl
 
-                ThemedLabel {
-                    text: qsTr("Tools")
-                    tone: "default"
-                    size: "sm"
-                }
+                readonly property real cellWidth: (width - columnSpacing * (columns - 1)) / columns
 
-                Grid {
-                    width: parent.width
-                    columns: 3
-                    columnSpacing: Theme.spacingMd
-                    rowSpacing: Theme.spacingXl
+                Repeater {
+                    model: root.tools
 
-                    readonly property real cellWidth: (width - columnSpacing * (columns - 1)) / columns
+                    delegate: AbstractButton {
+                        id: toolTile
+                        required property var modelData
 
-                    Repeater {
-                        model: root.tools
+                        width: parent.cellWidth
+                        height: 68
+                        hoverEnabled: true
 
-                        delegate: AbstractButton {
-                            id: toolTile
-                            required property var modelData
+                        Accessible.role: Accessible.Button
+                        Accessible.name: modelData.label
 
-                            width: parent.cellWidth
-                            height: 72
-                            hoverEnabled: true
+                        scale: toolTile.down ? Theme.pressScale : 1.0
+                        Behavior on scale {
+                            NumberAnimation { duration: Theme.durationPress; easing.type: Theme.easing }
+                        }
 
-                            Accessible.role: Accessible.Button
-                            Accessible.name: modelData.label
+                        onClicked: {
+                            Haptics.select()
+                            root.quickEditRequested()
+                        }
 
-                            scale: toolTile.down ? Theme.pressScale : 1.0
-                            Behavior on scale {
-                                NumberAnimation { duration: Theme.durationPress; easing.type: Theme.easing }
-                            }
+                        background: null
 
-                            onClicked: {
-                                Haptics.select()
-                                root.quickEditRequested()
-                            }
+                        contentItem: Item {
+                            implicitWidth: toolContent.implicitWidth
+                            implicitHeight: toolContent.implicitHeight
 
-                            background: null
-
-                            contentItem: Column {
+                            Column {
+                                id: toolContent
+                                anchors.centerIn: parent
                                 spacing: Theme.spacingSm
 
                                 IconGlyph {
