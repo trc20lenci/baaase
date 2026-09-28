@@ -62,9 +62,9 @@ option(BASE_AUTO_UPDATE_TRANSLATIONS "Run lupdate as part of the default build" 
 # The token is NOT a secret. It ships inside every binary and is trivially extractable; it exists
 # so the bucket cannot be crawled or hotlinked, which would cost operations for someone else's
 # benefit. That is also why it is fine in CMakeCache.txt.
-set(BASE_ADDON_INDEX_URL "https://drift-addons.cutwire.org/v1/index"
+set(BASE_ADDON_INDEX_URL ""
     CACHE STRING "Addon index endpoint; empty disables the addon service")
-set(BASE_ADDON_CLIENT_TOKEN "79a388bba9301cacc81cc6eb0724c81e948e1b27c69aee1b"
+set(BASE_ADDON_CLIENT_TOKEN ""
     CACHE STRING "Client token sent to the addon service as X-Drift-Client")
 
 # --- Marketplace -----------------------------------------------------------
@@ -76,9 +76,9 @@ set(BASE_ADDON_CLIENT_TOKEN "79a388bba9301cacc81cc6eb0724c81e948e1b27c69aee1b"
 #                  -DBASE_MARKET_CLIENT_KEY=...
 #
 #   cmake -B build -DBASE_MARKET_API_URL=      # no marketplace
-set(BASE_MARKET_API_URL "https://market.cutwire.org/api/v1"
+set(BASE_MARKET_API_URL ""
     CACHE STRING "Marketplace API base; empty disables the marketplace")
-set(BASE_MARKET_CLIENT_KEY "5409a0bebab4446f88e51d06024a5cf9a694ee141a6a1c6be7a49e45b6687438"
+set(BASE_MARKET_CLIENT_KEY ""
     CACHE STRING "HMAC key for marketplace client identity and request signing")
 
 # --- Update check -----------------------------------------------------------
