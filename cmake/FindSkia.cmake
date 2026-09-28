@@ -4,7 +4,7 @@ target, Skia::Skia, carrying the include root, the archives in link order, the s
 GN resolved, and — most importantly — the exact preprocessor defines Skia was compiled with.
 
 Lookup order:
-  1. DRIFT_SKIA_DIR            a directory containing SkiaConfig.cmake (Flatpak passes /app/lib/skia)
+  1. BASE_SKIA_DIR            a directory containing SkiaConfig.cmake (Flatpak passes /app/lib/skia)
   2. third_party/prebuilt/skia/<target>   what build-skia.sh installs for this host / Android ABI
   3. find_package(unofficial-skia)         vcpkg's port, for Windows builds that prefer it
 
@@ -34,8 +34,8 @@ else()
 endif()
 
 set(_skia_candidates)
-if(DRIFT_SKIA_DIR)
-    list(APPEND _skia_candidates "${DRIFT_SKIA_DIR}")
+if(BASE_SKIA_DIR)
+    list(APPEND _skia_candidates "${BASE_SKIA_DIR}")
 endif()
 list(APPEND _skia_candidates "${CMAKE_SOURCE_DIR}/third_party/prebuilt/skia/${_skia_target}")
 
@@ -80,6 +80,6 @@ if(unofficial-skia_FOUND)
 endif()
 
 message(FATAL_ERROR
-    "DRIFT_WITH_SKIA is ON but no Skia build was found. Run:\n"
+    "BASE_WITH_SKIA is ON but no Skia build was found. Run:\n"
     "    third_party/build-skia.sh ${_skia_target}\n"
-    "or point DRIFT_SKIA_DIR at a directory containing SkiaConfig.cmake.")
+    "or point BASE_SKIA_DIR at a directory containing SkiaConfig.cmake.")

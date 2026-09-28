@@ -6,7 +6,7 @@
 #include <QString>
 
 // Which GPU the process runs on, for hybrid laptops. Windows only: on Linux that choice belongs to
-// whoever launches Drift (prime-run, DRI_PRIME), not to Drift itself, so everything here is a no-op
+// whoever launches BASE (prime-run, DRI_PRIME), not to BASE itself, so everything here is a no-op
 // there and hardwareAdapters() is empty.
 //
 // GPU *identity* — what each adapter is, and which one OpenGL draws on — lives in GpuDevice.h.

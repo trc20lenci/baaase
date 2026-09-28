@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 
 // Every editor and app preference, in one scrolling pane: the editor, then the app.
 // Hosted by SettingsDialog; it used to be a tab in the assets panel's rail.

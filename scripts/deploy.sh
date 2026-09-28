@@ -11,11 +11,11 @@ set -euo pipefail
 
 ABI="${1:-arm64-v8a}"
 # Matches the local default in scripts/build.sh; override in step with it.
-PKG="${DRIFT_ANDROID_PACKAGE_NAME:-org.cutwire.drift.debug}"
+PKG="${BASE_ANDROID_PACKAGE_NAME:-app.base.editor.debug}"
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-APK="$ROOT/build/android-$ABI/android-build/drift.apk"
-SIGNED="$ROOT/build/android-$ABI/drift-signed.apk"
+APK="$ROOT/build/android-$ABI/android-build/base.apk"
+SIGNED="$ROOT/build/android-$ABI/base-signed.apk"
 
 [ -f "$APK" ] || { echo "no APK at $APK — run scripts/build.sh $ABI first" >&2; exit 1; }
 

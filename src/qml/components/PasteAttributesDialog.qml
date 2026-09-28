@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Dialog allowing the user to select which attributes from the copied clip
 // (transform/motion, speed, volume, video/audio effects, transitions)

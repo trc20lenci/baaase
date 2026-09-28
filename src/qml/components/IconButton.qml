@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Toolbar button, variants "text" / "ghost". Icon-only by default; set `text`
 // to show a label beside the glyph (header actions).

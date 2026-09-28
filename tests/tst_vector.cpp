@@ -16,7 +16,7 @@ namespace {
 
 QByteArray fixture(const QString &name)
 {
-    QFile file(QStringLiteral(DRIFT_TEST_DATA_DIR "/vector/") + name);
+    QFile file(QStringLiteral(BASE_TEST_DATA_DIR "/vector/") + name);
     if (!file.open(QIODevice::ReadOnly))
         return {};
     // Normalised rather than raw: inspectReportsExpressions patches the document by searching for
@@ -203,7 +203,7 @@ void VectorTest::probeFillsSource()
 
     VectorSource file;
     file.kind = VectorKind::Svg;
-    file.path = QStringLiteral(DRIFT_TEST_DATA_DIR "/vector/still.svg");
+    file.path = QStringLiteral(BASE_TEST_DATA_DIR "/vector/still.svg");
     QVERIFY2(vec::probeVectorSource(file, &error), qPrintable(error));
     QCOMPARE(file.width, 200);
     QCOMPARE(file.durationUs, TimeUs(0));
@@ -301,7 +301,7 @@ void VectorTest::svgStillRenders()
 {
     VectorSource source;
     source.kind = VectorKind::Svg;
-    source.path = QStringLiteral(DRIFT_TEST_DATA_DIR "/vector/still.svg");
+    source.path = QStringLiteral(BASE_TEST_DATA_DIR "/vector/still.svg");
     const QImage image = renderAt(source, 0.0, QSize(200, 100));
     QCOMPARE(image.size(), QSize(200, 100));
     QVERIFY(isColor(image.pixel(50, 50), 0, 255, 0));
@@ -331,7 +331,7 @@ VectorSource styledSource()
 {
     VectorSource source;
     source.kind = VectorKind::Svg;
-    source.path = QStringLiteral(DRIFT_TEST_DATA_DIR "/vector/styled.svg");
+    source.path = QStringLiteral(BASE_TEST_DATA_DIR "/vector/styled.svg");
     return source;
 }
 
@@ -607,7 +607,7 @@ void VectorTest::compositorRendersVectorClip()
     // File-backed, so the .json path is on the clip: the decoders must leave it alone.
     VectorSource source;
     source.kind = VectorKind::Lottie;
-    source.path = QStringLiteral(DRIFT_TEST_DATA_DIR "/vector/slide.json");
+    source.path = QStringLiteral(BASE_TEST_DATA_DIR "/vector/slide.json");
     const Project project = vectorProject(source, 1.0, false);
     FrameCompositor compositor;
     compositor.setProject(&project);

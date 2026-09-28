@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Auto Backup (API 28-30). Drift's app-data directory holds the project files the user
+<!-- Auto Backup (API 28-30). BASE's app-data directory holds the project files the user
      would want restored *and* several caches that are rebuildable and unbounded: reversed
      clip proxies, segmentation mattes, face tracks, denoise snippets, and downloaded addon
      packages. Backing those up pushes a few GB at the 25 MB quota, which makes the backup

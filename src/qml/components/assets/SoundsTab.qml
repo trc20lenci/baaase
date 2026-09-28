@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // Audio FX tab: audio-effect preset library (browse left, edit in the Audio inspector).
 Item {

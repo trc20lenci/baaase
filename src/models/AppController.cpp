@@ -73,7 +73,7 @@
 #include "SegmentImageStore.h"
 #include "engine/FrameSheet.h"
 #include "engine/TextLayout.h"
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "engine/SkiaTextPainter.h"
 #endif
 #include "engine/TransitionCatalog.h"
@@ -225,7 +225,7 @@ bool stabilizeTrfIsAscii(const QString &path)
 }
 
 // ffmpeg's filtergraph parser chokes on spaces inside input=/result= even when the
-// argument is already a single QProcess token. The app data dir is "CutWire Drift",
+// argument is already a single QProcess token. The app data dir is "BASE",
 // so detect/transform always write and read a no-space path in /tmp, then we copy
 // the analysis file into the cache for the next run.
 QString stabilizeFfmpegTrfPath(const QString &clipId)
@@ -827,7 +827,7 @@ AppController::AppController(AssetLibrary *assetLibrary, QObject *parent)
     });
 
     // Hardware decode that dies mid-playback is otherwise silent — the reader drops to
-    // software on its own and the preview just gets slower, which reads as a Drift bug.
+    // software on its own and the preview just gets slower, which reads as a BASE bug.
     connect(&m_playback, &PlaybackEngine::hardwareDecodeFellBack, this,
             [this](const QString &backendName) {
                 setLastMessage(backendName.isEmpty()
@@ -5146,7 +5146,7 @@ void AppController::setVaapiZeroCopy(bool enabled)
     settings.setValue(QStringLiteral("preview/vaapiZeroCopy"), m_vaapiZeroCopy);
 #endif
     emit vaapiZeroCopyChanged();
-    setLastMessage(tr("Faster preview takes effect after you restart Drift."),
+    setLastMessage(tr("Faster preview takes effect after you restart BASE."),
                    QStringLiteral("info"));
 }
 
@@ -5160,7 +5160,7 @@ void AppController::setMediaCodecZeroCopy(bool enabled)
     emit mediaCodecZeroCopyChanged();
     // ClipReader reads the setting once and latches it, so a restart is not just conservative
     // advice here — the running process really will not change behaviour.
-    setLastMessage(tr("Faster preview takes effect after you restart Drift."),
+    setLastMessage(tr("Faster preview takes effect after you restart BASE."),
                    QStringLiteral("info"));
 }
 
@@ -5194,7 +5194,7 @@ void AppController::setPreferredGpu(const QString &id)
     drift::gpu::storePreference(preference);
     emit preferredGpuChanged();
     // Not conservative advice: the driver chose this process's GPU when it loaded.
-    setLastMessage(tr("The graphics card choice takes effect after you restart Drift."),
+    setLastMessage(tr("The graphics card choice takes effect after you restart BASE."),
                    QStringLiteral("info"));
 }
 
@@ -5253,11 +5253,11 @@ QVariantList AppController::uiLanguages() const
 
     QStringList codes;
     const QDir dir(QStringLiteral(":/i18n"));
-    const QStringList files = dir.entryList({QStringLiteral("drift_*.qm")}, QDir::Files);
+    const QStringList files = dir.entryList({QStringLiteral("base_*.qm")}, QDir::Files);
     for (const QString &file : files) {
-        if (!file.startsWith(QStringLiteral("drift_")) || !file.endsWith(QStringLiteral(".qm")))
+        if (!file.startsWith(QStringLiteral("base_")) || !file.endsWith(QStringLiteral(".qm")))
             continue;
-        const QString code = file.mid(6, file.size() - 9); // strip drift_ and .qm
+        const QString code = file.mid(5, file.size() - 8); // strip base_ and .qm
         if (code.isEmpty() || code.compare(QStringLiteral("en"), Qt::CaseInsensitive) == 0)
             continue;
         if (!codes.contains(code))
@@ -13860,7 +13860,7 @@ void AppController::setShapeStyle(int trackIndex, int clipIndex, const QVariantM
 
 bool AppController::vectorSupportAvailable() const
 {
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     return true;
 #else
     return false;
@@ -18926,7 +18926,7 @@ bool AppController::applyProjectJson(const QByteArray &data, QString *error)
     m_project = std::move(parsed);
 
     // Stickers moved out of the QRC and into an addon, so projects saved before that store paths
-    // like ":/qt/qml/Drift/resources/stickers/grinning.png" that no longer resolve. Repoint them
+    // like ":/qt/qml/Base/resources/stickers/grinning.png" that no longer resolve. Repoint them
     // at the installed pack; a sticker with no installed pack keeps its old path and simply fails
     // to load, which is the same outcome as a missing media file.
     for (drift::MediaAsset &asset : m_project.assets()) {
@@ -20103,7 +20103,7 @@ void AppController::releaseTransientCaches()
     ClipReaderPool::instance().releaseAll();
     FrameCompositor::clearStillImageCache();
     drift::text::clearLayoutCache();
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     drift::skia::clearTextGeometryCache();
 #endif
     // Uploaded textures and the FBO pool, without tearing the context down. Runs on the GL thread
@@ -20587,10 +20587,10 @@ void AppController::saveToGallery(const QString &filePath, const QString &displa
     const QString name = displayName.isEmpty() ? QFileInfo(filePath).fileName() : displayName;
     const QUrl source = QUrl::fromLocalFile(filePath);
     const QString mime = QMimeDatabase().mimeTypeForFile(name, QMimeDatabase::MatchExtension).name();
-    const QString location = mime.startsWith(QLatin1String("audio/")) ? QStringLiteral("Music/Drift")
+    const QString location = mime.startsWith(QLatin1String("audio/")) ? QStringLiteral("Music/BASE")
                              : mime.startsWith(QLatin1String("image/"))
-                                 ? QStringLiteral("Pictures/Drift")
-                                 : QStringLiteral("Movies/Drift");
+                                 ? QStringLiteral("Pictures/BASE")
+                                 : QStringLiteral("Movies/BASE");
 
     (void)QtConcurrent::run([this, source, name, location]() {
         Exporter::BackgroundHold hold(QStringLiteral("Saving to gallery"));

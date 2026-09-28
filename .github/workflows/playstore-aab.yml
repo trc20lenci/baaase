@@ -80,7 +80,7 @@ jobs:
         run: |
           set -euo pipefail
           SHA="$(git rev-parse HEAD)"
-          VERSION="$(grep -oP '^project\(Drift VERSION \K[0-9]+\.[0-9]+\.[0-9]+' CMakeLists.txt)"
+          VERSION="$(grep -oP '^project\(BASE VERSION \K[0-9]+\.[0-9]+\.[0-9]+' CMakeLists.txt)"
           VC='${{ inputs.version_code }}'
           if [ -n "$VC" ]; then
             if ! [[ "$VC" =~ ^[1-9][0-9]*$ ]]; then
@@ -246,9 +246,9 @@ jobs:
 
       - name: Build release AAB
         env:
-          DRIFT_ANDROID_PACKAGE_NAME: org.cutwire.drift
-          DRIFT_ANDROID_APP_NAME: Drift
-          DRIFT_ANDROID_VERSION_CODE: ${{ steps.meta.outputs.version_code }}
+          BASE_ANDROID_PACKAGE_NAME: app.base.editor
+          BASE_ANDROID_APP_NAME: BASE
+          BASE_ANDROID_VERSION_CODE: ${{ steps.meta.outputs.version_code }}
           QT_ANDROID_ABIS: "arm64-v8a;armeabi-v7a;x86_64"
           BUILD_AAB: '1'
           CMAKE_C_COMPILER_LAUNCHER: ccache
@@ -307,7 +307,7 @@ jobs:
           KS="$RUNNER_TEMP/upload.jks"
           printf '%s' "$KEYSTORE_B64" | base64 -d > "$KS"
           mkdir -p "$RUNNER_TEMP/out"
-          OUT="$RUNNER_TEMP/out/Drift-${VERSION}-${VERSION_CODE}.aab"
+          OUT="$RUNNER_TEMP/out/BASE-${VERSION}-${VERSION_CODE}.aab"
           jarsigner -keystore "$KS" \
             -storepass:env KEYSTORE_PASSWORD -keypass:env KEYSTORE_PASSWORD \
             -signedjar "$OUT" \
@@ -321,8 +321,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: drift-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.version_code }}-aab
-          path: ${{ runner.temp }}/out/Drift-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.version_code }}.aab
+          name: base-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.version_code }}-aab
+          path: ${{ runner.temp }}/out/BASE-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.version_code }}.aab
           retention-days: 30
           if-no-files-found: error
 
@@ -334,5 +334,5 @@ jobs:
             echo "- **commit:** \`${{ steps.meta.outputs.sha }}\`"
             echo "- **versionName:** ${{ steps.meta.outputs.version }}"
             echo "- **versionCode:** ${{ steps.meta.outputs.version_code }}"
-            echo "- **artifact:** \`Drift-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.version_code }}.aab\`"
+            echo "- **artifact:** \`BASE-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.version_code }}.aab\`"
           } >> "$GITHUB_STEP_SUMMARY"

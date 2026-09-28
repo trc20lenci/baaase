@@ -26,8 +26,8 @@
 #include <QtCore/qcoreapplication_platform.h>
 #endif
 
-#ifndef DRIFT_VERSION
-#define DRIFT_VERSION "0"
+#ifndef BASE_VERSION
+#define BASE_VERSION "0"
 #endif
 
 namespace drift::market {
@@ -185,7 +185,7 @@ QString makeNonce()
 
 QString appHeader()
 {
-    return QStringLiteral("Drift/%1 (%2)").arg(QLatin1String(DRIFT_VERSION), platformId());
+    return QStringLiteral("BASE/%1 (%2)").arg(QLatin1String(BASE_VERSION), platformId());
 }
 
 bool isAuthCallbackUrl(const QUrl &url)

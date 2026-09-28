@@ -106,7 +106,7 @@ void rebuildLocked(const QStringList &packageRoots)
     g_familyIndex.clear();
 
     const QStringList roots = packageRoots.isEmpty()
-        ? GpuPackageParse::defaultSearchPaths(QStringLiteral("DRIFT_FONTS_DIR"),
+        ? GpuPackageParse::defaultSearchPaths(QStringLiteral("BASE_FONTS_DIR"),
                                               QStringLiteral("fonts"), QStringLiteral("fonts"))
         : packageRoots;
 
@@ -119,7 +119,7 @@ void rebuildLocked(const QStringList &packageRoots)
             FontFamilyEntry entry = loadPackage(dir.filePath(package));
             if (entry.family.isEmpty())
                 continue;
-            // First root wins, so DRIFT_FONTS_DIR can shadow the shipped bundle.
+            // First root wins, so BASE_FONTS_DIR can shadow the shipped bundle.
             if (g_familyIndex.contains(entry.family.toLower()))
                 continue;
             g_familyIndex.insert(entry.family.toLower(), g_catalog.size());

@@ -179,18 +179,18 @@ void MarketClient::setAssetLibrary(AssetLibrary *library)
     m_library = library;
 }
 
-// DRIFT_MARKET_API_URL in the environment points the client at another service — a local
+// BASE_MARKET_API_URL in the environment points the client at another service — a local
 // fake in tests, a staging deployment — without a rebuild. The compiled-in key still signs.
 QString MarketClient::apiBase()
 {
-    const QString override = qEnvironmentVariable("DRIFT_MARKET_API_URL");
+    const QString override = qEnvironmentVariable("BASE_MARKET_API_URL");
     return override.isEmpty() ? drift::market::kApiUrl : override;
 }
 
 bool MarketClient::configured() const
 {
     return !apiBase().isEmpty() && (!drift::market::kClientKey.isEmpty()
-                                    || !qEnvironmentVariable("DRIFT_MARKET_API_URL").isEmpty());
+                                    || !qEnvironmentVariable("BASE_MARKET_API_URL").isEmpty());
 }
 
 QVariantList MarketClient::providers() const

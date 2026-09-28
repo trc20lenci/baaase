@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // A single clip on a timeline track: background/fade canvas, filmstrip or

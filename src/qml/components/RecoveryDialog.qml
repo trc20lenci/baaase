@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Shown on every launch while an autosave snapshot from the previous session
 // exists (typically a crash — a confirmed close clears the snapshot). Restore

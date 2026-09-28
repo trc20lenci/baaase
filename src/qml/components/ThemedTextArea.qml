@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Multi-line text field matching ThemedTextField chrome.
 TextArea {

@@ -913,7 +913,7 @@ void SkiaTest::textPainterCacheKeys()
 // taller later in the clip.
 void SkiaTest::keyframedTextGrowsOverTime()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     Clip clip;
     clip.type = ClipType::Text;
@@ -969,7 +969,7 @@ void SkiaTest::keyframedTextGrowsOverTime()
 // the solid-fill raster of the same style stays all red.
 void SkiaTest::gradientFillSweepsTheBlock()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1021,7 +1021,7 @@ void SkiaTest::gradientFillSweepsTheBlock()
 // in the bleed so nothing is clipped.
 void SkiaTest::pathBendArchesTheLine()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1082,9 +1082,9 @@ void SkiaTest::pathBendArchesTheLine()
 // the shadow pass carries its silhouette.
 void SkiaTest::emojiOutlineDrawsARing()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
-    reloadEmojiCatalog({QString::fromUtf8(DRIFT_TEST_EMOJI_FONT_DIR)});
+    reloadEmojiCatalog({QString::fromUtf8(BASE_TEST_EMOJI_FONT_DIR)});
     if (emojiFontFamily().isEmpty())
         QSKIP("No emoji font available");
     TextStyle style;
@@ -1243,7 +1243,7 @@ Clip animatedClip(const TextStyle &style, const QString &text, TimeUs durationUs
 // resting place and settles.
 void SkiaTest::fragmentAnimationRendersPerCharacter()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1276,7 +1276,7 @@ void SkiaTest::fragmentAnimationRendersPerCharacter()
 // the animation plays, and the held pose is cached while the moving frames are not.
 void SkiaTest::bleedIsTimeInvariant()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1309,7 +1309,7 @@ void SkiaTest::bleedIsTimeInvariant()
 // adds ink around every glyph.
 void SkiaTest::shadingLayersCompositeInOrder()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1353,7 +1353,7 @@ void SkiaTest::shadingLayersCompositeInOrder()
 // A repeating left→right gradient slides with its offset, and maps per word when asked.
 void SkiaTest::gradientOffsetShiftsColour()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1405,7 +1405,7 @@ void SkiaTest::gradientOffsetShiftsColour()
 // An inline wipe animator reveals the block through a soft mask travelling upward.
 void SkiaTest::wipeMaskRevealsBottomUp()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1436,7 +1436,7 @@ void SkiaTest::wipeMaskRevealsBottomUp()
 // The typewriter caret appears after the last typed character and blinks.
 void SkiaTest::caretDrawsAfterLastVisibleFragment()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1470,7 +1470,7 @@ void SkiaTest::skslEffectsCompileAndRender()
                  qPrintable(spec.id + QLatin1String(": ") + skia::textEffectCompileError(spec.id)));
     QVERIFY(!skia::textEffectCompileError(QStringLiteral("nope")).isEmpty());
 
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1497,7 +1497,7 @@ void SkiaTest::skslEffectsCompileAndRender()
 // Every look renders something, and Neon glows outside the glyphs.
 void SkiaTest::textLookRenders()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     TextStyle style;
     style.fontFamily = QStringLiteral("Inter");
@@ -1519,7 +1519,7 @@ void SkiaTest::textLookRenders()
 // gradient, effect, extrude and arc layers all produce ink through the shared painter.
 void SkiaTest::textPacksRender()
 {
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
     SKIP_WITHOUT_FONTS();
     const QRectF layout(0, 0, 900, 300);
     for (const TextPreset &preset : textPresets()) {

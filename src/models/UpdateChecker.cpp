@@ -13,11 +13,11 @@
 #include <QTimer>
 #include <QUrl>
 
-// Configured in CMakeLists.txt (DRIFT_UPDATE_FEED_URL) and injected as a compile definition, the
+// Configured in CMakeLists.txt (BASE_UPDATE_FEED_URL) and injected as a compile definition, the
 // same way the addon service is, so a fork points at its own repository without touching code.
 // A translation unit built outside the `drift` target gets no feed rather than a stale one.
-#ifndef DRIFT_UPDATE_FEED_URL
-#define DRIFT_UPDATE_FEED_URL ""
+#ifndef BASE_UPDATE_FEED_URL
+#define BASE_UPDATE_FEED_URL ""
 #endif
 
 namespace {
@@ -32,8 +32,8 @@ constexpr int kStartupDelayMs = 5000;
 
 constexpr int kTransferTimeoutMs = 15000;
 
-const QString kFeedUrl = QStringLiteral(DRIFT_UPDATE_FEED_URL);
-const QString kCurrentVersion = QStringLiteral(DRIFT_VERSION);
+const QString kFeedUrl = QStringLiteral(BASE_UPDATE_FEED_URL);
+const QString kCurrentVersion = QStringLiteral(BASE_VERSION);
 
 QString settingsKey(const char *name)
 {
@@ -165,7 +165,7 @@ void UpdateChecker::check(bool manual)
     // GitHub's API rejects requests that send no User-Agent, and pins response shape to an API
     // version so a future default cannot change the fields parsed below.
     request.setHeader(QNetworkRequest::UserAgentHeader,
-                      QLatin1String("Drift/") + kCurrentVersion);
+                      QLatin1String("BASE/") + kCurrentVersion);
     request.setRawHeader("Accept", "application/vnd.github+json");
     request.setRawHeader("X-GitHub-Api-Version", "2022-11-28");
     request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
@@ -214,7 +214,7 @@ void UpdateChecker::applyRelease(const QByteArray &json, bool manual)
         m_releaseUrl.clear();
         emit resultChanged();
         if (manual)
-            setStatus(tr("Drift %1 is the latest version.").arg(kCurrentVersion));
+            setStatus(tr("BASE %1 is the latest version.").arg(kCurrentVersion));
         return;
     }
 
@@ -223,5 +223,5 @@ void UpdateChecker::applyRelease(const QByteArray &json, bool manual)
     m_releaseUrl = release.value(QStringLiteral("html_url")).toString();
     emit resultChanged();
     if (manual)
-        setStatus(tr("Drift %1 is available.").arg(version));
+        setStatus(tr("BASE %1 is available.").arg(version));
 }

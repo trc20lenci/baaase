@@ -100,7 +100,7 @@ namespace {
 
 #ifdef Q_OS_ANDROID
 
-constexpr const char *kExportServiceClass = "org/cutwire/drift/ExportService";
+constexpr const char *kExportServiceClass = "app/base/editor/ExportService";
 
 std::atomic<int> g_backgroundHolds{0};
 std::atomic<int> g_notifiedPercent{-1};
@@ -833,7 +833,7 @@ QByteArray audioOnlyMuxerName(const QString &container)
     return container.toUtf8();
 }
 
-// Drift's SDR pipeline is BT.709 limited-range end-to-end (GPU NV12 decode + export).
+// BASE's SDR pipeline is BT.709 limited-range end-to-end (GPU NV12 decode + export).
 void applySdrBt709Tags(AVCodecContext *vctx)
 {
     if (!vctx)
@@ -1305,7 +1305,7 @@ bool runGifExport(const drift::Project &project, const ExportSettings &settings,
         }
 
         // Preview and export share ClipReaderPool's readers, so this is what keeps an
-        // Android encode off the MediaCodec surface path — where the driver, not Drift,
+        // Android encode off the MediaCodec surface path — where the driver, not BASE,
         // decides the YUV->RGB matrix. Scoped to the whole encode; a no-op elsewhere.
         drift::MediaCodecSurfaceDecodeBlock noSurfaceDecode;
 
@@ -2082,8 +2082,8 @@ bool Exporter::run(const drift::Project &project, const ExportSettings &settings
         }
         headerWritten = true;
 
-        const bool forceCpuSws = qEnvironmentVariableIsSet("DRIFT_EXPORT_SWSCALE")
-                                 && qgetenv("DRIFT_EXPORT_SWSCALE") != "0";
+        const bool forceCpuSws = qEnvironmentVariableIsSet("BASE_EXPORT_SWSCALE")
+                                 && qgetenv("BASE_EXPORT_SWSCALE") != "0";
         const bool useGpuNv12 = !forceCpuSws && GpuCompositor::isAvailable()
             && (swPixFmt == AV_PIX_FMT_NV12 || swPixFmt == AV_PIX_FMT_YUV420P) && (outW % 2 == 0)
             && (outH % 2 == 0);
@@ -2131,7 +2131,7 @@ bool Exporter::run(const drift::Project &project, const ExportSettings &settings
         }
 
         // Preview and export share ClipReaderPool's readers, so this is what keeps an
-        // Android encode off the MediaCodec surface path — where the driver, not Drift,
+        // Android encode off the MediaCodec surface path — where the driver, not BASE,
         // decides the YUV->RGB matrix. Scoped to the whole encode; a no-op elsewhere.
         drift::MediaCodecSurfaceDecodeBlock noSurfaceDecode;
 
@@ -2446,9 +2446,9 @@ QUrl Exporter::publishToGallery(const QUrl &source, const QString &displayName, 
     QJniObject values("android/content/ContentValues");
     putString(values, "_display_name", displayName);
     putString(values, "mime_type", mimeType);
-    putString(values, "relative_path", audio ? QStringLiteral("Music/Drift")
-                                       : image ? QStringLiteral("Pictures/Drift")
-                                               : QStringLiteral("Movies/Drift"));
+    putString(values, "relative_path", audio ? QStringLiteral("Music/BASE")
+                                       : image ? QStringLiteral("Pictures/BASE")
+                                               : QStringLiteral("Movies/BASE"));
     // Pending until the bytes are there, so the gallery never shows a half-written video.
     putInt(values, "is_pending", 1);
 

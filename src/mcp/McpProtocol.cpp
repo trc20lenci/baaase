@@ -2,8 +2,8 @@
 #include "mcp/McpCatalog.h"
 #include "mcp/McpJson.h"
 
-#ifndef DRIFT_VERSION
-#define DRIFT_VERSION "0.0.0"
+#ifndef BASE_VERSION
+#define BASE_VERSION "0.0.0"
 #endif
 
 namespace drift::mcp {
@@ -31,10 +31,10 @@ QJsonObject initializeResult()
         {QStringLiteral("capabilities"), QJsonObject{{QStringLiteral("tools"), QJsonObject{}}}},
         {QStringLiteral("serverInfo"),
          QJsonObject{{QStringLiteral("name"), QStringLiteral("drift")},
-                     {QStringLiteral("version"), QStringLiteral(DRIFT_VERSION)}}},
+                     {QStringLiteral("version"), QStringLiteral(BASE_VERSION)}}},
         {QStringLiteral("instructions"),
          QStringLiteral(
-             "Drift video editor. Workflow: catalog (or search({q}) by keyword) → toolbox({name}) or "
+             "BASE video editor. Workflow: catalog (or search({q}) by keyword) → toolbox({name}) or "
              "toolbox({ops:[…]}) for schemas → apply({ops:[{tool,args}…]}) to edit; one batch is one undo "
              "step. To see the footage: activity() finds where content/motion/audio change, frames() "
              "renders a labelled contact sheet of distinct moments, capture({at}) gives one full still. "

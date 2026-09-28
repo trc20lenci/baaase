@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import ".."
 
 // Resolve-style project overview: the entire timeline compressed to fit this

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Timeline toolbar: transport/edit actions, scene badge, snap/ripple toggles

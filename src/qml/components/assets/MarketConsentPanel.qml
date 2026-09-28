@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // The marketplace opt-in. Shown by the Market tab and by the shared-link sheet, which are the

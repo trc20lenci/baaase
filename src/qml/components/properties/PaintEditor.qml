@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import ".."
 
 // Paint editor for a fill or stroke layer of a text or shape clip: solid colour, gradient, image

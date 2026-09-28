@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import ".."
 
 // Subtitles tab: timed caption clips, .srt import, and auto-caption from speech.

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import Drift 1.0
+import Base 1.0
 import "components"
 
 // Unit curve editor. X is always position through the effect; Y is what that position maps to.

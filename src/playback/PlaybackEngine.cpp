@@ -24,7 +24,7 @@ namespace {
 
 #ifdef Q_OS_ANDROID
 
-constexpr const char *kAudioFocusClass = "org/cutwire/drift/AudioFocus";
+constexpr const char *kAudioFocusClass = "app/base/editor/AudioFocus";
 
 // The engine that owns preview audio. Focus loss and the headphone-unplug broadcast are dispatched
 // on the Android UI thread, so the pause cannot be run there: it is posted to the engine's own
@@ -143,12 +143,12 @@ QString offGpuDecodeNote(drift::hwaccel::Backend backend,
 {
     const QString name = QString::fromLatin1(drift::hwaccel::name(backend));
     if (!match.decodeGpu.isEmpty() && !match.renderGpu.isEmpty()) {
-        return PlaybackEngine::tr("%1 decodes on %2, but Drift draws on %3. Every frame is copied "
+        return PlaybackEngine::tr("%1 decodes on %2, but BASE draws on %3. Every frame is copied "
                                   "through system memory, which is slower than decoding on the "
                                   "graphics card that draws.")
             .arg(name, match.decodeGpu, match.renderGpu);
     }
-    return PlaybackEngine::tr("%1 decodes on a different graphics card than the one Drift draws "
+    return PlaybackEngine::tr("%1 decodes on a different graphics card than the one BASE draws "
                               "on. Every frame is copied through system memory, which is slower "
                               "than decoding on the graphics card that draws.")
         .arg(name);

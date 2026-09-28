@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Shown at startup in place of a fresh empty project whenever "Reopen last project
 // on startup" is off: what you were working on, and how to start something. The
@@ -166,8 +166,8 @@ Rectangle {
                     // Wordmark art, swapped per theme so the logo keeps contrast
                     // against the app background in both light and dark mode.
                     source: Theme.darkMode
-                            ? "qrc:/qt/qml/Drift/resources/base_wordmark_light.png"
-                            : "qrc:/qt/qml/Drift/resources/base_wordmark_dark.png"
+                            ? "qrc:/qt/qml/Base/resources/base_wordmark_light.png"
+                            : "qrc:/qt/qml/Base/resources/base_wordmark_dark.png"
                     height: 26
                     fillMode: Image.PreserveAspectFit
                     smooth: true

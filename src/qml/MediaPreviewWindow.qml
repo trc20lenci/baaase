@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Window
 import QtMultimedia
-import Drift 1.0
+import Base 1.0
 import "components"
 
 // Preview and light edit for one bin row: watch it, crop the picture, pick the in/out

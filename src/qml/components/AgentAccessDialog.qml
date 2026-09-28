@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Header Agent button. Session-only localhost MCP, written for the person
 // connecting an assistant — not for someone reading a protocol spec.

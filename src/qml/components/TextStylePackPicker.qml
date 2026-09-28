@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Compact style-pack selector for the properties Style page: shows the active pack
 // and opens a dialog grid to switch. Hand-edited styles (empty packId) show as Custom.

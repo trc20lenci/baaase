@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 
 Rectangle {

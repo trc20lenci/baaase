@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import "components"
 
 // Everything the four-slot clip toolbar does not carry.

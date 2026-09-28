@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Localhost MCP, written for the person connecting an assistant rather than for someone
 // reading a protocol spec. Access is per session; the key persists so a pasted setup keeps

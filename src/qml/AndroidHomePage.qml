@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import "components"
 
 // The home shell's default destination: a CapCut-style landing page. Unlike the old
@@ -163,7 +163,7 @@ Item {
                     }
 
                     Image {
-                        source: "qrc:/qt/qml/Drift/resources/base_wordmark_light.png"
+                        source: "qrc:/qt/qml/Base/resources/base_wordmark_light.png"
                         height: 20
                         fillMode: Image.PreserveAspectFit
                         smooth: true

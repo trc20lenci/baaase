@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import Drift
+import Base
 
 // How a download job renders as words. Shared, because there are two hosts for the same jobs —
 // the desktop DownloadsWindow and the phone's AndroidDownloadsSheet — and a size or a status

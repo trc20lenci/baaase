@@ -1,8 +1,8 @@
-# Building Drift
+# Building BASE
 
-Developer documentation for building, testing, packaging, and extending Drift. If you just want to
-*use* Drift, see the [README](../README.md) — installers are on the
-[releases page](https://github.com/CutWire-Studios/Drift/releases/latest).
+Developer documentation for building, testing, packaging, and extending BASE. If you just want to
+*use* BASE, see the [README](../README.md) — installers are on the
+[releases page](https://github.com/trc20lenci/baaase/releases/latest).
 
 Built with **Qt 6**, **QML**, and **FFmpeg**. Preview and export share one compositor, so what you
 see is what you get.
@@ -21,7 +21,7 @@ see is what you get.
 | SoundTouch | any (pitch shifting behind the voice effects) |
 | zlib | any (inflate for the Premiere / Kdenlive / Resolve / MOGRT project importers) |
 
-ONNX Runtime powers auto-subtitles (and related ML features). Drift does not link it — only its headers are needed to build, and the library itself is an addon the user installs from the Acceleration category, which is what makes the CPU / CUDA / WebGPU choice theirs rather than the packager's. The headers are downloaded automatically at configure time; pass `-DDRIFT_FETCH_ONNXRUNTIME=OFF` to use a system install instead. A development build also stages a CPU runtime into `<build>/onnxruntime` so it works before anything is installed — `-DDRIFT_BUNDLE_ONNXRUNTIME=OFF` (what the Flatpak manifests use) turns that off, and `DRIFT_ONNXRUNTIME_DIR` points at an extracted release instead.
+ONNX Runtime powers auto-subtitles (and related ML features). BASE does not link it — only its headers are needed to build, and the library itself is an addon the user installs from the Acceleration category, which is what makes the CPU / CUDA / WebGPU choice theirs rather than the packager's. The headers are downloaded automatically at configure time; pass `-DDRIFT_FETCH_ONNXRUNTIME=OFF` to use a system install instead. A development build also stages a CPU runtime into `<build>/onnxruntime` so it works before anything is installed — `-DDRIFT_BUNDLE_ONNXRUNTIME=OFF` (what the Flatpak manifests use) turns that off, and `BASE_ONNXRUNTIME_DIR` points at an extracted release instead.
 
 Qt ImageFormats is a **runtime** dependency: nothing links against it, so a build without it
 succeeds and then decodes every `.webp` and `.tiff` still to a null `QImage` — a blank bin card
@@ -39,7 +39,7 @@ On Debian/Ubuntu install `libzstd-dev`, `libssl-dev`, `libsoundtouch-dev` and `z
 
 Optional: OpenCV for experimental background-removal builds (`-DWITH_BGREMOVAL=ON`). Only `core`, `imgproc`, and `imgcodecs` are linked.
 
-Skia draws text, shapes and Lottie/SVG clips on the GPU and is on by default (`-DDRIFT_WITH_SKIA=OFF` builds a video/image/audio-only editor: text, shape and Lottie/SVG clips draw nothing). Skia has no distro package Drift can rely on, so `third_party/build-skia.sh <target>` compiles a pinned milestone into `third_party/prebuilt/skia/<target>/` (linux-x64 by default; also `linux-arm64`, `mac-arm64`, `mac-x64` and `android-<abi>`). It needs `clang`, `ninja`, `python3` and `git`, plus on Linux the development packages for HarfBuzz, ICU, FreeType, fontconfig, expat, libpng and zlib (`gn` is downloaded by the script unless one is on `PATH`). The first build takes 20–40 minutes; the result is picked up by `cmake/FindSkia.cmake` automatically, or point `DRIFT_SKIA_DIR` at any directory holding a generated `SkiaConfig.cmake`. Windows CI uses vcpkg's `skia[gl,harfbuzz,icu,freetype,png]:x64-windows-static-md` instead, which pins the same commit. Every packaging lane builds with the option on.
+Skia draws text, shapes and Lottie/SVG clips on the GPU and is on by default (`-DDRIFT_WITH_SKIA=OFF` builds a video/image/audio-only editor: text, shape and Lottie/SVG clips draw nothing). Skia has no distro package BASE can rely on, so `third_party/build-skia.sh <target>` compiles a pinned milestone into `third_party/prebuilt/skia/<target>/` (linux-x64 by default; also `linux-arm64`, `mac-arm64`, `mac-x64` and `android-<abi>`). It needs `clang`, `ninja`, `python3` and `git`, plus on Linux the development packages for HarfBuzz, ICU, FreeType, fontconfig, expat, libpng and zlib (`gn` is downloaded by the script unless one is on `PATH`). The first build takes 20–40 minutes; the result is picked up by `cmake/FindSkia.cmake` automatically, or point `BASE_SKIA_DIR` at any directory holding a generated `SkiaConfig.cmake`. Windows CI uses vcpkg's `skia[gl,harfbuzz,icu,freetype,png]:x64-windows-static-md` instead, which pins the same commit. Every packaging lane builds with the option on.
 
 **Nothing has to be placed by hand.** Fonts, emoji stickers, and speech models are addons (see below), so a clone builds and runs with no bundled assets.
 
@@ -90,8 +90,8 @@ UI strings use Qt Linguist. QML already wraps copy in `qsTr()`; C++ uses `tr()` 
 
 Catalogs live in [`i18n/`](../i18n/):
 
-- `i18n/drift.ts` — English source template, regenerated by `lupdate`
-- `i18n/drift_<lang>.ts` — one file per language
+- `i18n/base.ts` — English source template, regenerated by `lupdate`
+- `i18n/base_<lang>.ts` — one file per language
 
 After adding or changing user-visible strings:
 
@@ -120,12 +120,12 @@ cmake --build build -j$(sysctl -n hw.ncpu)
 The build produces an application bundle rather than a bare executable, so run it with:
 
 ```bash
-open build/Drift.app          # or: ./build/Drift.app/Contents/MacOS/Drift to see stderr
+open build/BASE.app          # or: ./build/BASE.app/Contents/MacOS/BASE to see stderr
 ```
 
 The bundle is not cosmetic: macOS treats a loose binary as a background process, with no Dock tile, no menu bar and no way to raise the window, and only `Info.plist` can set `NSHighResolutionCapable`, without which the UI and the preview render at 1x on Retina displays.
 
-Effects, transitions, templates and audio effects are staged into `Drift.app/Contents/Resources`, which `GpuPackageParse::defaultSearchPaths` adds as a search root next to the directory holding the executable. The `DRIFT_*_DIR` overrides behave as they do elsewhere.
+Effects, transitions, templates and audio effects are staged into `BASE.app/Contents/Resources`, which `GpuPackageParse::defaultSearchPaths` adds as a search root next to the directory holding the executable. The `DRIFT_*_DIR` overrides behave as they do elsewhere.
 
 ### Disk image
 
@@ -133,9 +133,9 @@ Effects, transitions, templates and audio effects are staged into `Drift.app/Con
 scripts/package-macos.sh
 ```
 
-Builds Release, runs `macdeployqt` to copy Qt, FFmpeg, OpenSSL, zstd and SoundTouch into `Contents/Frameworks`, drops the build machine's `LC_RPATH` entries, signs, and writes `dist/Drift-<version>-<arch>.dmg`. The rpath step matters: dyld searches the executable's rpaths before the `@loader_path` entries in the nested frameworks, so a bundle still listing `/opt/homebrew/opt/qt6/lib` loads the host's Qt on any Mac that has one.
+Builds Release, runs `macdeployqt` to copy Qt, FFmpeg, OpenSSL, zstd and SoundTouch into `Contents/Frameworks`, drops the build machine's `LC_RPATH` entries, signs, and writes `dist/BASE-<version>-<arch>.dmg`. The rpath step matters: dyld searches the executable's rpaths before the `@loader_path` entries in the nested frameworks, so a bundle still listing `/opt/homebrew/opt/qt6/lib` loads the host's Qt on any Mac that has one.
 
-Signing is ad-hoc by default — enough to launch locally, since Apple Silicon will not run unsigned binaries, but it still shows the unidentified-developer prompt elsewhere. Without notarisation, opening it needs right-click → Open, or `xattr -dr com.apple.quarantine /Applications/Drift.app`.
+Signing is ad-hoc by default — enough to launch locally, since Apple Silicon will not run unsigned binaries, but it still shows the unidentified-developer prompt elsewhere. Without notarisation, opening it needs right-click → Open, or `xattr -dr com.apple.quarantine /Applications/BASE.app`.
 
 For a distributable build, sign with a Developer ID and notarise:
 
@@ -148,7 +148,7 @@ export NOTARY_APPLE_ID=you@example.com NOTARY_PASSWORD=abcd-efgh-ijkl-mnop NOTAR
 scripts/package-macos.sh --identity "Developer ID Application: … (TEAMID)" --notarize
 ```
 
-That signs under the hardened runtime with `resources/macos/Drift.entitlements`, then notarises and staples the app and the image. Both entitlements are load-bearing: the hardened runtime otherwise blocks QtQml's JIT, and library validation stops Drift from `dlopen`ing the ONNX Runtime an Acceleration addon installs, which silently removes auto-subtitles, segmentation and face tracking.
+That signs under the hardened runtime with `resources/macos/BASE.entitlements`, then notarises and staples the app and the image. Both entitlements are load-bearing: the hardened runtime otherwise blocks QtQml's JIT, and library validation stops BASE from `dlopen`ing the ONNX Runtime an Acceleration addon installs, which silently removes auto-subtitles, segmentation and face tracking.
 
 ### Release secrets
 
@@ -202,11 +202,11 @@ Opening a project that uses an effect or transition with no catalog entry report
 To work against local content instead of downloading:
 
 ```bash
-DRIFT_EFFECTS_DIR=/path/to/effects \
-DRIFT_TRANSITIONS_DIR=/path/to/transitions \
-DRIFT_FONTS_DIR=/path/to/fonts \
-DRIFT_STICKERS_DIR=/path/to/stickers \
-DRIFT_WHISPER_MODEL_DIR=/path/to/whisper-small \
+BASE_EFFECTS_DIR=/path/to/effects \
+BASE_TRANSITIONS_DIR=/path/to/transitions \
+BASE_FONTS_DIR=/path/to/fonts \
+BASE_STICKERS_DIR=/path/to/stickers \
+BASE_WHISPER_MODEL_DIR=/path/to/whisper-small \
   ./build/drift
 ```
 
@@ -231,7 +231,7 @@ These are CMake *cache* variables: changing the default in `CMakeLists.txt` does
 
 ### Marketplace
 
-Stock media (photos, video, audio) is fetched from `https://market.cutwire.org/api/v1`. Drift has no per-store adapters; types and providers come from the catalog. Contract: [docs/marketplace/README.md](marketplace/README.md).
+Stock media (photos, video, audio) is fetched from `https://market.cutwire.org/api/v1`. BASE has no per-store adapters; types and providers come from the catalog. Contract: [docs/marketplace/README.md](marketplace/README.md).
 
 ```bash
 cmake -B build -DDRIFT_MARKET_API_URL=https://market.example.com/api/v1 \
@@ -272,7 +272,7 @@ Agents should call `catalog`, then `toolbox`, then `apply` with a list of ops. `
 **Flatpak:** importing host files may fail unless you grant filesystem access:
 
 ```bash
-flatpak override --filesystem=home org.cutwire.Drift
+flatpak override --filesystem=home app.base.editor
 ```
 
 Native and AppImage builds can import any path the process can read.
@@ -317,15 +317,15 @@ Pushing a `vX.Y.Z` tag runs [`.github/workflows/release.yml`](../.github/workflo
 builds the AppImage, Windows installer, Arch package, and Flatpak bundle, then publishes them as a
 GitHub release. Before tagging:
 
-1. Bump `project(Drift VERSION ...)` in `CMakeLists.txt` and `pkgver` in `packaging/arch/PKGBUILD`
+1. Bump `project(BASE VERSION ...)` in `CMakeLists.txt` and `pkgver` in `packaging/arch/PKGBUILD`
    — the workflow refuses to publish if either disagrees with the tag.
-2. Add a `<release version="X.Y.Z">` entry to `flatpak/org.cutwire.Drift.metainfo.xml`. Its notes
+2. Add a `<release version="X.Y.Z">` entry to `flatpak/app.base.editor.metainfo.xml`. Its notes
    become the GitHub release body via `scripts/extract_release_notes.py`, so the software centre
    and the release page can never say different things.
 3. Run the **Build** workflow manually (`workflow_dispatch`) to prove each platform green — a tag
    is public the moment the release job finishes.
 
-Flathub is submitted separately from `flatpak/org.cutwire.Drift.flathub.yml`; pin its `commit:` to
+Flathub is submitted separately from `flatpak/app.base.editor.flathub.yml`; pin its `commit:` to
 the tagged commit first.
 
 ### CMake targets

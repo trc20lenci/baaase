@@ -82,7 +82,7 @@ namespace {
 
 bool verboseLoggingRequested(int argc, char *argv[])
 {
-    if (qEnvironmentVariableIntValue("DRIFT_VERBOSE") != 0)
+    if (qEnvironmentVariableIntValue("BASE_VERBOSE") != 0)
         return true;
     for (int i = 1; i < argc; ++i) {
         if (qstrcmp(argv[i], "--verbose") == 0)
@@ -229,7 +229,7 @@ bool runSelfTest()
         return true;
     }
 
-    const drift::TimeUs timeUs = qEnvironmentVariableIntValue("DRIFT_SELFTEST_TIME_US");
+    const drift::TimeUs timeUs = qEnvironmentVariableIntValue("BASE_SELFTEST_TIME_US");
 
     FrameCompositor compositor;
     compositor.setProject(&project);
@@ -289,7 +289,7 @@ bool probeOpenGl(const QSurfaceFormat &format, QSurfaceFormat *obtained = nullpt
 }
 
 // Qt Quick asks for QSurfaceFormat::defaultFormat() and calls qFatal() when it
-// cannot have it, so on a driver below OpenGL 3.3 Drift aborts before there is a
+// cannot have it, so on a driver below OpenGL 3.3 BASE aborts before there is a
 // window to put an error in — the app simply vanishes. Say why first.
 void warnIfNoOpenGl()
 {
@@ -334,7 +334,7 @@ void warnIfNoOpenGl()
         title = QCoreApplication::translate("main", "No OpenGL driver");
         body = QCoreApplication::translate(
             "main",
-            "Drift could not create an OpenGL context, so it cannot draw its interface "
+            "BASE could not create an OpenGL context, so it cannot draw its interface "
             "or render the preview.\n\nInstall or update your graphics driver.");
     } else if (atLeast33(obtained)) {
         // New enough, so it is the 3.3 *core profile* that could not be had — a
@@ -343,7 +343,7 @@ void warnIfNoOpenGl()
         title = QCoreApplication::translate("main", "OpenGL context unavailable");
         body = QCoreApplication::translate(
                    "main",
-                   "Drift could not create an OpenGL 3.3 core profile context, though "
+                   "BASE could not create an OpenGL 3.3 core profile context, though "
                    "this driver reports OpenGL %1.%2 (%3).\n\nThe video preview cannot "
                    "render. Updating your graphics driver may help.")
                    .arg(obtained.majorVersion())
@@ -352,12 +352,12 @@ void warnIfNoOpenGl()
     } else {
         title = QCoreApplication::translate("main", "Graphics driver is too old");
         // Deliberately does not promise what happens next: below 3.3 the preview
-        // cannot render on any platform, and on some Drift cannot start at all.
+        // cannot render on any platform, and on some BASE cannot start at all.
         body = QCoreApplication::translate(
                    "main",
-                   "Drift needs OpenGL 3.3, but this graphics driver only provides "
-                   "OpenGL %1.%2 (%3).\n\nThe video preview cannot render, and Drift may "
-                   "not start at all. Update your graphics driver, or run Drift on a "
+                   "BASE needs OpenGL 3.3, but this graphics driver only provides "
+                   "OpenGL %1.%2 (%3).\n\nThe video preview cannot render, and BASE may "
+                   "not start at all. Update your graphics driver, or run BASE on a "
                    "machine with a newer GPU.")
                    .arg(obtained.majorVersion())
                    .arg(obtained.minorVersion())
@@ -482,11 +482,11 @@ int main(int argc, char *argv[])
     }
     // Associates the window with the installed .desktop entry so shells (notably
     // Wayland) can find its icon and app metadata.
-    QGuiApplication::setDesktopFileName(QStringLiteral("org.cutwire.Drift"));
+    QGuiApplication::setDesktopFileName(QStringLiteral("app.base.editor"));
     // Title bar / taskbar icon when no desktop entry is available (Windows, and
     // Linux runs from the build tree). The .exe still needs the Windows .rc icon
     // for Explorer and pinned-taskbar identity.
-    QApplication::setWindowIcon(QIcon(QStringLiteral(":/app/drift.png")));
+    QApplication::setWindowIcon(QIcon(QStringLiteral(":/app/base.png")));
 
     // qsTr/tr resolve when the QML engine loads, so translators must be installed first.
     // Protocol strings under src/mcp/ are excluded from the catalog; they stay English.
@@ -535,7 +535,7 @@ int main(int argc, char *argv[])
     drift::ReverseProxyCache::instance().load();
     drift::ReverseProxyCache::instance().sweep(drift::ReverseProxyCache::kDefaultMaxBytes);
 
-    qmlRegisterType<PreviewItem>("Drift", 1, 0, "PreviewItem");
+    qmlRegisterType<PreviewItem>("Base", 1, 0, "PreviewItem");
 
     static AssetLibrary assetLibrary;
     static EditorState editorState(&assetLibrary);
@@ -548,16 +548,16 @@ int main(int argc, char *argv[])
     editorState.setAddonManager(&addonManager);
     marketClient.setAssetLibrary(&assetLibrary);
     editorState.setMarketClient(&marketClient);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "AssetLibrary", &assetLibrary);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "BinFolderModel", editorState.binFolderModel());
-    qmlRegisterSingletonInstance("Drift", 1, 0, "EditorState", &editorState);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "AppController", &editorState);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "FileDialogs", &fileDialogs);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "Addons", &addonManager);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "Market", &marketClient);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "Updates", &updateChecker);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "LayoutMemory", &layoutStore);
-    qmlRegisterSingletonInstance("Drift", 1, 0, "Haptics", &haptics);
+    qmlRegisterSingletonInstance("Base", 1, 0, "AssetLibrary", &assetLibrary);
+    qmlRegisterSingletonInstance("Base", 1, 0, "BinFolderModel", editorState.binFolderModel());
+    qmlRegisterSingletonInstance("Base", 1, 0, "EditorState", &editorState);
+    qmlRegisterSingletonInstance("Base", 1, 0, "AppController", &editorState);
+    qmlRegisterSingletonInstance("Base", 1, 0, "FileDialogs", &fileDialogs);
+    qmlRegisterSingletonInstance("Base", 1, 0, "Addons", &addonManager);
+    qmlRegisterSingletonInstance("Base", 1, 0, "Market", &marketClient);
+    qmlRegisterSingletonInstance("Base", 1, 0, "Updates", &updateChecker);
+    qmlRegisterSingletonInstance("Base", 1, 0, "LayoutMemory", &layoutStore);
+    qmlRegisterSingletonInstance("Base", 1, 0, "Haptics", &haptics);
 
     app.installEventFilter(new FileOpenFilter(&editorState, &marketClient, &app));
     {
@@ -602,13 +602,13 @@ int main(int argc, char *argv[])
         shellPreference = QStringLiteral("mobile");
     else if (shellArgs.contains(QStringLiteral("--shell=desktop")))
         shellPreference = QStringLiteral("desktop");
-    else if (qEnvironmentVariableIsSet("DRIFT_SHELL"))
-        shellPreference = qEnvironmentVariable("DRIFT_SHELL");
+    else if (qEnvironmentVariableIsSet("BASE_SHELL"))
+        shellPreference = qEnvironmentVariable("BASE_SHELL");
     if (shellPreference != QLatin1String("mobile") && shellPreference != QLatin1String("desktop"))
         shellPreference = QStringLiteral("auto");
 
     engine.setInitialProperties({{QStringLiteral("shellPreference"), shellPreference}});
-    engine.loadFromModule("Drift", "Shell");
+    engine.loadFromModule("Base", "Shell");
 
     return app.exec();
 }

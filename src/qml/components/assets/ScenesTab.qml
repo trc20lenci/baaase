@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Scenes tab: shot boundaries found in the selected video clip, ranked by how much is

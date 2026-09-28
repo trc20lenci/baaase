@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // Filmstrip across a video clip body.
 //

@@ -1,6 +1,6 @@
-# Agent access (Drift MCP)
+# Agent access (BASE MCP)
 
-Drift can expose a localhost MCP server so Cursor, Claude Code, or other agents can edit the open project. Enable it in **Settings → Agent access** (off at every launch by default; a "Start agent on startup" switch there opts into starting it automatically instead, and resets itself the next time access is turned off).
+BASE can expose a localhost MCP server so Cursor, Claude Code, or other agents can edit the open project. Enable it in **Settings → Agent access** (off at every launch by default; a "Start agent on startup" switch there opts into starting it automatically instead, and resets itself the next time access is turned off).
 
 ## Connect
 
@@ -52,7 +52,7 @@ the HTTP URL, token and session-file path. That banner goes to **stdout**, excep
 stdio is a transport, where it goes to stderr instead: the spec allows nothing but MCP
 messages on stdout, and a banner there is exactly what breaks clients.
 
-Without `--mcp-token` (or `$DRIFT_MCP_TOKEN`) a token is generated and shown in the
+Without `--mcp-token` (or `$BASE_MCP_TOKEN`) a token is generated and shown in the
 banner. Only the HTTP form writes the session file that `--mcp-stdio` reads, so a headless
 instance serving stdio never disturbs a GUI editor running alongside it.
 
@@ -67,7 +67,7 @@ QT_QPA_PLATFORM=xcb xvfb-run -a drift --headless
 ```
 
 Mesa's llvmpipe covers 3.3 in software; a GPU host can use an EGL platform plugin
-instead. Started without a usable context, Drift still serves MCP and still edits
+instead. Started without a usable context, BASE still serves MCP and still edits
 projects — it says so on stderr, and only render, capture and export fail.
 
 **Marketplace consent is granted in the GUI only.** A headless instance answers every
@@ -255,7 +255,7 @@ the scanned range, so that does scan afresh.
 `with_objects` needs the `object-model` add-on. Call `ai_capabilities` to see what is installed
 and what each piece unlocks; `list_addons` / `install_addon` can install a missing model.
 
-**Finding files.** Drift does not list directories. When the user names a clip loosely
+**Finding files.** BASE does not list directories. When the user names a clip loosely
 (`GX010023.mp4` in Downloads, “the wedding file”), glob or search with **your own filesystem
 tools**, pass the absolute path to `import_media`, and treat a non-empty `missing:[]` as
 “search again”, not as a bin problem.
@@ -349,7 +349,7 @@ tree for experts.
 | `list_text_looks` / `apply_text_look({clip, look, params})` | One-click recipes (Plain, Shadow, Lift, Hollow, Splice, Outline, Echo, Glitch, Neon, Background, Curve, Gradient, Shine, Chrome, Holographic) that rewrite the stack; the style remembers the look, and re-applying the **same** look with `params` adjusts just those params (a different look starts from its defaults) |
 | `list_text_animations({which, q})` | The In / Out / Loop presets with their typed params and `flags` (`unitLocked`, `orderLocked`, `easeLocked`, `durationLocked` say which controls the preset ignores; `mirrorForOut`, `mode`). Every reveal preset takes `duration`, `stagger`, `unit` (block\|character\|word\|line), `order`, `ease`; loops take `period` (0 = one pass over the clip: hold motion such as `tracking-drift`) and `amount` |
 | `set_text_animation({clip, which, preset, …})` / `clear_text_animation` | Set or clear a slot. Switching to a different preset resets its params to that preset's defaults unless `keepControls:true`; `durationOverride` sets the slot's total length; `animators:[…]` installs an inline animator tree instead |
-| `import_text_animation({path, which})` | A Lottie / `.lottie` text layer's animators (After Effects export) or a Drift preset file, saved as a user preset under the slot's `imported` category; `unsupported` lists what was dropped |
+| `import_text_animation({path, which})` | A Lottie / `.lottie` text layer's animators (After Effects export) or a BASE preset file, saved as a user preset under the slot's `imported` category; `unsupported` lists what was dropped |
 | `apply_text_style_to_all({clip, scope})` | Copy a caption clip's style to the other subtitle clips on its track (or `project`) |
 
 Reel-style typography, for example: `set_text_animation({clip, which:"in", preset:"type-on-blur", stagger:0.05})`,
@@ -404,7 +404,7 @@ Errors: `market_unavailable`, `consent_required`, `market_error`, and the servic
 (`rate_limited`, `auth_required`, `payment_required`, `provider_unavailable`, `not_found`,
 `download_failed`). Coin prices appear only when non-zero; nothing in the reply says "free".
 
-`DRIFT_MARKET_API_URL` in the environment points the client at another service (tests use a
+`BASE_MARKET_API_URL` in the environment points the client at another service (tests use a
 local fake) without rebuilding.
 
 ## Traps
@@ -481,4 +481,4 @@ list. Run it after touching the MCP layer to see what an agent will pay.
 - Any local process with the session token has full editor access.
 - Turn Agent access off when finished.
 
-**Flatpak:** host file import may need `flatpak override --filesystem=home org.cutwire.Drift`.
+**Flatpak:** host file import may need `flatpak override --filesystem=home app.base.editor`.

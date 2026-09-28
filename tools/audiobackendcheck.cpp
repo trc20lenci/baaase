@@ -1,6 +1,6 @@
 // Reports whether Qt's multimedia backend plugin loads, and what audio outputs it finds.
 //
-// Every QAudioSink in Drift gets its devices from that plugin. It is also the one part of the
+// Every QAudioSink in BASE gets its devices from that plugin. It is also the one part of the
 // Windows package that the FFmpeg DLLs we copy over windeployqt's can break: the app links FFmpeg
 // directly for decoding, so video keeps working while audio goes silent with nothing logged. Run
 // this from inside the staged tree, pointed at the plugin, to catch that before the installer is

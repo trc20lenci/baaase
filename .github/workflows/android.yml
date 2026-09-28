@@ -9,7 +9,7 @@ on:
       - '**.md'
       - 'docs/**'
       - 'LICENSE'
-      - 'Drift_icon.png'
+      - 'BASE_icon.png'
       - '.gitignore'
   workflow_dispatch:
 
@@ -125,8 +125,8 @@ jobs:
       # installable beside a release APK.
       - name: Compile (no APK)
         env:
-          DRIFT_ANDROID_PACKAGE_NAME: org.cutwire.drift.ci
-          DRIFT_ANDROID_APP_NAME: Drift CI
+          BASE_ANDROID_PACKAGE_NAME: app.base.editor.ci
+          BASE_ANDROID_APP_NAME: BASE CI
           SKIP_APK: '1'
           CMAKE_C_COMPILER_LAUNCHER: ccache
           CMAKE_CXX_COMPILER_LAUNCHER: ccache

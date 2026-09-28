@@ -26,7 +26,7 @@
 namespace drift::ort {
 namespace {
 
-// The oldest OrtApi Drift will drive. Below this the table is missing too much of what the engine
+// The oldest OrtApi BASE will drive. Below this the table is missing too much of what the engine
 // uses to be worth a compatibility story; above it, ONNX Runtime only ever appends to the table,
 // so a runtime slightly older than the headers is safe as long as nothing past its own version is
 // called — hence g_apiVersion being checked before the plugin EP calls.
@@ -109,7 +109,7 @@ std::optional<Candidate> inspect(const QString &root)
     candidate.libPath = lib;
 
     // runtime.json is what an addon uses to declare itself, and is deliberately optional: an
-    // upstream release extracted by hand and pointed at with DRIFT_ONNXRUNTIME_DIR has no such
+    // upstream release extracted by hand and pointed at with BASE_ONNXRUNTIME_DIR has no such
     // file and still has to work, so the variant is derived from what is in the directory.
     const QJsonObject meta = readJson(QDir(root).filePath(QStringLiteral("runtime.json")));
     candidate.variant = meta.value(QStringLiteral("variant")).toString().trimmed().toLower();
@@ -126,7 +126,7 @@ QList<Candidate> candidates()
 {
     QList<Candidate> found;
     const QStringList roots = GpuPackageParse::defaultSearchPaths(
-        QStringLiteral("DRIFT_ONNXRUNTIME_DIR"), QStringLiteral("onnxruntime"),
+        QStringLiteral("BASE_ONNXRUNTIME_DIR"), QStringLiteral("onnxruntime"),
         QString::fromLatin1(kRuntimeKind));
     for (const QString &root : roots) {
         if (const std::optional<Candidate> candidate = inspect(root))
@@ -207,7 +207,7 @@ bool ensureLoaded(QString *error)
     if (found.isEmpty()) {
         return fail(QStringLiteral(
             "No ONNX Runtime installed. Install one from the Addon Manager, or point "
-            "DRIFT_ONNXRUNTIME_DIR at an extracted onnxruntime release."));
+            "BASE_ONNXRUNTIME_DIR at an extracted onnxruntime release."));
     }
 
     const Candidate *chosen = nullptr;
@@ -227,7 +227,7 @@ bool ensureLoaded(QString *error)
         chosen = &found.first();
 
 #ifdef _WIN32
-    // onnxruntime.dll lives in the addon lib/ folder, not next to Drift.exe. LoadLibrary of a
+    // onnxruntime.dll lives in the addon lib/ folder, not next to BASE.exe. LoadLibrary of a
     // full path finds that DLL's own static imports beside it, but the CUDA EP is loaded later
     // by basename (onnxruntime_providers_cuda.dll) and then hard-imports cublas64_13.dll etc.
     // Those lookups start at the application directory unless this directory is on the process
@@ -274,7 +274,7 @@ bool ensureLoaded(QString *error)
             g_apiVersion = version;
     }
     if (!api) {
-        return fail(QStringLiteral("%1 is ONNX Runtime %2, which is older than this build of Drift "
+        return fail(QStringLiteral("%1 is ONNX Runtime %2, which is older than this build of BASE "
                                    "can drive. Update it from the Addon Manager.")
                         .arg(chosen->libPath, QString::fromUtf8(base->GetVersionString())));
     }
@@ -328,7 +328,7 @@ QList<PluginEp> installedPluginEps()
 {
     QList<PluginEp> eps;
     const QStringList roots = GpuPackageParse::defaultSearchPaths(
-        QStringLiteral("DRIFT_ONNXRUNTIME_EP_DIR"), QStringLiteral("onnxruntime-ep"),
+        QStringLiteral("BASE_ONNXRUNTIME_EP_DIR"), QStringLiteral("onnxruntime-ep"),
         QString::fromLatin1(kPluginEpKind));
     for (const QString &root : roots) {
         const QJsonObject meta = readJson(QDir(root).filePath(QStringLiteral("ep.json")));
@@ -387,7 +387,7 @@ QStringList selectableVariants()
 
 QString preferredVariant()
 {
-    const QString override = QString::fromLocal8Bit(qgetenv("DRIFT_ORT_EP")).trimmed().toLower();
+    const QString override = QString::fromLocal8Bit(qgetenv("BASE_ORT_EP")).trimmed().toLower();
     if (!override.isEmpty())
         return override;
     return QSettings()

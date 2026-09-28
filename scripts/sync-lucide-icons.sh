@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync Lucide icons used by Drift from a local lucide-icons checkout.
+# Sync Lucide icons used by BASE from a local lucide-icons checkout.
 # Copies SVG sources and rasterises 48px PNGs for QML (Qt Image has no SVG decoder here).
 set -euo pipefail
 

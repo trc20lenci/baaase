@@ -164,13 +164,13 @@ int main(int argc, char *argv[])
     const QString gpuOut = outDir + QStringLiteral("/benchexport-gpu-nv12.mp4");
     const QString cpuOut = outDir + QStringLiteral("/benchexport-cpu-sws.mp4");
 
-    qunsetenv("DRIFT_EXPORT_SWSCALE");
+    qunsetenv("BASE_EXPORT_SWSCALE");
     if (!runTimedExport(project, settings, gpuOut, QStringLiteral("GPU NV12 pipeline"), out, err))
         return 1;
 
     ClipReaderPool::instance().releaseAll();
 
-    qputenv("DRIFT_EXPORT_SWSCALE", "1");
+    qputenv("BASE_EXPORT_SWSCALE", "1");
     if (!runTimedExport(project, settings, cpuOut, QStringLiteral("CPU RGBA + sws_scale"), out, err))
         return 1;
 

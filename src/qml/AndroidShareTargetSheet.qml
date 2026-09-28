@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import "components"
 
 // What a share into an already-open project asks.

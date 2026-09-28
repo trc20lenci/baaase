@@ -82,7 +82,7 @@ inline QString providerToTry()
     return QStringLiteral("cuda");
 }
 
-// Applies that choice. The acceleration preference (or DRIFT_ORT_EP) selects between the CUDA
+// Applies that choice. The acceleration preference (or BASE_ORT_EP) selects between the CUDA
 // provider carried by a CUDA core, a plugin EP registered on the env, and plain CPU.
 //
 // Whether a failure is worth complaining about depends on who asked. An explicit choice that

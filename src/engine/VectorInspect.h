@@ -10,7 +10,7 @@
 
 // What a Lottie or SVG document declares and what this renderer cannot honour, so an agent can
 // see the problem before it composes a scene around it. Skia-free header; the .cpp parses with
-// Skottie / SkSVGDOM under DRIFT_WITH_SKIA and reports "unsupported" without it.
+// Skottie / SkSVGDOM under BASE_WITH_SKIA and reports "unsupported" without it.
 
 namespace drift::vec {
 

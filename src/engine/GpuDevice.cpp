@@ -159,7 +159,7 @@ QList<Adapter> enumerateLocked()
 #if defined(Q_OS_LINUX)
 
 // Resolved from libEGL at runtime rather than compiled against EGL/eglext.h, for the same
-// reason GlRuntime resolves its dma-buf import that way: Drift has to build and run on hosts
+// reason GlRuntime resolves its dma-buf import that way: BASE has to build and run on hosts
 // with no EGL headers and no EGL at all.
 constexpr int kEglDeviceExt = 0x322C;
 constexpr int kEglDrmDeviceFileExt = 0x3233;

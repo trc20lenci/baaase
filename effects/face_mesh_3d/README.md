@@ -2,7 +2,7 @@
 
 `sfm_face.bin` is the CPU rest-pose mesh for **3D Face Mesh**. It is the public
 Surrey Face Model reference remapped into
-Drift head space. At draw time it is inverse-distance warped toward
+BASE head space. At draw time it is inverse-distance warped toward
 MediaPipe's 468-point mesh.
 
 ## Head space

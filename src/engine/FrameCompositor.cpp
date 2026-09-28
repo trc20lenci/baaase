@@ -25,7 +25,7 @@
 #include "core/Time.h"
 #include "core/TimelineOps.h"
 #include "core/Transition.h"
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "SkiaShapePainter.h"
 #include "SkiaTextPainter.h"
 #endif
@@ -784,7 +784,7 @@ QRectF fillTextLayer(GpuLayer &layer, const drift::TextStyle &style, const QStri
                      drift::textanim::BlockProps *block)
 {
     *block = drift::textanim::BlockProps{};
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     const drift::ResolvedTextAnimation anim = drift::resolveTextAnimation(style.animation);
     drift::skia::TextPaintRequest request;
     request.style = style;
@@ -812,7 +812,7 @@ QRectF fillTextLayer(GpuLayer &layer, const drift::TextStyle &style, const QStri
     static bool warned = false;
     if (!warned) {
         warned = true;
-        qWarning("text clips need DRIFT_WITH_SKIA; nothing drawn");
+        qWarning("text clips need BASE_WITH_SKIA; nothing drawn");
     }
     return {};
 #endif
@@ -905,7 +905,7 @@ GpuLayer buildGpuLayer(const drift::Clip &clip, drift::TimeUs timelineUs, int pr
         destRect = rasterRect;
         applyTextBlockMotion(layer, block, &destRect, &opacity, &rotation);
     } else if (clip.type == drift::ClipType::Shape) {
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
         // The painter's image carries a bleed margin for strokes, shadows and glows, so its
         // destination rect is wider than the layout rect.
         drift::skia::ShapePaintRequest request;
@@ -920,7 +920,7 @@ GpuLayer buildGpuLayer(const drift::Clip &clip, drift::TimeUs timelineUs, int pr
         static bool warned = false;
         if (!warned) {
             warned = true;
-            qWarning("shape clips need DRIFT_WITH_SKIA; nothing drawn");
+            qWarning("shape clips need BASE_WITH_SKIA; nothing drawn");
         }
 #endif
         layer.effects = resolvedClipEffects(clip, clipTimeUs);

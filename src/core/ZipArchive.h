@@ -6,7 +6,7 @@
 #include <QString>
 
 // Minimal read-only ZIP support (stored and deflated entries, no zip64): enough for the
-// archives Drift opens — .mogrt templates and .lottie animation bundles.
+// archives BASE opens — .mogrt templates and .lottie animation bundles.
 
 namespace drift::zip {
 

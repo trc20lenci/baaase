@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.21)
 
 # Must be set before project(). Left unset, the binary is stamped with the build machine's OS
 # version and will not launch on anything older.
-set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Oldest macOS release Drift runs on")
+set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "Oldest macOS release BASE runs on")
 
 # C is enabled for JUCE only: its modules compile a handful of C sources (zlib, flac, oggvorbis)
 # and its CMake refuses to configure without it.
-project(Drift VERSION 0.6.0 LANGUAGES CXX C)
+project(BASE VERSION 1.0.0 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -19,8 +19,8 @@ option(WITH_BGREMOVAL "Enable OpenCV-based background removal" OFF)
 # Skia (Ganesh/GL) draws text, shapes and Lottie/SVG clips on the GPU; see
 # third_party/build-skia.sh for producing the prebuilt it links. OFF builds a video/image/audio
 # only editor: text, shapes and Lottie/SVG clips draw nothing.
-option(DRIFT_WITH_SKIA "Draw vector content (text, shapes, Lottie, SVG) with Skia" ON)
-set(DRIFT_SKIA_DIR "" CACHE PATH "Directory containing SkiaConfig.cmake (default: third_party/prebuilt/skia/<target>)")
+option(BASE_WITH_SKIA "Draw vector content (text, shapes, Lottie, SVG) with Skia" ON)
+set(BASE_SKIA_DIR "" CACHE PATH "Directory containing SkiaConfig.cmake (default: third_party/prebuilt/skia/<target>)")
 
 # Defaults off under CI so the Translations test still compares the committed catalogs.
 if(DEFINED ENV{CI})
@@ -28,7 +28,7 @@ if(DEFINED ENV{CI})
 else()
     set(_drift_auto_ts ON)
 endif()
-option(DRIFT_AUTO_UPDATE_TRANSLATIONS "Run lupdate as part of the default build" ${_drift_auto_ts})
+option(BASE_AUTO_UPDATE_TRANSLATIONS "Run lupdate as part of the default build" ${_drift_auto_ts})
 
 # Fonts, stickers and the Whisper model used to be fetched or extracted here and shipped inside
 # the build tree — roughly 800 MB of assets every user paid for whether or not they used them.
@@ -44,27 +44,27 @@ option(DRIFT_AUTO_UPDATE_TRANSLATIONS "Run lupdate as part of the default build"
 # installed package outranks the bundled one of the same id (see defaultSearchPaths), which is
 # what lets a shader fix go out without an app release.
 #
-# For development without downloading, point DRIFT_EFFECTS_DIR, DRIFT_TRANSITIONS_DIR,
-# DRIFT_FONTS_DIR, DRIFT_STICKERS_DIR, DRIFT_EMOJI_FONT_DIR or DRIFT_WHISPER_MODEL_DIR at a local
+# For development without downloading, point BASE_EFFECTS_DIR, BASE_TRANSITIONS_DIR,
+# BASE_FONTS_DIR, BASE_STICKERS_DIR, BASE_EMOJI_FONT_DIR or BASE_WHISPER_MODEL_DIR at a local
 # directory; those outrank everything, including installed addons.
 
 # --- Addon service ----------------------------------------------------------
 # Where the Addon Manager fetches from. These are the only place either value is defined —
 # src/models/AddonEndpoint.h just reads them — so a fork can point at its own Worker with:
 #
-#   cmake -B build -DDRIFT_ADDON_INDEX_URL=https://addons.example.com/v1/index \
-#                  -DDRIFT_ADDON_CLIENT_TOKEN=...
+#   cmake -B build -DBASE_ADDON_INDEX_URL=https://addons.example.com/v1/index \
+#                  -DBASE_ADDON_CLIENT_TOKEN=...
 #
-# Set DRIFT_ADDON_INDEX_URL to an empty string to build with the addon service disabled: the
+# Set BASE_ADDON_INDEX_URL to an empty string to build with the addon service disabled: the
 # manager then lists nothing and installs nothing, and the app runs on locally installed or
 # side-loaded content only.
 #
 # The token is NOT a secret. It ships inside every binary and is trivially extractable; it exists
 # so the bucket cannot be crawled or hotlinked, which would cost operations for someone else's
 # benefit. That is also why it is fine in CMakeCache.txt.
-set(DRIFT_ADDON_INDEX_URL "https://drift-addons.cutwire.org/v1/index"
+set(BASE_ADDON_INDEX_URL "https://drift-addons.cutwire.org/v1/index"
     CACHE STRING "Addon index endpoint; empty disables the addon service")
-set(DRIFT_ADDON_CLIENT_TOKEN "79a388bba9301cacc81cc6eb0724c81e948e1b27c69aee1b"
+set(BASE_ADDON_CLIENT_TOKEN "79a388bba9301cacc81cc6eb0724c81e948e1b27c69aee1b"
     CACHE STRING "Client token sent to the addon service as X-Drift-Client")
 
 # --- Marketplace -----------------------------------------------------------
@@ -72,13 +72,13 @@ set(DRIFT_ADDON_CLIENT_TOKEN "79a388bba9301cacc81cc6eb0724c81e948e1b27c69aee1b"
 # The HMAC key is not a user secret — it ships in the binary — and exists so requests can be
 # signed and a stable client id derived. See docs/marketplace/README.md.
 #
-#   cmake -B build -DDRIFT_MARKET_API_URL=https://market.example.com/api/v1 \
-#                  -DDRIFT_MARKET_CLIENT_KEY=...
+#   cmake -B build -DBASE_MARKET_API_URL=https://market.example.com/api/v1 \
+#                  -DBASE_MARKET_CLIENT_KEY=...
 #
-#   cmake -B build -DDRIFT_MARKET_API_URL=      # no marketplace
-set(DRIFT_MARKET_API_URL "https://market.cutwire.org/api/v1"
+#   cmake -B build -DBASE_MARKET_API_URL=      # no marketplace
+set(BASE_MARKET_API_URL "https://market.cutwire.org/api/v1"
     CACHE STRING "Marketplace API base; empty disables the marketplace")
-set(DRIFT_MARKET_CLIENT_KEY "5409a0bebab4446f88e51d06024a5cf9a694ee141a6a1c6be7a49e45b6687438"
+set(BASE_MARKET_CLIENT_KEY "5409a0bebab4446f88e51d06024a5cf9a694ee141a6a1c6be7a49e45b6687438"
     CACHE STRING "HMAC key for marketplace client identity and request signing")
 
 # --- Update check -----------------------------------------------------------
@@ -89,7 +89,7 @@ set(DRIFT_MARKET_CLIENT_KEY "5409a0bebab4446f88e51d06024a5cf9a694ee141a6a1c6be7a
 # Set it to an empty string for builds a package manager owns — the Flatpak manifests and the Arch
 # PKGBUILD all do. There, pacman or flatpak fetches the update on its own schedule and an in-app
 # nag is noise the user cannot act on (Flathub's quality guidelines say as much).
-set(DRIFT_UPDATE_FEED_URL "https://api.github.com/repos/CutWire-Studios/Drift/releases/latest"
+set(BASE_UPDATE_FEED_URL "https://api.github.com/repos/trc20lenci/baaase/releases/latest"
     CACHE STRING "Release feed polled for updates; empty disables the update check")
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick QuickControls2 Multimedia Test Concurrent Widgets OpenGL Network QuickEffects Svg Xml)
@@ -151,10 +151,10 @@ endif()
 # Static, not shared: the app is a single .so that QtLoader dlopens, and every extra shared library
 # would have to be listed in ANDROID_EXTRA_LIBS and bundled by hand. PIC is mandatory for the same
 # reason — a non-PIC archive linked into a .so fails with an R_AARCH64_ADR_PREL_PG_HI21 relocation
-# error. Drift is GPL-3.0, so statically linking the LGPL pieces is fine.
+# error. BASE is GPL-3.0, so statically linking the LGPL pieces is fine.
 if(ANDROID)
-    set(DRIFT_PREBUILT "${CMAKE_SOURCE_DIR}/third_party/prebuilt/android/${ANDROID_ABI}")
-    if(NOT EXISTS "${DRIFT_PREBUILT}/lib/libavcodec.a")
+    set(BASE_PREBUILT "${CMAKE_SOURCE_DIR}/third_party/prebuilt/android/${ANDROID_ABI}")
+    if(NOT EXISTS "${BASE_PREBUILT}/lib/libavcodec.a")
         message(FATAL_ERROR
             "No prebuilt dependencies for ${ANDROID_ABI}. Run:\n"
             "    third_party/build-android.sh ${ANDROID_ABI}")
@@ -162,35 +162,35 @@ if(ANDROID)
 
     # Link order is dependency order; static archives are resolved left to right.
     add_library(FFmpeg::FFmpeg INTERFACE IMPORTED)
-    target_include_directories(FFmpeg::FFmpeg INTERFACE "${DRIFT_PREBUILT}/include")
+    target_include_directories(FFmpeg::FFmpeg INTERFACE "${BASE_PREBUILT}/include")
     target_link_libraries(FFmpeg::FFmpeg INTERFACE
-        "${DRIFT_PREBUILT}/lib/libavfilter.a"
-        "${DRIFT_PREBUILT}/lib/libavformat.a"
-        "${DRIFT_PREBUILT}/lib/libavcodec.a"
-        "${DRIFT_PREBUILT}/lib/libswscale.a"
-        "${DRIFT_PREBUILT}/lib/libswresample.a"
-        "${DRIFT_PREBUILT}/lib/libavutil.a"
-        "${DRIFT_PREBUILT}/lib/libx264.a"
+        "${BASE_PREBUILT}/lib/libavfilter.a"
+        "${BASE_PREBUILT}/lib/libavformat.a"
+        "${BASE_PREBUILT}/lib/libavcodec.a"
+        "${BASE_PREBUILT}/lib/libswscale.a"
+        "${BASE_PREBUILT}/lib/libswresample.a"
+        "${BASE_PREBUILT}/lib/libavutil.a"
+        "${BASE_PREBUILT}/lib/libx264.a"
         # libavcodec's only software AV1 decoder — the native "av1" decoder needs a hwaccel.
-        "${DRIFT_PREBUILT}/lib/libdav1d.a"
+        "${BASE_PREBUILT}/lib/libdav1d.a"
         # mediandk resolves the AMediaCodec_*/AMediaFormat_* the --enable-mediacodec decoders call,
         # plus the AImageReader_*/AImage_* the zero-copy preview surface is built on. android is
         # for AHardwareBuffer_*, which lives in libandroid rather than libmediandk.
         m z mediandk android)
 
     add_library(drift_zstd INTERFACE IMPORTED)
-    target_include_directories(drift_zstd INTERFACE "${DRIFT_PREBUILT}/include")
-    target_link_libraries(drift_zstd INTERFACE "${DRIFT_PREBUILT}/lib/libzstd.a")
-    set(DRIFT_ZSTD_TARGET drift_zstd)
+    target_include_directories(drift_zstd INTERFACE "${BASE_PREBUILT}/include")
+    target_link_libraries(drift_zstd INTERFACE "${BASE_PREBUILT}/lib/libzstd.a")
+    set(BASE_ZSTD_TARGET drift_zstd)
 
     add_library(OpenSSL::Crypto INTERFACE IMPORTED)
-    target_include_directories(OpenSSL::Crypto INTERFACE "${DRIFT_PREBUILT}/include")
-    target_link_libraries(OpenSSL::Crypto INTERFACE "${DRIFT_PREBUILT}/lib/libcrypto.a")
+    target_include_directories(OpenSSL::Crypto INTERFACE "${BASE_PREBUILT}/include")
+    target_link_libraries(OpenSSL::Crypto INTERFACE "${BASE_PREBUILT}/lib/libcrypto.a")
 
     add_library(drift_soundtouch INTERFACE IMPORTED)
-    target_include_directories(drift_soundtouch INTERFACE "${DRIFT_PREBUILT}/include")
-    target_link_libraries(drift_soundtouch INTERFACE "${DRIFT_PREBUILT}/lib/libSoundTouch.a")
-    set(DRIFT_SOUNDTOUCH_TARGET drift_soundtouch)
+    target_include_directories(drift_soundtouch INTERFACE "${BASE_PREBUILT}/include")
+    target_link_libraries(drift_soundtouch INTERFACE "${BASE_PREBUILT}/lib/libSoundTouch.a")
+    set(BASE_SOUNDTOUCH_TARGET drift_soundtouch)
 endif()
 
 if(NOT ANDROID)
@@ -201,35 +201,35 @@ endif()
 # app links none of it: it compiles against the headers and dlopens a runtime at startup
 # (src/engine/OrtRuntime.cpp), so the CPU / CUDA / WebGPU decision belongs to the user and is made
 # by installing an addon, not by whoever configured this build. Only the headers are needed here.
-option(DRIFT_FETCH_ONNXRUNTIME
+option(BASE_FETCH_ONNXRUNTIME
     "Download prebuilt ONNX Runtime headers when they are not installed (cmake/FetchOnnxRuntime.cmake)" ON)
 # Stage a CPU runtime into <appDir>/onnxruntime so the build tree can transcribe without going
 # through the addon service. Packaged builds turn this off — they ship no runtime at all.
-option(DRIFT_BUNDLE_ONNXRUNTIME
+option(BASE_BUNDLE_ONNXRUNTIME
     "Stage a CPU ONNX Runtime into the build tree for development" ON)
 find_package(OnnxRuntime QUIET)
-if(DRIFT_BUNDLE_ONNXRUNTIME AND OnnxRuntime_FOUND AND NOT ONNXRUNTIME_RUNTIME_LIBS
-   AND DRIFT_FETCH_ONNXRUNTIME)
+if(BASE_BUNDLE_ONNXRUNTIME AND OnnxRuntime_FOUND AND NOT ONNXRUNTIME_RUNTIME_LIBS
+   AND BASE_FETCH_ONNXRUNTIME)
     # Headers with no library beside them (a headers-only system package) leave the build tree
     # with nothing to load, which looks exactly like a broken install at runtime.
     message(STATUS "ONNX Runtime headers found without a library; downloading one to bundle")
     set(OnnxRuntime_FOUND FALSE)
 endif()
-if(NOT OnnxRuntime_FOUND AND DRIFT_FETCH_ONNXRUNTIME)
+if(NOT OnnxRuntime_FOUND AND BASE_FETCH_ONNXRUNTIME)
     include(FetchOnnxRuntime)
     find_package(OnnxRuntime REQUIRED)
 endif()
 if(NOT OnnxRuntime_FOUND)
     message(FATAL_ERROR
         "ONNX Runtime headers not found. Install them and set ONNXRUNTIME_ROOT, "
-        "or enable DRIFT_FETCH_ONNXRUNTIME to download them automatically.")
+        "or enable BASE_FETCH_ONNXRUNTIME to download them automatically.")
 endif()
 message(STATUS "ONNX Runtime headers: ${OnnxRuntime_INCLUDE_DIRS}")
-if(DRIFT_BUNDLE_ONNXRUNTIME AND NOT ONNXRUNTIME_RUNTIME_LIBS)
+if(BASE_BUNDLE_ONNXRUNTIME AND NOT ONNXRUNTIME_RUNTIME_LIBS)
     message(WARNING
-        "DRIFT_BUNDLE_ONNXRUNTIME is on but no ONNX Runtime library was found to stage. "
+        "BASE_BUNDLE_ONNXRUNTIME is on but no ONNX Runtime library was found to stage. "
         "The build tree will have no runtime; install an Acceleration addon or point "
-        "DRIFT_ONNXRUNTIME_DIR at an extracted release.")
+        "BASE_ONNXRUNTIME_DIR at an extracted release.")
 endif()
 
 if(WITH_BGREMOVAL)
@@ -244,12 +244,12 @@ find_package(PkgConfig QUIET)
 if(NOT ANDROID)
     find_package(zstd CONFIG QUIET)
     if(TARGET zstd::libzstd_shared)
-        set(DRIFT_ZSTD_TARGET zstd::libzstd_shared)
+        set(BASE_ZSTD_TARGET zstd::libzstd_shared)
     elseif(TARGET zstd::libzstd)
-        set(DRIFT_ZSTD_TARGET zstd::libzstd)
+        set(BASE_ZSTD_TARGET zstd::libzstd)
     elseif(PkgConfig_FOUND)
         pkg_check_modules(ZSTD REQUIRED IMPORTED_TARGET libzstd)
-        set(DRIFT_ZSTD_TARGET PkgConfig::ZSTD)
+        set(BASE_ZSTD_TARGET PkgConfig::ZSTD)
     else()
         message(FATAL_ERROR "libzstd not found: no zstd CMake config and no pkg-config to fall back on")
     endif()
@@ -270,7 +270,7 @@ if(NOT ANDROID)
         pkg_check_modules(SOUNDTOUCH QUIET IMPORTED_TARGET soundtouch)
     endif()
     if(TARGET PkgConfig::SOUNDTOUCH)
-        set(DRIFT_SOUNDTOUCH_TARGET PkgConfig::SOUNDTOUCH)
+        set(BASE_SOUNDTOUCH_TARGET PkgConfig::SOUNDTOUCH)
         # soundtouch.pc often exports -I.../include/soundtouch (for <SoundTouch.h>), but our sources
         # use <soundtouch/SoundTouch.h> and need .../include. Prefer the parent when that layout is
         # present (vcpkg on Windows with pkgconf).
@@ -297,7 +297,7 @@ if(NOT ANDROID)
         endif()
     else()
         find_package(SoundTouch CONFIG REQUIRED)
-        set(DRIFT_SOUNDTOUCH_TARGET SoundTouch::SoundTouch)
+        set(BASE_SOUNDTOUCH_TARGET SoundTouch::SoundTouch)
         # Upstream 2.4.x exports "<prefix>/include;<prefix>/include;<prefix>/COMPONENT;<prefix>/
         # SoundTouch" — two install() keywords that leaked into INCLUDES DESTINATION, plus a duplicate.
         # Every packaging of that release carries it, vcpkg's included. <prefix>/include is the real
@@ -327,51 +327,51 @@ endif()
 # processes float blocks inside AudioMixer.
 #
 # Acquisition mirrors ONNX Runtime above: a local tree wins, otherwise fetch. flatpak-builder runs
-# offline, so packaged builds set DRIFT_JUCE_DIR at a source it vendored itself and turn the fetch
-# off (see flatpak/org.cutwire.Drift.yml).
-# Drift links exactly one JUCE module and calls none of JUCE's project helpers, so everything past
+# offline, so packaged builds set BASE_JUCE_DIR at a source it vendored itself and turn the fetch
+# off (see flatpak/app.base.editor.yml).
+# BASE links exactly one JUCE module and calls none of JUCE's project helpers, so everything past
 # add_subdirectory(modules) is dead weight: it configures and builds juceaide, and — the part that
 # actually leaks — adds install() rules that drop JUCE's headers, its LV2 helper binary and its
 # CMake package config into any `cmake --install` prefix, i.e. into the AppImage and the distro
 # package. FORCE because it has to win over JUCE's own option() default either way it is acquired.
 set(JUCE_MODULES_ONLY ON CACHE BOOL "Only configure the JUCE modules" FORCE)
 
-option(DRIFT_FETCH_JUCE "Download JUCE when DRIFT_JUCE_DIR is not set" ON)
+option(BASE_FETCH_JUCE "Download JUCE when BASE_JUCE_DIR is not set" ON)
 # STRING, not PATH, on purpose: CMake rewrites a relative PATH cache entry to an absolute one
 # against the working directory of the cmake invocation — the *build* directory. The manifests
-# vendor JUCE next to CMakeLists.txt and pass `-DDRIFT_JUCE_DIR=juce`, which a PATH would resolve
+# vendor JUCE next to CMakeLists.txt and pass `-DBASE_JUCE_DIR=juce`, which a PATH would resolve
 # to <build>/juce and fail. As a STRING the value arrives verbatim and is resolved below, against
 # the source tree, which is what a relative path here can only sensibly mean.
-set(DRIFT_JUCE_DIR "" CACHE STRING
-    "JUCE source tree — absolute, or relative to this file; overrides DRIFT_FETCH_JUCE")
-set(DRIFT_JUCE_TAG "8.0.15" CACHE STRING "JUCE release tag to fetch when DRIFT_JUCE_DIR is unset")
+set(BASE_JUCE_DIR "" CACHE STRING
+    "JUCE source tree — absolute, or relative to this file; overrides BASE_FETCH_JUCE")
+set(BASE_JUCE_TAG "8.0.15" CACHE STRING "JUCE release tag to fetch when BASE_JUCE_DIR is unset")
 
-if(DRIFT_JUCE_DIR)
-    if(IS_ABSOLUTE "${DRIFT_JUCE_DIR}")
-        set(_drift_juce_dir "${DRIFT_JUCE_DIR}")
+if(BASE_JUCE_DIR)
+    if(IS_ABSOLUTE "${BASE_JUCE_DIR}")
+        set(_drift_juce_dir "${BASE_JUCE_DIR}")
     else()
-        set(_drift_juce_dir "${CMAKE_CURRENT_SOURCE_DIR}/${DRIFT_JUCE_DIR}")
+        set(_drift_juce_dir "${CMAKE_CURRENT_SOURCE_DIR}/${BASE_JUCE_DIR}")
     endif()
     if(NOT EXISTS "${_drift_juce_dir}/CMakeLists.txt")
         message(FATAL_ERROR
-            "DRIFT_JUCE_DIR=${DRIFT_JUCE_DIR} does not point at a JUCE source tree "
+            "BASE_JUCE_DIR=${BASE_JUCE_DIR} does not point at a JUCE source tree "
             "(looked in ${_drift_juce_dir}).")
     endif()
     message(STATUS "JUCE: using ${_drift_juce_dir}")
     add_subdirectory("${_drift_juce_dir}" "${CMAKE_BINARY_DIR}/juce-build")
-elseif(DRIFT_FETCH_JUCE)
-    message(STATUS "JUCE: fetching ${DRIFT_JUCE_TAG}")
+elseif(BASE_FETCH_JUCE)
+    message(STATUS "JUCE: fetching ${BASE_JUCE_TAG}")
     include(FetchContent)
     FetchContent_Declare(JUCE
         GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
-        GIT_TAG ${DRIFT_JUCE_TAG}
+        GIT_TAG ${BASE_JUCE_TAG}
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE)
     FetchContent_MakeAvailable(JUCE)
 else()
     message(FATAL_ERROR
-        "JUCE not available. Point DRIFT_JUCE_DIR at a JUCE source tree, "
-        "or enable DRIFT_FETCH_JUCE to download it automatically.")
+        "JUCE not available. Point BASE_JUCE_DIR at a JUCE source tree, "
+        "or enable BASE_FETCH_JUCE to download it automatically.")
 endif()
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -459,11 +459,11 @@ add_library(driftcore STATIC
 target_include_directories(driftcore PUBLIC src)
 target_link_libraries(driftcore PUBLIC Qt6::Core Qt6::Gui Qt6::Xml ZLIB::ZLIB)
 
-file(GLOB DRIFT_TEXT_ANIMATION_FILES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/presets/text-animations/*.json")
+file(GLOB BASE_TEXT_ANIMATION_FILES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/presets/text-animations/*.json")
 qt_add_resources(driftcore "drift_text_animations"
     PREFIX "/text-animations"
     BASE "${CMAKE_SOURCE_DIR}/presets/text-animations"
-    FILES ${DRIFT_TEXT_ANIMATION_FILES}
+    FILES ${BASE_TEXT_ANIMATION_FILES}
 )
 
 # Audio effect DSP. JUCE modules compile into whatever target links them, so keeping them in a
@@ -493,7 +493,7 @@ set_target_properties(driftaudiodsp PROPERTIES AUTOMOC OFF)
 target_include_directories(driftaudiodsp PUBLIC src)
 target_link_libraries(driftaudiodsp PUBLIC driftcore)
 target_link_libraries(driftaudiodsp PRIVATE juce::juce_dsp juce::juce_recommended_config_flags
-    ${DRIFT_SOUNDTOUCH_TARGET})
+    ${BASE_SOUNDTOUCH_TARGET})
 # JUCE_USE_CURL and JUCE_WEB_BROWSER matter: without them juce_core links libcurl on Linux, which
 # is exactly the dependency creep this split exists to prevent.
 target_compile_definitions(driftaudiodsp PRIVATE
@@ -663,7 +663,7 @@ target_include_directories(driftengine PUBLIC src)
 target_include_directories(driftengine SYSTEM PRIVATE ${CMAKE_SOURCE_DIR}/third_party/cgltf)
 target_link_libraries(driftengine PUBLIC Qt6::Core Qt6::Gui Qt6::OpenGL FFmpeg::FFmpeg driftcore
     driftaudiodsp onnxruntime::headers)
-target_link_libraries(driftengine PRIVATE ${DRIFT_ZSTD_TARGET} OpenSSL::Crypto ${CMAKE_DL_LIBS})
+target_link_libraries(driftengine PRIVATE ${BASE_ZSTD_TARGET} OpenSSL::Crypto ${CMAKE_DL_LIBS})
 if(WIN32)
     # Hybrid-graphics laptops: D3D11VA -> OpenGL preview interop, and DXGI adapter enumeration for
     # the GPU preference and for opening D3D11VA on the GPU that renders.
@@ -673,15 +673,15 @@ if(WIN32)
     )
     target_link_libraries(driftengine PRIVATE d3d11 dxgi d3dcompiler opengl32)
 endif()
-target_compile_definitions(driftengine PRIVATE DRIFT_VERSION="${PROJECT_VERSION}")
+target_compile_definitions(driftengine PRIVATE BASE_VERSION="${PROJECT_VERSION}")
 
 if(WITH_BGREMOVAL)
     target_include_directories(driftengine PRIVATE ${OpenCV_INCLUDE_DIRS})
     target_link_libraries(driftengine PRIVATE ${OpenCV_LIBS})
-    target_compile_definitions(driftengine PUBLIC DRIFT_WITH_BGREMOVAL)
+    target_compile_definitions(driftengine PUBLIC BASE_WITH_BGREMOVAL)
 endif()
 
-if(DRIFT_WITH_SKIA)
+if(BASE_WITH_SKIA)
     find_package(Skia REQUIRED)
     target_sources(driftengine PRIVATE
         src/engine/SkiaRuntime.h
@@ -703,21 +703,21 @@ if(DRIFT_WITH_SKIA)
         src/engine/SkiaTextEffects.h
         src/engine/SkiaTextEffects.cpp
     )
-    # build-skia.sh compiles Skia with RTTI (see the extra_cflags_cc note there), so Drift classes
+    # build-skia.sh compiles Skia with RTTI (see the extra_cflags_cc note there), so BASE classes
     # may subclass Skia interfaces from any translation unit. vcpkg's port on Windows keeps /GR-,
     # which is harmless: MSVC emits type descriptors as COMDAT wherever they are needed, so a
     # derived class never depends on its base's archive carrying one.
     # PRIVATE: no header outside src/engine/Skia*.h includes Skia (Vector*.cpp do, under
-    # DRIFT_WITH_SKIA), so the defines and the include root stay out of the rest of the build.
+    # BASE_WITH_SKIA), so the defines and the include root stay out of the rest of the build.
     target_link_libraries(driftengine PRIVATE Skia::Skia)
-    target_compile_definitions(driftengine PUBLIC DRIFT_WITH_SKIA)
+    target_compile_definitions(driftengine PUBLIC BASE_WITH_SKIA)
     # Qt's `foreach` keyword macro collides with SkTHash::foreach(), which the Skottie headers
-    # pull in. Nothing in Drift writes foreach; Q_FOREACH stays available.
+    # pull in. Nothing in BASE writes foreach; Q_FOREACH stays available.
     target_compile_definitions(driftengine PRIVATE QT_NO_FOREACH)
 endif()
 
 # --- application ------------------------------------------------------------
-qt_add_executable(drift
+qt_add_executable(base
     src/main.cpp
     src/DriftImageProvider.h
     src/DriftImageProvider.cpp
@@ -786,7 +786,7 @@ qt_add_executable(drift
 # The MCP server itself ships everywhere. On Android it listens on loopback like it does on
 # desktop, and an agent reaches it through `adb forward` — which is what makes the phone build
 # drivable by tooling instead of by blind coordinate taps.
-target_sources(drift PRIVATE
+target_sources(base PRIVATE
     src/mcp/McpSession.h
     src/mcp/McpSession.cpp
     src/mcp/McpCatalog.h
@@ -809,7 +809,7 @@ target_sources(drift PRIVATE
 # The stdio transport and the headless entry point stay desktop-only: both are process entry
 # points driven from a terminal, which an APK has no equivalent of.
 if(NOT ANDROID)
-    target_sources(drift PRIVATE
+    target_sources(base PRIVATE
         src/mcp/McpStdio.h
         src/mcp/McpStdio.cpp
         src/mcp/McpStdioServer.h
@@ -825,19 +825,19 @@ if(WIN32)
     # qt_add_executable() forwards to add_executable() without WIN32, so the linker defaults to the
     # console subsystem and Windows opens a console window before the GUI comes up. Qt6::EntryPoint
     # (linked in by Qt6::Core) supplies the WinMain that forwards to main().
-    set_target_properties(drift PROPERTIES WIN32_EXECUTABLE TRUE)
-    target_sources(drift PRIVATE resources/windows/drift.rc)
-    set_source_files_properties(resources/windows/drift.rc PROPERTIES
-        OBJECT_DEPENDS "${CMAKE_SOURCE_DIR}/resources/windows/drift.ico")
+    set_target_properties(base PROPERTIES WIN32_EXECUTABLE TRUE)
+    target_sources(base PRIVATE resources/windows/base.rc)
+    set_source_files_properties(resources/windows/base.rc PROPERTIES
+        OBJECT_DEPENDS "${CMAKE_SOURCE_DIR}/resources/windows/base.ico")
 endif()
 
 # Without a bundle macOS runs the app as a background process, with no Dock tile or menu bar.
-# It also collides with the <build>/Drift/ directory qt_add_qml_module(URI Drift) writes, which
+# It also collides with the <build>/Base/ directory qt_add_qml_module(URI Base) writes, which
 # on case-insensitive APFS fails the link with EISDIR.
 if(APPLE)
-    set(DRIFT_MACOS_EXECUTABLE "BASE")
-    set(DRIFT_MACOS_BUNDLE_ID "app.base.editor")
-    set(DRIFT_MACOS_ICON_FILE "Drift.icns")
+    set(BASE_MACOS_EXECUTABLE "BASE")
+    set(BASE_MACOS_BUNDLE_ID "app.base.editor")
+    set(BASE_MACOS_ICON_FILE "Base.icns")
 
     # Not CMake's MACOSX_BUNDLE_* properties: the NS* and LSMinimumSystemVersion keys have none.
     configure_file(
@@ -845,28 +845,28 @@ if(APPLE)
         "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
         @ONLY)
 
-    set(DRIFT_MACOS_ICNS "${CMAKE_SOURCE_DIR}/resources/macos/${DRIFT_MACOS_ICON_FILE}")
-    target_sources(drift PRIVATE "${DRIFT_MACOS_ICNS}")
-    set_source_files_properties("${DRIFT_MACOS_ICNS}" PROPERTIES
+    set(BASE_MACOS_ICNS "${CMAKE_SOURCE_DIR}/resources/macos/${BASE_MACOS_ICON_FILE}")
+    target_sources(base PRIVATE "${BASE_MACOS_ICNS}")
+    set_source_files_properties("${BASE_MACOS_ICNS}" PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
-    set_target_properties(drift PROPERTIES
+    set_target_properties(base PROPERTIES
         MACOSX_BUNDLE TRUE
-        OUTPUT_NAME "${DRIFT_MACOS_EXECUTABLE}"
+        OUTPUT_NAME "${BASE_MACOS_EXECUTABLE}"
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
 endif()
 
-# App icon for QApplication::setWindowIcon (all platforms). Rendered from Drift_icon.png,
-# as is resources/windows/drift.ico — keep the two in sync when the branding changes.
-qt_add_resources(drift "drift_app_icon"
+# App icon for QApplication::setWindowIcon (all platforms). Rendered from BASE_icon.png,
+# as is resources/windows/base.ico — keep the two in sync when the branding changes.
+qt_add_resources(base "base_app_icon"
     PREFIX "/app"
     BASE resources
-    FILES resources/drift.png
+    FILES resources/base.png
 )
 
 # Fixed input for the playback diagnostics benchmark, so numbers from two different bug
 # reports are comparable. See resources/diagnostics/README.md for how it is generated.
-qt_add_resources(drift "drift_diagnostics"
+qt_add_resources(base "base_diagnostics"
     PREFIX "/diagnostics"
     BASE resources/diagnostics
     FILES resources/diagnostics/bench1080p60.mp4
@@ -888,11 +888,11 @@ set_source_files_properties(src/qml/Toasts.qml PROPERTIES QT_QML_SINGLETON_TYPE 
 set_source_files_properties(src/qml/TouchDrag.qml PROPERTIES QT_QML_SINGLETON_TYPE true)
 
 # Lucide icons: use the original scalable SVG sources in QML.
-file(GLOB DRIFT_LUCIDE_ICONS RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS
+file(GLOB BASE_LUCIDE_ICONS RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS
      "resources/icons/*.svg")
 
-qt_add_qml_module(drift
-    URI Drift
+qt_add_qml_module(base
+    URI Base
     VERSION 1.0
     QML_FILES
         src/qml/Shell.qml
@@ -1073,10 +1073,10 @@ qt_add_qml_module(drift
         # BASE wordmark, one per theme (white art for dark mode, black for light).
         resources/base_wordmark_light.png
         resources/base_wordmark_dark.png
-        ${DRIFT_LUCIDE_ICONS}
+        ${BASE_LUCIDE_ICONS}
 )
 
-target_link_libraries(drift PRIVATE
+target_link_libraries(base PRIVATE
     Qt6::Quick
     Qt6::QuickControls2
     Qt6::QuickEffects
@@ -1089,20 +1089,20 @@ target_link_libraries(drift PRIVATE
     driftcore
     driftengine
 )
-target_include_directories(drift PRIVATE src src/preview)
+target_include_directories(base PRIVATE src src/preview)
 
 if(ANDROID)
     # FileDialogs registers a QtAndroidPrivate::NewIntentListener so a second ACTION_VIEW reaches a
     # running instance (singleTop delivers it to onNewIntent, which the public API does not expose).
     # CorePrivate is not pulled in by the plain Qt6 Core package, hence the extra find_package.
     find_package(Qt6 REQUIRED COMPONENTS CorePrivate)
-    target_link_libraries(drift PRIVATE Qt6::CorePrivate)
+    target_link_libraries(base PRIVATE Qt6::CorePrivate)
 
     # applicationDirPath() on Android is the APK's lib directory and contains nothing but .so
     # files, so the file-based package roots the desktop build stages next to the binary have
     # nowhere to live. The packages ride inside the binary as Qt resources instead;
     # GpuPackageParse::defaultSearchPaths adds ":/packages/<subdir>" as the bundled root.
-    file(GLOB_RECURSE DRIFT_PACKAGE_FILES RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS
+    file(GLOB_RECURSE BASE_PACKAGE_FILES RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS
          "effects/*/effect.json"
          "effects/*/*.frag"
          "effects/*/thumbnail.png"
@@ -1114,11 +1114,11 @@ if(ANDROID)
          "audio-effects/*/thumbnail.png"
          "effect-templates/*/template.json"
          "effect-templates/*/thumbnail.png")
-    list(REMOVE_DUPLICATES DRIFT_PACKAGE_FILES)
-    qt_add_resources(drift "drift_packages"
+    list(REMOVE_DUPLICATES BASE_PACKAGE_FILES)
+    qt_add_resources(base "base_packages"
         PREFIX "/packages"
         BASE "${CMAKE_SOURCE_DIR}"
-        FILES ${DRIFT_PACKAGE_FILES}
+        FILES ${BASE_PACKAGE_FILES}
     )
 
     # Qt Network's OpenSSL TLS plugin dlopens libcrypto_3.so / libssl_3.so at runtime.
@@ -1145,13 +1145,13 @@ if(ANDROID)
         list(APPEND _drift_android_extra_libs "${_crypto}" "${_ssl}")
     endforeach()
 
-    set(DRIFT_ANDROID_PACKAGE_NAME "app.base.editor" CACHE STRING
+    set(BASE_ANDROID_PACKAGE_NAME "app.base.editor" CACHE STRING
         "Android application id (use app.base.editor.ci for side-by-side test builds)")
-    set(DRIFT_ANDROID_APP_NAME "BASE" CACHE STRING
+    set(BASE_ANDROID_APP_NAME "BASE" CACHE STRING
         "Launcher label")
-    # versionName is PROJECT_VERSION — same string the desktop binary embeds as DRIFT_VERSION.
+    # versionName is PROJECT_VERSION — same string the desktop binary embeds as BASE_VERSION.
     # versionCode is the Play-Store integer; default tracks that semver so a desktop bump is an
-    # Android bump too (0.6.0 → 600). CI may override with -DDRIFT_ANDROID_VERSION_CODE=.
+    # Android bump too (0.6.0 → 600). CI may override with -DBASE_ANDROID_VERSION_CODE=.
     string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _drift_android_ver "${PROJECT_VERSION}")
     if(_drift_android_ver)
         math(EXPR _drift_android_version_code_default
@@ -1159,18 +1159,18 @@ if(ANDROID)
     else()
         set(_drift_android_version_code_default 1)
     endif()
-    set(DRIFT_ANDROID_VERSION_CODE "${_drift_android_version_code_default}" CACHE STRING
+    set(BASE_ANDROID_VERSION_CODE "${_drift_android_version_code_default}" CACHE STRING
         "Android versionCode (defaults to major*10000+minor*100+patch from PROJECT_VERSION)")
 
-    set_target_properties(drift PROPERTIES
+    set_target_properties(base PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android"
-        QT_ANDROID_PACKAGE_NAME "${DRIFT_ANDROID_PACKAGE_NAME}"
-        QT_ANDROID_APP_NAME "${DRIFT_ANDROID_APP_NAME}"
+        QT_ANDROID_PACKAGE_NAME "${BASE_ANDROID_PACKAGE_NAME}"
+        QT_ANDROID_APP_NAME "${BASE_ANDROID_APP_NAME}"
         QT_ANDROID_APP_ICON "@mipmap/ic_launcher"
         QT_ANDROID_MIN_SDK_VERSION 28
         QT_ANDROID_TARGET_SDK_VERSION 36
         QT_ANDROID_VERSION_NAME "${PROJECT_VERSION}"
-        QT_ANDROID_VERSION_CODE "${DRIFT_ANDROID_VERSION_CODE}"
+        QT_ANDROID_VERSION_CODE "${BASE_ANDROID_VERSION_CODE}"
         QT_ANDROID_EXTRA_LIBS "${_drift_android_extra_libs}"
     )
 endif()
@@ -1178,21 +1178,21 @@ endif()
 # MCP tool names, JSON schemas, agent errors and copied configs are a machine protocol and must
 # stay English. QT_EXCLUDE_FROM_TRANSLATION is a no-op until src/mcp/ exists (the mcp branch);
 # lupdate also ignores QStringLiteral, so those files only leak if someone later adds tr().
-file(GLOB DRIFT_MCP_SOURCES CONFIGURE_DEPENDS
+file(GLOB BASE_MCP_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/src/mcp/*.cpp"
     "${CMAKE_SOURCE_DIR}/src/mcp/*.h")
-if(DRIFT_MCP_SOURCES)
-    set_source_files_properties(${DRIFT_MCP_SOURCES} PROPERTIES QT_EXCLUDE_FROM_TRANSLATION ON)
+if(BASE_MCP_SOURCES)
+    set_source_files_properties(${BASE_MCP_SOURCES} PROPERTIES QT_EXCLUDE_FROM_TRANSLATION ON)
 endif()
 
 if(Qt6LinguistTools_FOUND)
     # Catalogs, project/SRT errors and reverse-proxy messages live on driftengine/driftcore, which
-    # qt_add_translations(drift) does not scan on its own.
-    file(GLOB DRIFT_TS_FILES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/i18n/drift_*.ts")
-    qt_add_translations(drift
+    # qt_add_translations(base) does not scan on its own.
+    file(GLOB BASE_TS_FILES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/i18n/base_*.ts")
+    qt_add_translations(base
         TS_FILES
-            "${CMAKE_SOURCE_DIR}/i18n/drift.ts"
-            ${DRIFT_TS_FILES}
+            "${CMAKE_SOURCE_DIR}/i18n/base.ts"
+            ${BASE_TS_FILES}
         RESOURCE_PREFIX "/i18n"
         SOURCES
             src/engine/EffectCatalog.cpp
@@ -1223,7 +1223,7 @@ if(Qt6LinguistTools_FOUND)
     # sandbox, so the Flatpak regenerated its catalogs down to the C++ strings on every build and
     # shipped a UI that was English apart from the toasts (#167). Probe once and stay off where
     # lupdate cannot see QML, rather than letting it gut the committed catalogs.
-    if(NOT DEFINED DRIFT_LUPDATE_HAS_QML AND TARGET Qt6::lupdate)
+    if(NOT DEFINED BASE_LUPDATE_HAS_QML AND TARGET Qt6::lupdate)
         get_target_property(_drift_lupdate_exe Qt6::lupdate IMPORTED_LOCATION)
         if(NOT _drift_lupdate_exe)
             get_target_property(_drift_lupdate_cfgs Qt6::lupdate IMPORTED_CONFIGURATIONS)
@@ -1250,18 +1250,18 @@ if(Qt6LinguistTools_FOUND)
         endif()
         string(FIND "${_drift_probe_ts}" "drift_lupdate_qml_probe" _drift_probe_hit)
         if(_drift_probe_hit GREATER -1)
-            set(DRIFT_LUPDATE_HAS_QML ON CACHE INTERNAL "lupdate can parse QML")
+            set(BASE_LUPDATE_HAS_QML ON CACHE INTERNAL "lupdate can parse QML")
         else()
-            set(DRIFT_LUPDATE_HAS_QML OFF CACHE INTERNAL "lupdate can parse QML")
+            set(BASE_LUPDATE_HAS_QML OFF CACHE INTERNAL "lupdate can parse QML")
         endif()
     endif()
 
-    if(DRIFT_AUTO_UPDATE_TRANSLATIONS AND NOT DRIFT_LUPDATE_HAS_QML)
+    if(BASE_AUTO_UPDATE_TRANSLATIONS AND NOT BASE_LUPDATE_HAS_QML)
         message(WARNING
             "lupdate has no QML/JavaScript support; running it would delete every QML string from "
             "i18n/*.ts and ship English-only .qm files. Not running lupdate as part of this build. "
             "Install a Qt Linguist build with QML support to refresh the catalogs.")
-        set(DRIFT_AUTO_UPDATE_TRANSLATIONS OFF)
+        set(BASE_AUTO_UPDATE_TRANSLATIONS OFF)
     endif()
 
     # Qt keeps lupdate out of the default build, so a new qsTr() only reaches i18n/*.ts when
@@ -1270,7 +1270,7 @@ if(Qt6LinguistTools_FOUND)
     # racing them. DEFER because qt_add_translations only creates these targets at the end of
     # the directory scope. Off under CI, where the test must see the committed catalogs and not
     # ones this build just repaired.
-    if(DRIFT_AUTO_UPDATE_TRANSLATIONS)
+    if(BASE_AUTO_UPDATE_TRANSLATIONS)
         cmake_language(DEFER CALL add_dependencies ${PROJECT_NAME}_lrelease update_translations)
     endif()
 else()
@@ -1278,13 +1278,13 @@ else()
 endif()
 
 # Defined here rather than in the header so there is exactly one place to change them.
-target_compile_definitions(drift PRIVATE
-    DRIFT_ADDON_INDEX_URL="${DRIFT_ADDON_INDEX_URL}"
-    DRIFT_ADDON_CLIENT_TOKEN="${DRIFT_ADDON_CLIENT_TOKEN}"
-    DRIFT_MARKET_API_URL="${DRIFT_MARKET_API_URL}"
-    DRIFT_MARKET_CLIENT_KEY="${DRIFT_MARKET_CLIENT_KEY}"
-    DRIFT_UPDATE_FEED_URL="${DRIFT_UPDATE_FEED_URL}"
-    DRIFT_VERSION="${PROJECT_VERSION}"
+target_compile_definitions(base PRIVATE
+    BASE_ADDON_INDEX_URL="${BASE_ADDON_INDEX_URL}"
+    BASE_ADDON_CLIENT_TOKEN="${BASE_ADDON_CLIENT_TOKEN}"
+    BASE_MARKET_API_URL="${BASE_MARKET_API_URL}"
+    BASE_MARKET_CLIENT_KEY="${BASE_MARKET_CLIENT_KEY}"
+    BASE_UPDATE_FEED_URL="${BASE_UPDATE_FEED_URL}"
+    BASE_VERSION="${PROJECT_VERSION}"
 )
 
 # Ship a file-based package directory next to the binaries that load the catalog.
@@ -1294,7 +1294,7 @@ target_compile_definitions(drift PRIVATE
 # target: two `cmake -E copy_directory` processes writing the same tree concurrently — which is
 # what `cmake --build --parallel` does — fail with "Error copying directory".
 function(drift_stage_packages target assetdir)
-    # Only drift is a bundle, so the shared output directory guarded against below cannot happen.
+    # Only base is a bundle, so the shared output directory guarded against below cannot happen.
     get_target_property(_bundle ${target} MACOSX_BUNDLE)
     if(_bundle)
         add_custom_command(TARGET ${target} POST_BUILD
@@ -1345,10 +1345,10 @@ endfunction()
 # Stage an ONNX Runtime into <appDir>/onnxruntime/lib, which is one of the roots
 # drift::ort::ensureLoaded() searches — the same relationship the bundled effects have with
 # installed effect addons, and ranked the same way: an installed Acceleration addon wins over this.
-# It is a development convenience only; packaged builds set DRIFT_BUNDLE_ONNXRUNTIME=OFF and ship
+# It is a development convenience only; packaged builds set BASE_BUNDLE_ONNXRUNTIME=OFF and ship
 # no runtime at all.
 function(drift_bundle_onnxruntime target)
-    if(DRIFT_BUNDLE_ONNXRUNTIME AND ONNXRUNTIME_RUNTIME_LIBS)
+    if(BASE_BUNDLE_ONNXRUNTIME AND ONNXRUNTIME_RUNTIME_LIBS)
         get_target_property(_bundle ${target} MACOSX_BUNDLE)
         if(_bundle)
             set(_ortdir "$<TARGET_BUNDLE_CONTENT_DIR:${target}>/Resources/onnxruntime/lib")
@@ -1371,11 +1371,11 @@ endfunction()
 
 # Android gets these through qt_add_resources above; there is no <appDir> to stage into.
 if(NOT ANDROID)
-    drift_copy_effects(drift)
-    drift_copy_effect_templates(drift)
-    drift_copy_transitions(drift)
-    drift_copy_audio_effects(drift)
-    drift_bundle_onnxruntime(drift)
+    drift_copy_effects(base)
+    drift_copy_effect_templates(base)
+    drift_copy_transitions(base)
+    drift_copy_audio_effects(base)
+    drift_bundle_onnxruntime(base)
 endif()
 
 # Desktop packaging, the headless CLI tools and the QTest binaries. None of it applies to an
@@ -1384,38 +1384,38 @@ if(NOT ANDROID)
 # --- install (used by packaging, e.g. Flatpak; the dev workflow runs in-place) ---
 include(GNUInstallDirs)
 
-# Everything Drift installs is tagged with the "drift" component, so packaging can ask for the app
-# and nothing else: `cmake --install build --component drift`. JUCE's modules install ~50 MB of
+# Everything BASE installs is tagged with the "base" component, so packaging can ask for the app
+# and nothing else: `cmake --install build --component base`. JUCE's modules install ~50 MB of
 # their own sources into include/JUCE-<version>, and a plain `cmake --install` has no way to say no
 # to them. (The Flatpak manifests get the same result the other way round, by cleaning up /include.)
 if(APPLE)
     # The bundle is complete after the build. Use -DCMAKE_INSTALL_PREFIX=/Applications.
-    install(TARGETS drift BUNDLE DESTINATION . COMPONENT drift)
+    install(TARGETS base BUNDLE DESTINATION . COMPONENT base)
 else()
-    install(TARGETS drift RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT drift)
+    install(TARGETS base RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT base)
 
     # File-based effect/transition/template/audio-effect packages ship next to the binary;
     # the app searches <appDir>/<subdir> (GpuPackageParse::defaultSearchPaths). Installing
-    # them here (rather than via the DRIFT_*_DIR env vars) keeps installed addons able to
+    # them here (rather than via the BASE_*_DIR env vars) keeps installed addons able to
     # supersede the bundled copies.
     foreach(_assetdir effects transitions effect-templates audio-effects)
         install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_assetdir}
-                DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT drift)
+                DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT base)
     endforeach()
 
     # Desktop integration for Flatpak / freedesktop.
-    install(FILES flatpak/org.cutwire.Drift.desktop
-            DESTINATION ${CMAKE_INSTALL_DATADIR}/applications COMPONENT drift)
-    install(FILES flatpak/org.cutwire.Drift.metainfo.xml
-            DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo COMPONENT drift)
-    install(FILES flatpak/org.cutwire.Drift.xml
-            DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages COMPONENT drift)
+    install(FILES flatpak/app.base.editor.desktop
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/applications COMPONENT base)
+    install(FILES flatpak/app.base.editor.metainfo.xml
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo COMPONENT base)
+    install(FILES flatpak/app.base.editor.xml
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages COMPONENT base)
     # 1024px source is intentionally skipped: flatpak build-export rejects icons
     # larger than 512x512.
     foreach(_size 64 128 256 512)
         install(FILES
-            flatpak/share/icons/hicolor/${_size}x${_size}/apps/org.cutwire.Drift.png
-            DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${_size}x${_size}/apps COMPONENT drift)
+            flatpak/share/icons/hicolor/${_size}x${_size}/apps/app.base.editor.png
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${_size}x${_size}/apps COMPONENT base)
     endforeach()
 endif()
 

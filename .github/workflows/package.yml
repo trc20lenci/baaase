@@ -16,7 +16,7 @@ on:
         default: all
         type: string
       android_identity:
-        description: "release (org.cutwire.drift) or ci (org.cutwire.drift.ci) package id"
+        description: "release (app.base.editor) or ci (app.base.editor.ci) package id"
         required: false
         default: ci
         type: string
@@ -26,7 +26,7 @@ permissions:
 
 env:
   QT_VERSION: "6.10.3"
-  # Drift needs Quick, QuickControls2, QuickEffects, Widgets, OpenGL, Network, Concurrent and Test
+  # BASE needs Quick, QuickControls2, QuickEffects, Widgets, OpenGL, Network, Concurrent and Test
   # (qtbase + qtdeclarative, both in the base install); qtmultimedia is the only extra it links.
   # qtimageformats is for the import side: without it webp/tiff stills cannot be added to a project.
   # LinguistTools (lupdate) ships in the default qttools archive — it is not an aqtinstall module.
@@ -39,7 +39,7 @@ env:
   # the xcb plugin instead. See the Test step below.
   FETCHCONTENT_BASE_DIR: ${{ github.workspace }}/.deps
   # Pinned to the FFmpeg *branch* QtMultimedia's ffmpeg backend bundles for QT_VERSION above (check
-  # doc.qt.io/qt-6/qtmultimedia-attribution-ffmpeg.html when bumping QT_VERSION). Drift links
+  # doc.qt.io/qt-6/qtmultimedia-attribution-ffmpeg.html when bumping QT_VERSION). BASE links
   # FFmpeg itself *and* loads Qt's multimedia backend for audio output, so both copies are in the
   # process; sharing a branch is what keeps that from being two ABIs of the same library.
   #
@@ -49,7 +49,7 @@ env:
   #
   # The gpl variant, not lgpl: x264 and x265 are GPL, so the lgpl builds carry no H.264/H.265
   # encoder at all — which leaves the default export settings unencodable and MatteWriter with
-  # nothing to write a matte with. Drift is GPLv3 (see LICENSE), so linking them is fine.
+  # nothing to write a matte with. BASE is GPLv3 (see LICENSE), so linking them is fine.
   FFMPEG_REPO: "CutWire-Studios/FFmpeg-Builds"
   FFMPEG_TAG: "n7.1"
 
@@ -89,16 +89,16 @@ jobs:
 
       - name: Lint flatpak manifest and metadata
         run: |
-          appstreamcli validate --no-net flatpak/org.cutwire.Drift.metainfo.xml
-          desktop-file-validate flatpak/org.cutwire.Drift.desktop
-          flatpak-builder --show-manifest flatpak/org.cutwire.Drift.yml > /dev/null
-          flatpak-builder --show-manifest flatpak/org.cutwire.Drift.flathub.yml > /dev/null
+          appstreamcli validate --no-net flatpak/app.base.editor.metainfo.xml
+          desktop-file-validate flatpak/app.base.editor.desktop
+          flatpak-builder --show-manifest flatpak/app.base.editor.yml > /dev/null
+          flatpak-builder --show-manifest flatpak/app.base.editor.flathub.yml > /dev/null
 
       - name: Cache flatpak runtimes
         uses: actions/cache@v4
         with:
           path: ~/.local/share/flatpak
-          key: flatpak-runtimes-${{ hashFiles('flatpak/org.cutwire.Drift.yml') }}
+          key: flatpak-runtimes-${{ hashFiles('flatpak/app.base.editor.yml') }}
 
       # The local manifest (not the Flathub one) — it builds the working tree, so it validates the
       # commit under test rather than whatever tag the Flathub manifest is pinned to.
@@ -107,14 +107,14 @@ jobs:
           flatpak-builder --user --force-clean --install-deps-from=flathub \
             --repo="${{ runner.temp }}/flatpak-repo" \
             "${{ runner.temp }}/flatpak-build" \
-            flatpak/org.cutwire.Drift.yml
+            flatpak/app.base.editor.yml
 
       - name: Export bundle
         run: |
           mkdir -p dist
           flatpak build-bundle "${{ runner.temp }}/flatpak-repo" \
-            "dist/Drift-${{ inputs.version }}.flatpak" \
-            org.cutwire.Drift
+            "dist/BASE-${{ inputs.version }}.flatpak" \
+            app.base.editor
 
       - name: Upload flatpak bundle
         uses: actions/upload-artifact@v4
@@ -215,7 +215,7 @@ jobs:
           curl -fsSL "https://github.com/${FFMPEG_REPO}/releases/download/${FFMPEG_TAG}/ffmpeg-${FFMPEG_TAG}-linux64-gpl-shared.tar.xz" \
             | tar -xJf - --strip-components=1 -C "${GITHUB_WORKSPACE}/.deps/ffmpeg"
 
-      # DRIFT_BUNDLE_ONNXRUNTIME=OFF: a packaged build ships no runtime at all. Drift dlopens the
+      # BASE_BUNDLE_ONNXRUNTIME=OFF: a packaged build ships no runtime at all. BASE dlopens the
       # one the user installs from the Acceleration category, which is what keeps the CPU / CUDA /
       # WebGPU choice theirs instead of the packager's. Only the headers are fetched, to compile.
       - name: Configure
@@ -252,7 +252,7 @@ jobs:
 
       - name: Stage install tree
         run: |
-          cmake --install build --prefix "${GITHUB_WORKSPACE}/AppDir/usr" --component drift
+          cmake --install build --prefix "${GITHUB_WORKSPACE}/AppDir/usr" --component base
           mkdir -p "${GITHUB_WORKSPACE}/dist"
 
       - name: Build AppImage
@@ -263,7 +263,7 @@ jobs:
           chmod +x linuxdeploy.AppImage linuxdeploy-plugin-qt.AppImage
           export QMAKE="${QT_ROOT_DIR}/bin/qmake"
           export VERSION="${{ inputs.version }}"
-          # Drift's own QML is compiled into the binary, but the Qt Quick modules it imports are
+          # BASE's own QML is compiled into the binary, but the Qt Quick modules it imports are
           # not: without QML_SOURCES_PATHS the qt plugin has nothing to scan and ships an AppImage
           # whose every import fails at startup.
           export QML_SOURCES_PATHS="${GITHUB_WORKSPACE}/src/qml"
@@ -298,13 +298,13 @@ jobs:
           # hwaccel::deviceAvailable() dlopens libva.so.2 and libva-drm.so.2 itself before
           # letting FFmpeg near VAAPI. See vaapiLoadable() in src/engine/HwAccel.cpp.
           ./linuxdeploy.AppImage --appdir AppDir --plugin qt --output appimage \
-            -d flatpak/org.cutwire.Drift.desktop \
-            -i flatpak/share/icons/hicolor/256x256/apps/org.cutwire.Drift.png \
-            -e AppDir/usr/bin/drift \
+            -d flatpak/app.base.editor.desktop \
+            -i flatpak/share/icons/hicolor/256x256/apps/app.base.editor.png \
+            -e AppDir/usr/bin/base \
             -l /usr/lib/x86_64-linux-gnu/libssl.so.3 \
             -l /usr/lib/x86_64-linux-gnu/libcrypto.so.3
           appimage="$(ls ./*.AppImage | grep -iv linuxdeploy | head -n 1)"
-          mv "${appimage}" "dist/Drift-${{ inputs.version }}-x86_64.AppImage"
+          mv "${appimage}" "dist/BASE-${{ inputs.version }}-x86_64.AppImage"
 
       - name: Upload AppImage artifact
         uses: actions/upload-artifact@v4
@@ -346,7 +346,7 @@ jobs:
 
       # zstd (addon package decompression), openssl (addon signature verification), soundtouch
       # (voice-effect pitch shifting) and zlib (the project-file importers' inflate) are the
-      # non-Qt, non-FFmpeg libraries Drift links. Windows is the only target with no ambient
+      # non-Qt, non-FFmpeg libraries BASE links. Windows is the only target with no ambient
       # zlib — every other platform's SDK, base install or runtime already carries one — so it
       # has to be named here or find_package(ZLIB REQUIRED) fails at configure.
       #
@@ -456,8 +456,8 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist\bin | Out-Null
-          Copy-Item build\Release\drift.exe dist\bin -Force
-          # --qmldir: Drift's own QML lives in the binary's resources, but the Qt Quick modules it
+          Copy-Item build\Release\base.exe dist\bin -Force
+          # --qmldir: BASE's own QML lives in the binary's resources, but the Qt Quick modules it
           # imports have to be deployed, and qmlimportscanner reads the sources to find them.
           # --no-opengl-sw: opengl32sw.dll is Qt's bundled Mesa llvmpipe, and it only
           # provides OpenGL 3.0 — below the 3.3 the compositor needs. Whenever Qt chose
@@ -466,7 +466,7 @@ jobs:
           # main.cpp sets QT_NO_OPENGL_BUGLIST so Qt stops picking it over a perfectly
           # good card in the first place; keep the two together.
           & "${{ env.QT_ROOT_DIR }}\bin\windeployqt.exe" --release --no-translations `
-            --no-opengl-sw --qmldir src\qml dist\bin\drift.exe
+            --no-opengl-sw --qmldir src\qml dist\bin\base.exe
           Copy-Item vcpkg\installed\x64-windows\bin\*.dll dist\bin -Force
           Copy-Item .deps\ffmpeg\bin\*.dll dist\bin -Force
           # Bundled effect/transition/template packages: a POST_BUILD step already put them beside
@@ -478,7 +478,7 @@ jobs:
       # The one part of this package that can break silently. QAudioSink gets its devices from Qt's
       # multimedia backend plugin, and the FFmpeg copy above deliberately lands on top of the DLLs
       # windeployqt took out of Qt (see FFMPEG_TAG). If that combination leaves the plugin unable
-      # to load, audio playback is silent while video — which uses the FFmpeg Drift links directly
+      # to load, audio playback is silent while video — which uses the FFmpeg BASE links directly
       # — keeps working, so nothing else here would notice.
       #
       # The device count is reported but not asserted: runners have no audio endpoint.
@@ -499,7 +499,7 @@ jobs:
             throw "$check was not built; cannot verify the multimedia backend plugin"
           }
           Copy-Item $check dist\bin -Force
-          # Run from the staged tree so the checker's app dir is the same as drift.exe.
+          # Run from the staged tree so the checker's app dir is the same as base.exe.
           Push-Location dist\bin
           try {
             & .\audiobackendcheck.exe $plugin
@@ -515,7 +515,7 @@ jobs:
       - name: Build Inno Setup installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.6
         with:
-          path: installer/windows/Drift.iss
+          path: installer/windows/BASE.iss
           options: |
             /DMyAppVersion=${{ inputs.version }}
             /DMyAppSource=${{ github.workspace }}\dist\bin
@@ -524,8 +524,8 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Copy-Item installer\windows\output\Drift-Setup-x64.exe `
-            "dist\Drift-Setup-${{ inputs.version }}-x64.exe" -Force
+          Copy-Item installer\windows\output\BASE-Setup-x64.exe `
+            "dist\BASE-Setup-${{ inputs.version }}-x64.exe" -Force
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
@@ -533,20 +533,20 @@ jobs:
           name: windows-installer
           path: dist/*.exe
 
-      # The same staged tree the installer wraps, minus the install: a zip holding a single Drift\
+      # The same staged tree the installer wraps, minus the install: a zip holding a single BASE\
       # folder that runs from wherever it is unpacked, touching no registry key and no Start menu.
       # Relocatable, not self-contained — the app still keeps settings, addons, models and caches
-      # under %APPDATA%\Drift, so two copies on one machine share that state.
+      # under %APPDATA%\BASE, so two copies on one machine share that state.
       #
       # 7z rather than Compress-Archive: the staged tree is several hundred MB of Qt and FFmpeg
       # DLLs, which is where Compress-Archive's in-memory approach gets slow.
       - name: Build portable zip
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path portable\Drift, dist\portable | Out-Null
-          Copy-Item dist\bin\* portable\Drift -Recurse -Force
+          New-Item -ItemType Directory -Force -Path portable\BASE, dist\portable | Out-Null
+          Copy-Item dist\bin\* portable\BASE -Recurse -Force
           & "$env:ProgramFiles\7-Zip\7z.exe" a -tzip -mx=9 `
-            "dist\portable\Drift-Portable-${{ inputs.version }}-x64.zip" .\portable\Drift
+            "dist\portable\BASE-Portable-${{ inputs.version }}-x64.zip" .\portable\BASE
 
       - name: Upload portable artifact
         uses: actions/upload-artifact@v4
@@ -563,7 +563,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Homebrew, not install-qt-action: its Qt links the same FFmpeg Drift does, so unlike the
+      # Homebrew, not install-qt-action: its Qt links the same FFmpeg BASE does, so unlike the
       # other jobs there is no second libavcodec in the process to keep ABI-compatible.
       - name: Install dependencies
         run: |
@@ -675,8 +675,8 @@ jobs:
       # The script already names it from the project version, which is what a release tag carries.
       - name: Name the artifact for this release
         run: |
-          want="dist/Drift-${{ inputs.version }}-arm64.dmg"
-          for f in dist/Drift-*.dmg; do
+          want="dist/BASE-${{ inputs.version }}-arm64.dmg"
+          for f in dist/BASE-*.dmg; do
             [ "$f" = "$want" ] || mv "$f" "$want"
           done
 
@@ -848,20 +848,20 @@ jobs:
         shell: bash
         run: |
           if [ "${{ inputs.android_identity }}" = "release" ]; then
-            echo "package=org.cutwire.drift" >> "$GITHUB_OUTPUT"
-            echo "app_name=Drift" >> "$GITHUB_OUTPUT"
+            echo "package=app.base.editor" >> "$GITHUB_OUTPUT"
+            echo "app_name=BASE" >> "$GITHUB_OUTPUT"
             echo "version_code=" >> "$GITHUB_OUTPUT"
           else
-            echo "package=org.cutwire.drift.ci" >> "$GITHUB_OUTPUT"
-            echo "app_name=Drift CI" >> "$GITHUB_OUTPUT"
+            echo "package=app.base.editor.ci" >> "$GITHUB_OUTPUT"
+            echo "app_name=BASE CI" >> "$GITHUB_OUTPUT"
             echo "version_code=${{ github.run_number }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build release APK
         env:
-          DRIFT_ANDROID_PACKAGE_NAME: ${{ steps.identity.outputs.package }}
-          DRIFT_ANDROID_APP_NAME: ${{ steps.identity.outputs.app_name }}
-          DRIFT_ANDROID_VERSION_CODE: ${{ steps.identity.outputs.version_code }}
+          BASE_ANDROID_PACKAGE_NAME: ${{ steps.identity.outputs.package }}
+          BASE_ANDROID_APP_NAME: ${{ steps.identity.outputs.app_name }}
+          BASE_ANDROID_VERSION_CODE: ${{ steps.identity.outputs.version_code }}
           CMAKE_C_COMPILER_LAUNCHER: ccache
           CMAKE_CXX_COMPILER_LAUNCHER: ccache
           CCACHE_MAXSIZE: 2G
@@ -870,8 +870,8 @@ jobs:
           export QT_HOST_PATH="$HOME/Qt/$QT_ANDROID_VERSION/gcc_64"
           # Empty VERSION_CODE must not reach the environment as "", which would still override
           # CMake's derived default — unset it instead.
-          if [ -z "${DRIFT_ANDROID_VERSION_CODE}" ]; then
-            unset DRIFT_ANDROID_VERSION_CODE
+          if [ -z "${BASE_ANDROID_VERSION_CODE}" ]; then
+            unset BASE_ANDROID_VERSION_CODE
           fi
           ./scripts/build.sh "$ABI" Release
           ccache -s
@@ -898,7 +898,7 @@ jobs:
           [ -n "$APK" ] || { echo "no release APK under $BUILD/android-build" >&2; exit 1; }
 
           mkdir -p dist
-          OUT="dist/Drift-${VERSION}-${ABI}.apk"
+          OUT="dist/BASE-${VERSION}-${ABI}.apk"
 
           if [ -z "${KEYSTORE_B64:-}" ]; then
             echo "::warning::ANDROID_KEYSTORE_BASE64 not set; uploading unsigned APK"
@@ -920,5 +920,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: android-apk-${{ matrix.abi }}
-          path: dist/Drift-${{ inputs.version }}-${{ matrix.abi }}.apk
+          path: dist/BASE-${{ inputs.version }}-${{ matrix.abi }}.apk
           if-no-files-found: error

@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import ".."
 
 // One row of a text or shape clip's shading stack. The list is shown front-most first, so

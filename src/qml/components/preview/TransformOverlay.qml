@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Transform overlay: resize/rotate grips for the clips visible at the playhead.

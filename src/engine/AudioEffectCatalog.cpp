@@ -148,7 +148,7 @@ QList<AudioEffectEntry> scanDirectories(const QStringList &rootDirs)
                          qPrintable(error.isEmpty() ? QStringLiteral("invalid package") : error));
                 continue;
             }
-            // Higher-priority roots (installed addons, DRIFT_*_DIR) intentionally supersede the
+            // Higher-priority roots (installed addons, BASE_*_DIR) intentionally supersede the
             // bundled <appDir>/audio-effects copy — expected, so silent.
             if (seenIds.contains(entry->id))
                 continue;
@@ -175,7 +175,7 @@ void ensureLoaded()
 
 QStringList defaultAudioEffectSearchPaths()
 {
-    return GpuPackageParse::defaultSearchPaths(QStringLiteral("DRIFT_AUDIO_EFFECTS_DIR"),
+    return GpuPackageParse::defaultSearchPaths(QStringLiteral("BASE_AUDIO_EFFECTS_DIR"),
                                                QStringLiteral("audio-effects"),
                                                QStringLiteral("audio-effects"));
 }

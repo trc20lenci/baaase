@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Remap eos sfm_reference.obj into Drift head space (sfm_face.bin).
+"""Remap eos sfm_reference.obj into BASE head space (sfm_face.bin).
 """
 
 from __future__ import annotations
@@ -85,7 +85,7 @@ def download(name: str, dest: Path) -> None:
     last = None
     for attempt in range(6):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Drift-sfm-convert/1"})
+            req = urllib.request.Request(url, headers={"User-Agent": "BASE-sfm-convert/1"})
             with urllib.request.urlopen(req, timeout=60) as resp:
                 dest.write_bytes(resp.read())
             if dest.stat().st_size > 0:
@@ -175,7 +175,7 @@ def scale_uniform(verts, s: float) -> None:
 
 
 def remap_axes(verts, ibug_to_sfm: dict[int, int]) -> int:
-    """Y-up SFM → Drift head space. Returns number of axis negations (winding)."""
+    """Y-up SFM → BASE head space. Returns number of axis negations (winding)."""
     n = len(verts)
     flips = 0
 

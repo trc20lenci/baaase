@@ -5,7 +5,7 @@ if(NOT SOURCE_DIR OR NOT BINARY_DIR)
     message(FATAL_ERROR "CheckTranslations.cmake needs SOURCE_DIR and BINARY_DIR")
 endif()
 
-set(_catalog "${SOURCE_DIR}/i18n/drift.ts")
+set(_catalog "${SOURCE_DIR}/i18n/base.ts")
 if(NOT EXISTS "${_catalog}")
     message(FATAL_ERROR
         "Missing ${_catalog}. Run:\n"

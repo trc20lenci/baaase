@@ -271,7 +271,7 @@ void ensureLoaded()
 
 QStringList defaultEffectTemplateSearchPaths()
 {
-    return GpuPackageParse::defaultSearchPaths(QStringLiteral("DRIFT_TEMPLATES_DIR"),
+    return GpuPackageParse::defaultSearchPaths(QStringLiteral("BASE_TEMPLATES_DIR"),
                                                QStringLiteral("effect-templates"),
                                                QStringLiteral("effect-templates"));
 }

@@ -75,7 +75,7 @@ void rebuildLocked(const QStringList &packageRoots)
     g_family.clear();
 
     const QStringList roots = packageRoots.isEmpty()
-        ? GpuPackageParse::defaultSearchPaths(QStringLiteral("DRIFT_EMOJI_FONT_DIR"),
+        ? GpuPackageParse::defaultSearchPaths(QStringLiteral("BASE_EMOJI_FONT_DIR"),
                                               QStringLiteral("emoji-fonts"),
                                               QStringLiteral("emoji-font"))
         : packageRoots;

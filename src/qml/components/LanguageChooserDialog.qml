@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // First launch after install, and the header Language button afterwards.
 // English is selected by default on first launch. The header reopens the same

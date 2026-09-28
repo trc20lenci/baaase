@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
-import Drift 1.0
+import Base 1.0
 import "components"
 
 // Cutout surface, for whichever backend is installed. Opened for one clip: pick a reference frame,

@@ -4893,7 +4893,7 @@ void CoreTest::textLooksRegenerate()
 void CoreTest::lottieTextImport()
 {
     using namespace drift;
-    QFile fixture(QStringLiteral(DRIFT_TEST_DATA_DIR "/text-animations/lottie-text-animator.json"));
+    QFile fixture(QStringLiteral(BASE_TEST_DATA_DIR "/text-animations/lottie-text-animator.json"));
     QVERIFY2(fixture.open(QIODevice::ReadOnly), qPrintable(fixture.fileName()));
     const QByteArray json = fixture.readAll();
 

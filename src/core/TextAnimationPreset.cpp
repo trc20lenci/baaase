@@ -305,7 +305,7 @@ void TextAnimationPresetCatalog::ensureLoaded() const
     m_presets.clear();
     initTextAnimationResources();
     loadDir(QStringLiteral(":/text-animations"), true, QString());
-    const QString extra = qEnvironmentVariable("DRIFT_TEXT_ANIMATIONS");
+    const QString extra = qEnvironmentVariable("BASE_TEXT_ANIMATIONS");
     for (const QString &dir : extra.split(QLatin1Char(':'), Qt::SkipEmptyParts))
         loadDir(dir, true, QString());
     if (!userDir().isEmpty())

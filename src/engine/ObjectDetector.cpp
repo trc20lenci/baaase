@@ -39,7 +39,7 @@ double intersectionOverUnion(const QRectF &a, const QRectF &b)
 QString resolveObjectModelDir()
 {
     const QStringList roots = GpuPackageParse::defaultSearchPaths(
-        QStringLiteral("DRIFT_OBJECT_MODEL_DIR"), QStringLiteral("models/yolox-tiny"),
+        QStringLiteral("BASE_OBJECT_MODEL_DIR"), QStringLiteral("models/yolox-tiny"),
         QStringLiteral("object-model"));
 
     // A directory only counts as a model when every piece is there — a half-downloaded folder
@@ -194,7 +194,7 @@ bool ObjectDetector::Impl::ensureLoaded()
         // the app is running, and latching here would make it need a restart. A model that is
         // present but fails to load is latched below, since retrying just repeats the failure.
         error = QStringLiteral("Object model not found. Install the object detection addon, "
-                               "place it in models/yolox-tiny, or set DRIFT_OBJECT_MODEL_DIR.");
+                               "place it in models/yolox-tiny, or set BASE_OBJECT_MODEL_DIR.");
         return false;
     }
     if (!drift::ort::ensureLoaded(&error))

@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import ".."
 
 // One preset in the Animate gallery: the preset's settled pose on sample text, with its label

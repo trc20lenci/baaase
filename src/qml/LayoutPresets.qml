@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import Drift
+import Base
 
 // The single source of truth for canvas presets: the platform catalog and the arithmetic that
 // turns (template, quality) into a pixel size.

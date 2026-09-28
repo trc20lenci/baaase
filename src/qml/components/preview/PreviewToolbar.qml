@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
-import Drift
+import Base
 import ".."
 
 // Transport toolbar: timecode readout, play/pause, zoom readout, preview
@@ -305,7 +305,7 @@ Item {
 
     // Picking a decoder that runs on the other GPU is a legitimate choice — some codecs only
     // the discrete card decodes — so this explains the cost rather than blocking it, and
-    // offers the change that would actually fix it where Drift can make one.
+    // offers the change that would actually fix it where BASE can make one.
     ThemedDialog {
         id: decodeGpuDialog
 

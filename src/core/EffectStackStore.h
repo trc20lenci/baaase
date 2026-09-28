@@ -31,7 +31,7 @@ struct EffectStackPreset
 // and each entry in the library. `id` is written only when non-empty, so an export carries none.
 QJsonObject effectStackToJson(const EffectStackPreset &preset);
 
-// Returns an isEmpty() preset for anything that is not a Drift effect stack. That marker check is
+// Returns an isEmpty() preset for anything that is not a BASE effect stack. That marker check is
 // what makes it safe to auto-detect a paste off the system clipboard, which is shared with every
 // other application and usually holds prose.
 EffectStackPreset effectStackFromJson(const QJsonObject &object);

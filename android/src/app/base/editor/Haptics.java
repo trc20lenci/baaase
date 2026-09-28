@@ -1,4 +1,4 @@
-package org.cutwire.drift;
+package app.base.editor;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +26,7 @@ import android.view.Window;
 // has been ignored since API 33 — so an app that only ever calls route 1 is silent on those devices
 // with no indication why. That was the bug: every call site was firing correctly and nothing moved.
 //
-// Route 2 therefore answers to Drift's own switch (Settings → Interface → Haptic feedback) rather
+// Route 2 therefore answers to BASE's own switch (Settings → Interface → Haptic feedback) rather
 // than to the system touch-feedback setting: the C++ side never calls in here at all when that
 // switch is off. The system setting still wins wherever route 1 succeeds, which is the common case.
 //

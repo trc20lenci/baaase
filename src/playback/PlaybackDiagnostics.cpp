@@ -344,7 +344,7 @@ QVariantMap PlaybackDiagnostics::collect(const PlaybackStats &stats, const drift
 QString PlaybackDiagnostics::formatPlainText(const QVariantMap &info)
 {
     QString out;
-    out += QStringLiteral("# Drift playback diagnostics\n\n");
+    out += QStringLiteral("# BASE playback diagnostics\n\n");
 
     const QVariantList rows = info.value(QStringLiteral("rows")).toList();
     if (!rows.isEmpty()) {

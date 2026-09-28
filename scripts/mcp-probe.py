@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure Drift's MCP replies end to end.
+"""Measure BASE's MCP replies end to end.
 
 Starts `drift --headless` over stdio, synthesises a four-shot test clip with ffmpeg, calls every
 read tool and a sample of ops, and prints one line per call with the reply size in characters

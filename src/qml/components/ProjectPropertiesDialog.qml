@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Title, author and description — the metadata stamped into the .drift bundle. Author defaults
 // from the last one used, so it is typed once rather than per project.

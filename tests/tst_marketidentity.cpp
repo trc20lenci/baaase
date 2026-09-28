@@ -40,7 +40,7 @@ void TestMarketIdentity::hmacKnownVector()
 // with a flat "invalid client" and no way to see why.
 void TestMarketIdentity::keyIsTheConfiguredBytes()
 {
-    const QByteArray configured(DRIFT_MARKET_CLIENT_KEY);
+    const QByteArray configured(BASE_MARKET_CLIENT_KEY);
     QCOMPARE(hmacKeyBytes(), configured);
     QCOMPARE(hmacKeyBytes().size(), 64);
     QVERIFY(hmacKeyBytes() != QByteArray::fromHex(configured));

@@ -1,5 +1,5 @@
 #include "GpuCompositor.h"
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "SkiaRuntime.h"
 #endif
 
@@ -288,7 +288,7 @@ GlTarget buildLayerTarget(GlRuntime &rt, QOpenGLExtraFunctions *gl, const GpuLay
     } else if (layer.video.isValid()) {
         target = promoteVideoFrameToTarget(rt, gl, layer.video);
     } else {
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
         if (layer.vector) {
             if (auto *sk = drift::skia::SkiaRuntime::acquire(rt))
                 target = sk->paintToTarget(rt, gl, *layer.vector);

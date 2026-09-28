@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import Drift
+import Base
 
 // Import policy in one place: run the import, then say what happened.
 //

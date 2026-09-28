@@ -24,7 +24,7 @@
          permission at all; this covers the case that route cannot: the one-argument overload does
          nothing and returns false when the system's touch-feedback setting is off, which several
          OEM skins ship as the default, and since API 33 there is no flag that overrides it. Without
-         the fallback the feature is simply dead on those devices. Drift's own switch (Settings →
+         the fallback the feature is simply dead on those devices. BASE's own switch (Settings →
          Interface → Haptic feedback, off by one tap) is what gates the fallback — the C++ side never reaches the Java
          at all when it is off. Normal permission: no runtime prompt, no install-time consent. -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -55,7 +55,7 @@
         android:largeScreens="true"
         android:normalScreens="true"
         android:smallScreens="true" />
-    <!-- enableOnBackInvokedCallback must stay false. Drift's entire Back story is one Shortcut
+    <!-- enableOnBackInvokedCallback must stay false. BASE's entire Back story is one Shortcut
          in AndroidMain.qml that dispatches six branches with side effects — a full-screen clip
          tool, open menus, modals that deliberately refuse to close, a swallow during an import,
          then the home/exit step. The predictive-back callback would hand the gesture to the
@@ -80,7 +80,7 @@
             android:screenOrientation="unspecified"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/DriftTheme">
+            android:theme="@style/BaseTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -106,7 +106,7 @@
 
             <!-- Share targets. Separate filters on purpose: the VIEW filter above matches
                  mimeType="*/*" so that .drift can be opened from anywhere, and adding media
-                 types to it would make Drift a candidate for opening every video file on the
+                 types to it would make BASE a candidate for opening every video file on the
                  device. No BROWSABLE either — these are share-sheet destinations, not links.
 
                  No new permissions: a shared content:// arrives with a transient read grant and
@@ -167,7 +167,7 @@
              encode dies with the activity anyway: a service outliving the task would leave a
              progress notification for a render that no longer exists. -->
         <service
-            android:name="org.cutwire.drift.ExportService"
+            android:name="app.base.editor.ExportService"
             android:exported="false"
             android:stopWithTask="true"
             android:foregroundServiceType="mediaProcessing" />

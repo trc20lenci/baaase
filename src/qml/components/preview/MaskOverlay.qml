@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import ".."
 
 // Mask editor: direct manipulation of the selected clip's mask layers. Geometry is driven by the

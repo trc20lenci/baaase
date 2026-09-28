@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import Drift
+import Base
 
 // Lift-and-drop for the phone shell's asset sheet.
 //

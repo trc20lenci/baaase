@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Host for SettingsPane. Opened from the header's Settings menu ("More settings…")
 // and from the phone's overflow menu; both used to reach a tab in the assets rail.

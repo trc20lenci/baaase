@@ -13,8 +13,8 @@ CMakeLists.txt.user
 
 # Fonts, stickers and Whisper models are addons now — built and published from the drift-addons
 # repo, downloaded at runtime into <AppDataLocation>/addons/. These directories are only local
-# development overrides, pointed at with DRIFT_FONTS_DIR / DRIFT_STICKERS_DIR /
-# DRIFT_WHISPER_MODEL_DIR / DRIFT_FACE_PROPS_DIR, and are never part of a build.
+# development overrides, pointed at with BASE_FONTS_DIR / BASE_STICKERS_DIR /
+# BASE_WHISPER_MODEL_DIR / BASE_FACE_PROPS_DIR, and are never part of a build.
 /fonts/
 stickers/
 emoji-fonts/

@@ -1,4 +1,4 @@
-package org.cutwire.drift;
+package app.base.editor;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,7 +24,7 @@ public class ExportService extends Service
 {
     private static final String CHANNEL_ID = "export";
     private static final int NOTIFICATION_ID = 4711;
-    private static final String ACTION_CANCEL = "org.cutwire.drift.CANCEL_EXPORT";
+    private static final String ACTION_CANCEL = "app.base.editor.CANCEL_EXPORT";
 
     // The service now holds any long job, not just an export, so the notification says which one.
     // volatile because start() runs on the job's thread while onStartCommand and setPercent read it
@@ -213,7 +213,7 @@ public class ExportService extends Service
         return builder.build();
     }
 
-    // Implemented in libdrift.so and registered from Exporter.cpp when the first job starts. It
+    // Implemented in libbase.so and registered from Exporter.cpp when the first job starts. It
     // only raises a flag; the render is what decides to stop.
     private static native void nativeCancelRequested();
 

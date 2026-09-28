@@ -43,7 +43,7 @@ private:
 
 void TestAddonPackage::initTestCase()
 {
-    m_fixture = QStringLiteral(DRIFT_TEST_DATA_DIR "/test.fixture-1.2.3.driftpkg");
+    m_fixture = QStringLiteral(BASE_TEST_DATA_DIR "/test.fixture-1.2.3.driftpkg");
     QVERIFY2(QFile::exists(m_fixture), qPrintable(m_fixture));
     QVERIFY(m_tmp.isValid());
 }
@@ -192,7 +192,7 @@ void TestAddonPackage::installedAddonOutranksBundledContent()
     reloadAddonRegistry();
 
     const QStringList roots = GpuPackageParse::defaultSearchPaths(
-        QStringLiteral("DRIFT_UNSET_FOR_TEST"), QStringLiteral("fonts"), QStringLiteral("fonts"));
+        QStringLiteral("BASE_UNSET_FOR_TEST"), QStringLiteral("fonts"), QStringLiteral("fonts"));
 
     const QString addonRoot = QDir(installDir).filePath(QStringLiteral("fonts"));
     const QString bundledRoot =

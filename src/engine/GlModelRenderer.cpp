@@ -21,7 +21,7 @@
 #include <unordered_map>
 
 // Qt's GLES2 headers stop short of these ES 3.0 constants; the functions exist on every context
-// Drift creates.
+// BASE creates.
 #ifndef GL_RGBA32F
 #define GL_RGBA32F 0x8814
 #endif

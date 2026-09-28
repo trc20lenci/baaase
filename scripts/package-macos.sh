@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build Drift.app and wrap it in a self-contained, signed .dmg.
+# Build BASE.app and wrap it in a self-contained, signed .dmg.
 #
 #   scripts/package-macos.sh
 #   scripts/package-macos.sh --identity "Developer ID Application: ..." --notarize
@@ -66,10 +66,10 @@ if [[ ! -x "$MACDEPLOYQT" ]]; then
   exit 1
 fi
 
-VERSION="$(sed -n 's/^project(Drift VERSION \([0-9.]*\).*/\1/p' "$ROOT/CMakeLists.txt")"
+VERSION="$(sed -n 's/^project(BASE VERSION \([0-9.]*\).*/\1/p' "$ROOT/CMakeLists.txt")"
 ARCH="$(uname -m)"
-APP="$BUILD_DIR/Drift.app"
-DMG="$DIST_DIR/Drift-$VERSION-$ARCH.dmg"
+APP="$BUILD_DIR/BASE.app"
+DMG="$DIST_DIR/BASE-$VERSION-$ARCH.dmg"
 
 if [[ $SKIP_BUILD -eq 0 ]]; then
   # No inference runtime ships, as on Linux and Windows; the user installs an Acceleration addon.
@@ -77,7 +77,7 @@ if [[ $SKIP_BUILD -eq 0 ]]; then
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_PREFIX_PATH="$QT_PREFIX;$BREW_PREFIX/opt/openssl@3;$BREW_PREFIX" \
     -DDRIFT_BUNDLE_ONNXRUNTIME=OFF
-  cmake --build "$BUILD_DIR" --target drift --parallel "$(sysctl -n hw.ncpu)"
+  cmake --build "$BUILD_DIR" --target base --parallel "$(sysctl -n hw.ncpu)"
 fi
 
 if [[ ! -d "$APP" ]]; then
@@ -90,7 +90,7 @@ fi
 
 # macdeployqt leaves the build tree's rpaths in place, and dyld searches those before the
 # @loader_path entries in the frameworks, so the host's Qt would win over the bundled one.
-EXE="$APP/Contents/MacOS/Drift"
+EXE="$APP/Contents/MacOS/BASE"
 rpaths() { otool -l "$EXE" | awk '/LC_RPATH/{f=1} f&&/ path /{print $2; f=0}'; }
 
 while IFS= read -r RPATH; do
@@ -103,7 +103,7 @@ if ! rpaths | grep -qx "@executable_path/../Frameworks"; then
   install_name_tool -add_rpath "@executable_path/../Frameworks" "$EXE"
 fi
 
-# macdeployqt copies every plugin in a category, including ones belonging to Qt modules Drift does
+# macdeployqt copies every plugin in a category, including ones belonging to Qt modules BASE does
 # not link — the virtual keyboard is one. Their frameworks are never deployed, so the plugin can
 # only fail to load, and the "Cannot resolve rpath" errors macdeployqt printed above are it saying
 # so. Drop them rather than sign and ship a binary that cannot resolve.
@@ -147,7 +147,7 @@ while IFS= read -r -d '' NESTED; do
   codesign "${CODESIGN_ARGS[@]}" "$NESTED" 2>/dev/null || true
 done < <(find "$APP/Contents" \( -name "*.dylib" -o -name "*.framework" \) -print0)
 if [[ -n "$IDENTITY" ]]; then
-  codesign "${CODESIGN_ARGS[@]}" --entitlements "$ROOT/resources/macos/Drift.entitlements" "$APP"
+  codesign "${CODESIGN_ARGS[@]}" --entitlements "$ROOT/resources/macos/BASE.entitlements" "$APP"
 else
   codesign "${CODESIGN_ARGS[@]}" "$APP"
 fi
@@ -170,19 +170,19 @@ notarize() {
 # carries its own ticket and validates with no network. Stapling only the .dmg leaves the app
 # relying on an online check.
 if [[ $NOTARIZE -eq 1 ]]; then
-  ditto -c -k --keepParent "$APP" "$STAGING/Drift.zip"
-  notarize "$STAGING/Drift.zip"
+  ditto -c -k --keepParent "$APP" "$STAGING/BASE.zip"
+  notarize "$STAGING/BASE.zip"
   xcrun stapler staple "$APP"
 fi
 
 mkdir -p "$DIST_DIR"
 rm -f "$DMG"
 
-cp -R "$APP" "$STAGING/Drift.app"
+cp -R "$APP" "$STAGING/BASE.app"
 ln -s /Applications "$STAGING/Applications"
-rm -f "$STAGING/Drift.zip"
+rm -f "$STAGING/BASE.zip"
 
-hdiutil create -volname "Drift $VERSION" -srcfolder "$STAGING" \
+hdiutil create -volname "BASE $VERSION" -srcfolder "$STAGING" \
   -ov -format UDZO -quiet "$DMG"
 
 if [[ -n "$IDENTITY" ]]; then

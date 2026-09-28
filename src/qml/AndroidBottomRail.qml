@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import "components"
 
 // CapCut-style bottom tool rail: four destinations either side of a centred Add

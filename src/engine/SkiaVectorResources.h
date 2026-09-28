@@ -7,7 +7,7 @@
 #include "modules/skresources/include/SkResources.h"
 
 // Resource loading for Lottie and SVG documents. Skia's own codecs are built for PNG only, so
-// every image goes through QImage (JPEG, WebP, HEIC via the same plugins the rest of Drift uses)
+// every image goes through QImage (JPEG, WebP, HEIC via the same plugins the rest of BASE uses)
 // and is handed back as a raster SkImage.
 
 namespace drift::skia {

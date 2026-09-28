@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 
 // The contextual layer above the timeline: what you can do to the thing you have selected.

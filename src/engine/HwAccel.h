@@ -43,7 +43,7 @@ QList<Backend> decodeBackendOrderFor(const QString &renderVendor);
 
 // Whether frames decoded on `backend` start out on the GPU `renderVendor` names. Mismatch is the
 // only answer that changes behaviour: Unknown has to stay as permissive as an empty vendor, or a
-// machine Drift cannot identify would lose hardware decode it can perfectly well do.
+// machine BASE cannot identify would lose hardware decode it can perfectly well do.
 enum class RenderMatch { Matches, Mismatch, Unknown };
 
 struct RenderMatchInfo
@@ -97,11 +97,11 @@ const char *scaleFilter(Backend backend);
 // process runs.
 bool deviceAvailable(AVHWDeviceType type);
 
-// DRIFT_NO_HWACCEL is the escape hatch for a driver that decodes garbage or crashes.
+// BASE_NO_HWACCEL is the escape hatch for a driver that decodes garbage or crashes.
 bool disabledByEnv();
 
 // Whether this build can decode anything through MediaCodec: at least one *_mediacodec decoder
-// resolves and DRIFT_NO_MEDIACODEC is unset. Always false off Android. deviceAvailable() cannot
+// resolves and BASE_NO_MEDIACODEC is unset. Always false off Android. deviceAvailable() cannot
 // answer this — FFmpeg's MediaCodec device init succeeds with a null surface for backward
 // compatibility, so it reports true on every Android device whether or not a decoder exists.
 bool mediaCodecDecodeAvailable();

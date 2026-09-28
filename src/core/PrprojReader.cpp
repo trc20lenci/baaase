@@ -723,7 +723,7 @@ std::optional<Project> readProjectData(const QByteArray &data, const QString &so
         project.resetToDefaultTimeline();
     }
 
-    // Premiere models an adjustment layer as a clip on a video track, which is the shape Drift
+    // Premiere models an adjustment layer as a clip on a video track, which is the shape BASE
     // used to have too. Reuse the same pass project load runs so an import lands in the current
     // model rather than in a state the editor's invariants do not expect.
     liftAdjustmentClipsToOwnTracks(project);

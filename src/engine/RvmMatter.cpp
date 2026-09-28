@@ -58,7 +58,7 @@ int variantRank(const QString &variant)
 // at the first hit: the two RVM addons install side by side and the user chooses between them.
 QList<ModelRoot> discoverRoots()
 {
-    QStringList roots = GpuPackageParse::defaultSearchPaths(QStringLiteral("DRIFT_RVM_MODEL_DIR"),
+    QStringList roots = GpuPackageParse::defaultSearchPaths(QStringLiteral("BASE_RVM_MODEL_DIR"),
                                                             QStringLiteral("models/rvm"),
                                                             QStringLiteral("rvm-model"));
     // The addon roots above already cover both packages; this is only the bundled / hand-placed
@@ -193,7 +193,7 @@ RvmMatter::Impl::Loaded *RvmMatter::Impl::ensureLoaded(const QString &requested)
     const QList<ModelRoot> roots = discoverRoots();
     if (roots.isEmpty()) {
         error = QStringLiteral("Video matting model not found. Install the People Cutout addon, "
-                               "or set DRIFT_RVM_MODEL_DIR.");
+                               "or set BASE_RVM_MODEL_DIR.");
         return nullptr;
     }
 

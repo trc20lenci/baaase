@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Builds Skia (Ganesh/GL + SkParagraph + Skottie + SVG) as static archives for one target and
 # installs them into third_party/prebuilt/skia/<target>/{lib,include,SkiaConfig.cmake}, which is
-# where cmake/FindSkia.cmake looks when DRIFT_WITH_SKIA is on.
+# where cmake/FindSkia.cmake looks when BASE_WITH_SKIA is on.
 #
 # Why from source everywhere: Skia has no ABI stability and no official CMake build, Flatpak builds
 # with no network, Android needs the same NDK Qt was built with, and the prebuilts that exist
@@ -41,7 +41,7 @@ SKIA_MILESTONE="m148"
 SKIA_COMMIT="e7c90ecca9444fe09598f1630ab7cee2c0ee027a"
 SKIA_SHA256="7b5158952ebc4e2ce8de19f036b7613e266705003469579d9e98070ead62fc3b"
 
-# Modules Drift links. Order is dependency order (dependents first) because static archives are
+# Modules BASE links. Order is dependency order (dependents first) because static archives are
 # resolved left to right; FindSkia writes them into the imported target in this order.
 SKIA_TARGETS=(
   //modules/skottie:skottie
@@ -153,7 +153,7 @@ COMMON_ARGS=(
   # RTTI-on code: the derived typeinfo references a base typeinfo that exists nowhere. Compiling
   # the subclassing files -fno-rtti too held until gcc's LTO devirtualisation re-emitted sksg
   # vtables in an RTTI context (Arch, -flto=auto). extra_flags is the last default config, so this
-  # overrides the hardcoded flag. Costs ~1% of archive size; nothing in Drift uses it at runtime.
+  # overrides the hardcoded flag. Costs ~1% of archive size; nothing in BASE uses it at runtime.
   extra_cflags_cc=[\"-frtti\"]
 )
 
@@ -264,7 +264,7 @@ done
 
 # Defines and system libraries as GN resolved them, unioned over every target. The
 # *_IMPLEMENTATION defines must not leak: they flip SK_API to dllexport-style visibility. NDEBUG
-# becomes SK_RELEASE: Skia derives SK_DEBUG from NDEBUG's absence, and a Debug build of Drift
+# becomes SK_RELEASE: Skia derives SK_DEBUG from NDEBUG's absence, and a Debug build of BASE
 # compiling the headers as SK_DEBUG against a release archive changes struct layouts.
 DEFINES="$(cd "$SKIA_SRC" && for t in "${SKIA_TARGETS[@]}"; do "$GN" desc "$BUILD" "$t" defines; done \
            | grep -v '_IMPLEMENTATION' | sed 's/^NDEBUG$/SK_RELEASE/' | sort -u)"

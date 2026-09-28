@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
-import Drift 1.0
+import Base 1.0
 import "components"
 
 // Marketplace downloads: what is running, what is waiting behind the concurrency cap, and

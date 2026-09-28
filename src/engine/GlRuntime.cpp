@@ -6,7 +6,7 @@
 #if defined(Q_OS_WIN)
 #include "D3d11GlInterop.h"
 #endif
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "SkiaRuntime.h"
 #endif
 
@@ -45,14 +45,14 @@ extern "C" {
 // VAAPI dma-buf import. Android is GLES on a MediaCodec decoder that never produces a VAAPI
 // surface, so it is excluded along with the two platforms that have no libva at all.
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MACOS) && !defined(Q_OS_ANDROID)
-#define DRIFT_VAAPI_IMPORT 1
+#define BASE_VAAPI_IMPORT 1
 #include <unistd.h>
 #endif
 
 // MediaCodec zero-copy import: a gralloc buffer bound as a GL external texture. Android only,
 // and the mirror image of the VAAPI path above — same EGLImage mechanism, different source.
 #if defined(Q_OS_ANDROID)
-#define DRIFT_ANDROID_AHB_IMPORT 1
+#define BASE_ANDROID_AHB_IMPORT 1
 #include <android/hardware_buffer.h>
 #include "ClipReader.h"
 #include "MediaCodecImagePool.h"
@@ -153,8 +153,8 @@ VaapiZeroCopyMode vaapiZeroCopyMode()
 {
     // Env is read live so tests can qputenv after other imports have already
     // resolved the settings half. QSettings is what must not run per frame.
-    if (qEnvironmentVariableIsSet("DRIFT_VAAPI_ZEROCOPY")) {
-        return qgetenv("DRIFT_VAAPI_ZEROCOPY") != "0" ? VaapiZeroCopyMode::On
+    if (qEnvironmentVariableIsSet("BASE_VAAPI_ZEROCOPY")) {
+        return qgetenv("BASE_VAAPI_ZEROCOPY") != "0" ? VaapiZeroCopyMode::On
                                                       : VaapiZeroCopyMode::Off;
     }
     static VaapiZeroCopyMode mode = VaapiZeroCopyMode::Auto;
@@ -173,8 +173,8 @@ VaapiZeroCopyMode vaapiZeroCopyMode()
 
 bool d3d11ZeroCopyEnabled()
 {
-    if (qEnvironmentVariableIsSet("DRIFT_D3D11_ZEROCOPY"))
-        return qgetenv("DRIFT_D3D11_ZEROCOPY") != "0";
+    if (qEnvironmentVariableIsSet("BASE_D3D11_ZEROCOPY"))
+        return qgetenv("BASE_D3D11_ZEROCOPY") != "0";
     static bool enabled = true;
     static std::once_flag once;
     std::call_once(once, [] {
@@ -473,7 +473,7 @@ CudaGlApi &cudaGlApi()
 #endif
         if (!api.lib)
             return;
-#define DRIFT_CUDA_SYM(field, name) \
+#define BASE_CUDA_SYM(field, name) \
     api.field = reinterpret_cast<decltype(api.field)>(sym(name)); \
     if (!api.field) \
         return;
@@ -482,17 +482,17 @@ CudaGlApi &cudaGlApi()
         // pointer must use the versioned symbol or it will read the arguments at the wrong
         // offsets. If a driver is old enough to lack them, ok stays false and the preview
         // falls back to the hardware-transfer path.
-        DRIFT_CUDA_SYM(cuInit, "cuInit");
-        DRIFT_CUDA_SYM(cuCtxPushCurrent, "cuCtxPushCurrent_v2");
-        DRIFT_CUDA_SYM(cuCtxPopCurrent, "cuCtxPopCurrent_v2");
-        DRIFT_CUDA_SYM(cuGraphicsGLRegisterImage, "cuGraphicsGLRegisterImage");
-        DRIFT_CUDA_SYM(cuGraphicsUnregisterResource, "cuGraphicsUnregisterResource");
-        DRIFT_CUDA_SYM(cuGraphicsMapResources, "cuGraphicsMapResources");
-        DRIFT_CUDA_SYM(cuGraphicsUnmapResources, "cuGraphicsUnmapResources");
-        DRIFT_CUDA_SYM(cuGraphicsSubResourceGetMappedArray, "cuGraphicsSubResourceGetMappedArray");
-        DRIFT_CUDA_SYM(cuMemcpy2DAsync, "cuMemcpy2DAsync_v2");
-        DRIFT_CUDA_SYM(cuStreamSynchronize, "cuStreamSynchronize");
-#undef DRIFT_CUDA_SYM
+        BASE_CUDA_SYM(cuInit, "cuInit");
+        BASE_CUDA_SYM(cuCtxPushCurrent, "cuCtxPushCurrent_v2");
+        BASE_CUDA_SYM(cuCtxPopCurrent, "cuCtxPopCurrent_v2");
+        BASE_CUDA_SYM(cuGraphicsGLRegisterImage, "cuGraphicsGLRegisterImage");
+        BASE_CUDA_SYM(cuGraphicsUnregisterResource, "cuGraphicsUnregisterResource");
+        BASE_CUDA_SYM(cuGraphicsMapResources, "cuGraphicsMapResources");
+        BASE_CUDA_SYM(cuGraphicsUnmapResources, "cuGraphicsUnmapResources");
+        BASE_CUDA_SYM(cuGraphicsSubResourceGetMappedArray, "cuGraphicsSubResourceGetMappedArray");
+        BASE_CUDA_SYM(cuMemcpy2DAsync, "cuMemcpy2DAsync_v2");
+        BASE_CUDA_SYM(cuStreamSynchronize, "cuStreamSynchronize");
+#undef BASE_CUDA_SYM
         if (api.cuInit(0) != kCuSuccess)
             return;
         api.ok = true;
@@ -671,7 +671,7 @@ void logVaapiImportOnce(const QString &reason)
     });
 }
 
-#if defined(DRIFT_VAAPI_IMPORT)
+#if defined(BASE_VAAPI_IMPORT)
 // libva and the EGL dma-buf import extension, resolved at runtime for the same reason CUDA is:
 // the binary has to start on a host with neither. Only the handful of declarations the import
 // needs are reproduced here — a compile-time dependency on va/va.h and EGL/eglext.h would buy
@@ -772,17 +772,17 @@ VaEglApi &vaEglApi()
         api.egl = dlopen("libEGL.so.1", RTLD_LAZY | RTLD_LOCAL);
         if (!api.va || !api.egl)
             return;
-#define DRIFT_VA_SYM(handle, field, name) \
+#define BASE_VA_SYM(handle, field, name) \
     api.field = reinterpret_cast<decltype(api.field)>(dlsym(handle, name)); \
     if (!api.field) \
         return;
         api.vaQueryVendorString = reinterpret_cast<decltype(api.vaQueryVendorString)>(
             dlsym(api.va, "vaQueryVendorString"));
-        DRIFT_VA_SYM(api.va, vaExportSurfaceHandle, "vaExportSurfaceHandle");
-        DRIFT_VA_SYM(api.va, vaSyncSurface, "vaSyncSurface");
-        DRIFT_VA_SYM(api.egl, eglGetCurrentDisplay, "eglGetCurrentDisplay");
-        DRIFT_VA_SYM(api.egl, eglQueryString, "eglQueryString");
-#undef DRIFT_VA_SYM
+        BASE_VA_SYM(api.va, vaExportSurfaceHandle, "vaExportSurfaceHandle");
+        BASE_VA_SYM(api.va, vaSyncSurface, "vaSyncSurface");
+        BASE_VA_SYM(api.egl, eglGetCurrentDisplay, "eglGetCurrentDisplay");
+        BASE_VA_SYM(api.egl, eglQueryString, "eglQueryString");
+#undef BASE_VA_SYM
 
         // eglCreateImageKHR is an extension entry point, so it comes from eglGetProcAddress
         // rather than the library's symbol table. glEGLImageTargetTexture2DOES comes from Qt's
@@ -876,7 +876,7 @@ QString describePrime(const VaDrmPrimeSurfaceDescriptor &desc)
     }
     return text;
 }
-#endif // DRIFT_VAAPI_IMPORT
+#endif // BASE_VAAPI_IMPORT
 
 uint64_t targetPoolKey(int width, int height, bool wantDepth)
 {
@@ -1018,7 +1018,7 @@ bool GlRuntime::initGlObjects()
     const int major = context->format().majorVersion();
     const int minor = context->format().minorVersion();
     if (isEs ? major < 3 : (major < 3 || (major == 3 && minor < 3))) {
-        qCritical("GlRuntime: this device reports OpenGL%s %d.%d; Drift needs OpenGL ES 3.0 or "
+        qCritical("GlRuntime: this device reports OpenGL%s %d.%d; BASE needs OpenGL ES 3.0 or "
                   "OpenGL 3.3. GPU rendering is unavailable. (vendor: %s, renderer: %s)",
                   isEs ? " ES" : "", major, minor,
                   reinterpret_cast<const char *>(gl->glGetString(GL_VENDOR)),
@@ -1181,7 +1181,7 @@ void GlRuntime::releaseCaches()
     }
 
     exec([this] {
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
         if (skia)
             skia->releaseCaches();
 #endif
@@ -1208,7 +1208,7 @@ void GlRuntime::shutdown()
         [this] {
             if (!context->makeCurrent(surface.get()))
                 return;
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
             if (skia) {
                 skia->shutdown();
                 skia.reset();
@@ -1556,7 +1556,7 @@ void GlRuntime::destroyImageUploadCache()
     m_imageUploadIndex.clear();
 }
 
-#if defined(DRIFT_ANDROID_AHB_IMPORT)
+#if defined(BASE_ANDROID_AHB_IMPORT)
 namespace {
 
 // EGL for the AHardwareBuffer import. Deliberately not shared with the VAAPI block above: that
@@ -1621,7 +1621,7 @@ void logMediaCodecImportOnce(const char *reason)
 }
 
 } // namespace
-#endif // DRIFT_ANDROID_AHB_IMPORT
+#endif // BASE_ANDROID_AHB_IMPORT
 
 void GlRuntime::destroyVideoUploadState()
 {
@@ -1648,7 +1648,7 @@ void GlRuntime::destroyVideoUploadState()
             gl->glDeleteTextures(1, &m_importUV);
             m_importUV = 0;
         }
-#if defined(DRIFT_ANDROID_AHB_IMPORT)
+#if defined(BASE_ANDROID_AHB_IMPORT)
         if (m_mcTexture) {
             gl->glDeleteTextures(1, &m_mcTexture);
             m_mcTexture = 0;
@@ -1915,7 +1915,7 @@ bool GlRuntime::importD3d11Nv12(QOpenGLExtraFunctions *gl, const AVFrame *frame,
         return false;
     if (!drift::d3d11ZeroCopyEnabled()) {
         noteZeroCopyDecline(QStringLiteral(
-            "D3D11 interop is turned off (preview/d3d11ZeroCopy or DRIFT_D3D11_ZEROCOPY)"));
+            "D3D11 interop is turned off (preview/d3d11ZeroCopy or BASE_D3D11_ZEROCOPY)"));
         return false;
     }
     if (!m_d3d11)
@@ -1974,7 +1974,7 @@ bool GlRuntime::ensureImportTextureNames(QOpenGLExtraFunctions *gl)
 
 // VAAPI surface -> dma-buf -> two EGLImages -> the same R8 + RG8 pair the convert shader already
 // samples. Replaces an av_hwframe_transfer_data of the displayed frame on every Intel/AMD host.
-#if defined(DRIFT_VAAPI_IMPORT)
+#if defined(BASE_VAAPI_IMPORT)
 namespace {
 
 // Auto engages zero-copy only where the whole chain — surface export, dma-buf import and
@@ -1998,7 +1998,7 @@ bool vaapiDriverIsVerified(VaEglApi &api, void *display, QOpenGLExtraFunctions *
 }
 
 } // namespace
-#endif // DRIFT_VAAPI_IMPORT
+#endif // BASE_VAAPI_IMPORT
 
 
 // Binds the gralloc buffer behind a latched MediaCodec frame as a GL external texture. No copy:
@@ -2012,7 +2012,7 @@ bool vaapiDriverIsVerified(VaEglApi &api, void *display, QOpenGLExtraFunctions *
 bool GlRuntime::importMediaCodecImage(QOpenGLExtraFunctions *gl, const AVFrame *frame,
                                       GLuint *texture, QVector4D *crop)
 {
-#ifndef DRIFT_ANDROID_AHB_IMPORT
+#ifndef BASE_ANDROID_AHB_IMPORT
     Q_UNUSED(gl);
     Q_UNUSED(frame);
     Q_UNUSED(texture);
@@ -2111,7 +2111,7 @@ bool GlRuntime::importMediaCodecImage(QOpenGLExtraFunctions *gl, const AVFrame *
 
 bool GlRuntime::importVaapiNv12(QOpenGLExtraFunctions *gl, const AVFrame *frame)
 {
-#if !defined(DRIFT_VAAPI_IMPORT)
+#if !defined(BASE_VAAPI_IMPORT)
     Q_UNUSED(gl);
     Q_UNUSED(frame);
     return false;

@@ -120,7 +120,7 @@ public:
     bool handleNewIntent(JNIEnv *env, jobject intent) override
     {
         Q_UNUSED(env);
-        // No action filter here any more. Sharing into an already-running Drift arrives through
+        // No action filter here any more. Sharing into an already-running BASE arrives through
         // this path and nowhere else, so rejecting everything but VIEW meant a share to a warm
         // process silently did nothing at all.
         const QVariantMap described = describeIntent(QJniObject(intent));

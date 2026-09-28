@@ -150,7 +150,7 @@ QList<TransitionPresetEntry> TransitionPackageLoader::scanDirectories(const QStr
 
 QStringList TransitionPackageLoader::defaultSearchPaths()
 {
-    return GpuPackageParse::defaultSearchPaths(QStringLiteral("DRIFT_TRANSITIONS_DIR"),
+    return GpuPackageParse::defaultSearchPaths(QStringLiteral("BASE_TRANSITIONS_DIR"),
                                                QStringLiteral("transitions"),
                                                QStringLiteral("transitions"));
 }

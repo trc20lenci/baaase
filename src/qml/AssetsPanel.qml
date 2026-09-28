@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
 import QtQuick.Dialogs
-import Drift
+import Base
 import "components"
 import "components/assets"
 

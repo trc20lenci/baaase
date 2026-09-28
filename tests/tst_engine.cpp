@@ -71,7 +71,7 @@
 #include "engine/GpuCompositor.h"
 #include "core/TextAnimationPreset.h"
 #include "engine/TextLayout.h"
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "engine/SkiaRuntime.h"
 #include "engine/SkiaTextPainter.h"
 #endif
@@ -346,23 +346,23 @@ void EngineTest::initTestCase()
     // matte and denoise caches). Test mode keeps a test run out of the developer's real app data.
     QStandardPaths::setTestModeEnabled(true);
 
-    const QString effectsDir = QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR);
+    const QString effectsDir = QString::fromUtf8(BASE_TEST_EFFECTS_DIR);
     QVERIFY2(QDir(effectsDir).exists(), qPrintable(effectsDir));
     QStringList effectRoots{effectsDir};
-    const QString addonEffectsDir = QString::fromUtf8(DRIFT_TEST_ADDON_EFFECTS_DIR);
+    const QString addonEffectsDir = QString::fromUtf8(BASE_TEST_ADDON_EFFECTS_DIR);
     if (QDir(addonEffectsDir).exists())
         effectRoots.append(addonEffectsDir);
     reloadEffectCatalog(effectRoots);
 
-    const QString transitionsDir = QString::fromUtf8(DRIFT_TEST_TRANSITIONS_DIR);
+    const QString transitionsDir = QString::fromUtf8(BASE_TEST_TRANSITIONS_DIR);
     QVERIFY2(QDir(transitionsDir).exists(), qPrintable(transitionsDir));
     reloadTransitionCatalog({transitionsDir});
 
     // The font bundle is fetched rather than committed, so an offline checkout legitimately has
     // none. The font tests skip in that case rather than fail.
-    reloadFontCatalog({QString::fromUtf8(DRIFT_TEST_FONTS_DIR)});
+    reloadFontCatalog({QString::fromUtf8(BASE_TEST_FONTS_DIR)});
 
-    const QString audioEffectsDir = QString::fromUtf8(DRIFT_TEST_AUDIO_EFFECTS_DIR);
+    const QString audioEffectsDir = QString::fromUtf8(BASE_TEST_AUDIO_EFFECTS_DIR);
     QVERIFY2(QDir(audioEffectsDir).exists(), qPrintable(audioEffectsDir));
     reloadAudioEffectCatalog({audioEffectsDir});
 }
@@ -384,7 +384,7 @@ void EngineTest::emojiCatalogNeedsFontAddon()
 void EngineTest::emojiRasterisesGlyph()
 {
     // Like the font bundle, the emoji font is an addon rather than a checked-in asset.
-    reloadEmojiCatalog({QString::fromUtf8(DRIFT_TEST_EMOJI_FONT_DIR)});
+    reloadEmojiCatalog({QString::fromUtf8(BASE_TEST_EMOJI_FONT_DIR)});
     if (emojiFontFamily().isEmpty())
         QSKIP("No emoji font available");
 
@@ -890,13 +890,13 @@ void EngineTest::colorParametersParseAndResolve()
              QStringLiteral("#123456"));
 }
 
-#ifndef DRIFT_TEST_DATA_DIR
-#define DRIFT_TEST_DATA_DIR "."
+#ifndef BASE_TEST_DATA_DIR
+#define BASE_TEST_DATA_DIR "."
 #endif
 
 void EngineTest::modelAssetLoadsCubeGlb()
 {
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/cube.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/cube.glb");
     QVERIFY2(QFileInfo::exists(path), qPrintable(path));
 
     QString warning;
@@ -1063,7 +1063,7 @@ void EngineTest::faceModelDoesNotLeakGlState()
 
 void EngineTest::modelAssetCubeHasNoRig()
 {
-    const auto asset = drift::loadModelAssetCached(QStringLiteral(DRIFT_TEST_DATA_DIR "/cube.glb"));
+    const auto asset = drift::loadModelAssetCached(QStringLiteral(BASE_TEST_DATA_DIR "/cube.glb"));
     QVERIFY(asset);
     QVERIFY(!asset->rig);
     QVERIFY(asset->animations.isEmpty());
@@ -1076,7 +1076,7 @@ void EngineTest::modelAssetCubeHasNoRig()
 
 void EngineTest::modelAssetParsesBoxAnimated()
 {
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/model/BoxAnimated.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/model/BoxAnimated.glb");
     QVERIFY2(QFileInfo::exists(path), qPrintable(path));
     QString warning;
     const auto asset = drift::loadModelAsset(path, &warning);
@@ -1134,7 +1134,7 @@ void EngineTest::modelAssetParsesBoxAnimated()
 
 void EngineTest::modelAssetParsesRiggedSimple()
 {
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/model/RiggedSimple.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/model/RiggedSimple.glb");
     QVERIFY2(QFileInfo::exists(path), qPrintable(path));
     QString warning;
     const auto asset = drift::loadModelAsset(path, &warning);
@@ -1417,7 +1417,7 @@ void EngineTest::modelClipScreenRectMatchesMvp()
 
 void EngineTest::modelClipDrawRequestFollowsLoopMode()
 {
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/cube.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/cube.glb");
     drift::model3d::RenderRequest request;
     request.path = path;
     request.centre = QPointF(0.5, 0.5);
@@ -1432,7 +1432,7 @@ void EngineTest::modelClipDrawRequestFollowsLoopMode()
     QCOMPARE(draw->params.rotY, 45.0);
     QCOMPARE(draw->params.centreX, 0.5);
 
-    request.path = QStringLiteral(DRIFT_TEST_DATA_DIR "/does-not-exist.glb");
+    request.path = QStringLiteral(BASE_TEST_DATA_DIR "/does-not-exist.glb");
     QVERIFY(!drift::model3d::makeDrawRequest(request));
 }
 
@@ -1472,7 +1472,7 @@ void EngineTest::modelClipRendersCube()
 {
     if (!GpuCompositor::isAvailable())
         QSKIP("OpenGL offscreen context unavailable");
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/cube.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/cube.glb");
 
     const QImage out = GpuCompositor::render(modelClipScene(path, 64));
     QVERIFY(!out.isNull());
@@ -1567,7 +1567,7 @@ void EngineTest::modelClipRigRenders()
         QSKIP("OpenGL offscreen context unavailable");
 
     for (const char *file : {"BoxAnimated.glb", "RiggedSimple.glb"}) {
-        const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/model/") + QLatin1String(file);
+        const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/model/") + QLatin1String(file);
         const QImage t0 = GpuCompositor::render(modelClipSceneAt(path, 96, 0, drift::VectorLoop::Loop));
         QVERIFY2(!t0.isNull(), file);
         int lit = 0;
@@ -1604,7 +1604,7 @@ void EngineTest::compositorRendersModelClip()
     drift::Clip clip;
     clip.id = QStringLiteral("model");
     clip.type = drift::ClipType::Model3d;
-    clip.path = QStringLiteral(DRIFT_TEST_DATA_DIR "/model/BoxAnimated.glb");
+    clip.path = QStringLiteral(BASE_TEST_DATA_DIR "/model/BoxAnimated.glb");
     clip.model3d.path = clip.path;
     clip.model3d.scale = 0.4;
     clip.model3d.depth = 0.0;
@@ -1657,7 +1657,7 @@ void EngineTest::modelClipDoesNotLeakGlState()
 {
     if (!GpuCompositor::isAvailable())
         QSKIP("OpenGL offscreen context unavailable");
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/cube.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/cube.glb");
     QVERIFY(!GpuCompositor::render(modelClipScene(path, 64)).isNull());
 
     // A plain image layer after a model draw must still land: a leaked depth test or cull
@@ -1744,7 +1744,7 @@ void EngineTest::faceMesh3dEffectPackageLoads()
 
 void EngineTest::faceMeshRestLoadsAndWarps()
 {
-    const QString bin = QDir(QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR))
+    const QString bin = QDir(QString::fromUtf8(BASE_TEST_EFFECTS_DIR))
                             .filePath(QStringLiteral("face_mesh_3d/sfm_face.bin"));
     QVERIFY2(QFileInfo::exists(bin), qPrintable(bin));
 
@@ -1965,7 +1965,7 @@ void EngineTest::faceMesh3dDrawsWarpedOverlay()
     if (!def)
         QSKIP("face_mesh_3d package missing from catalog");
 
-    const QString bin = QDir(QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR))
+    const QString bin = QDir(QString::fromUtf8(BASE_TEST_EFFECTS_DIR))
                             .filePath(QStringLiteral("face_mesh_3d/sfm_face.bin"));
     const auto rest = drift::loadFaceMeshRest(bin);
     QVERIFY(rest);
@@ -2105,7 +2105,7 @@ void EngineTest::faceSwapEffectPackageLoads()
 
 void EngineTest::faceSwapMeshTopologyLoads()
 {
-    const QString bin = QDir(QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR))
+    const QString bin = QDir(QString::fromUtf8(BASE_TEST_EFFECTS_DIR))
                             .filePath(QStringLiteral("face_swap/mediapipe_face.bin"));
     QVERIFY2(QFileInfo::exists(bin), qPrintable(bin));
 
@@ -2139,7 +2139,7 @@ void EngineTest::faceSwapMeshTopologyLoads()
 
 void EngineTest::faceSwapVertexAlphaRamps()
 {
-    const QString bin = QDir(QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR))
+    const QString bin = QDir(QString::fromUtf8(BASE_TEST_EFFECTS_DIR))
                             .filePath(QStringLiteral("face_swap/mediapipe_face.bin"));
     const auto rest = drift::loadFaceMeshRest(bin);
     QVERIFY(rest);
@@ -2272,7 +2272,7 @@ void EngineTest::faceSwapDrawsSwappedFace()
              "brightness after a face swap step did not apply");
 }
 
-// Generates effects/face_swap/thumbnail.png. Skipped unless DRIFT_FACE_SWAP_THUMB names an output
+// Generates effects/face_swap/thumbnail.png. Skipped unless BASE_FACE_SWAP_THUMB names an output
 // path, so it costs a normal run nothing.
 //
 // It lives here rather than in tools/effectthumbs because that tool only handles `backend: "gpu"`
@@ -2282,9 +2282,9 @@ void EngineTest::faceSwapDrawsSwappedFace()
 // feathered edge and the eye/mouth passthrough are all visible.
 void EngineTest::faceSwapMakeThumbnail()
 {
-    const QByteArray out = qgetenv("DRIFT_FACE_SWAP_THUMB");
+    const QByteArray out = qgetenv("BASE_FACE_SWAP_THUMB");
     if (out.isEmpty())
-        QSKIP("set DRIFT_FACE_SWAP_THUMB to regenerate");
+        QSKIP("set BASE_FACE_SWAP_THUMB to regenerate");
     if (!GpuEffectExecutor::instance().isAvailable())
         QSKIP("GPU unavailable");
     const EffectPresetEntry *def = effectDefForId(QStringLiteral("face_swap"));
@@ -2404,7 +2404,7 @@ void EngineTest::beautyEffectsPassThroughWithoutContours()
 void EngineTest::matteWriterRoundTripsThroughClipReader()
 {
     // MatteWriter encodes lossless H.264 and nothing else, so an LGPL FFmpeg (no x264) has
-    // nothing to run this against. Drift's own packages ship a GPL build; this is for anyone
+    // nothing to run this against. BASE's own packages ship a GPL build; this is for anyone
     // building against a distro's LGPL one.
     if (!Exporter::videoCodecById(QStringLiteral("h264")).value(QStringLiteral("available")).toBool())
         QSKIP("No H.264 encoder available in this FFmpeg build");
@@ -3195,7 +3195,7 @@ void EngineTest::vaapiPreviewMatchesSoftwareDecode()
 
     // The importer is off by default; opting in here is what a user would do, and it keeps this
     // test meaningful rather than silently measuring the PBO path against itself.
-    qputenv("DRIFT_VAAPI_ZEROCOPY", "1");
+    qputenv("BASE_VAAPI_ZEROCOPY", "1");
 
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
@@ -3268,7 +3268,7 @@ void EngineTest::vaapiPreviewMatchesSoftwareDecode()
 
     ClipReader::setHardwareDecodeMode(ClipReader::HardwareDecodeMode::Auto,
                                       drift::hwaccel::Backend::None);
-    qunsetenv("DRIFT_VAAPI_ZEROCOPY");
+    qunsetenv("BASE_VAAPI_ZEROCOPY");
 }
 
 // Locks in the two-frame invariant in ensureSoftwareNv12: a software P010 frame
@@ -3554,7 +3554,7 @@ void EngineTest::playbackDiagnosticsReportsStagesAndFindings()
     QVERIFY(!evenIds.contains(QStringLiteral("cadence-beat")));
 
     const QString text = PlaybackDiagnostics::formatPlainText(info);
-    QVERIFY(text.startsWith(QStringLiteral("# Drift playback diagnostics")));
+    QVERIFY(text.startsWith(QStringLiteral("# BASE playback diagnostics")));
     QVERIFY(text.contains(QStringLiteral("Display refresh")));
 
     // The staged sweep on a real file: each stage must produce a number, and the readback
@@ -3663,7 +3663,7 @@ void EngineTest::decodeAttemptOrderKeepsPinsOnTheRenderGpu()
 }
 
 // What the decoder picker warns on. The verdict has to be Mismatch only when it is actually
-// known to be one: Unknown must stay as permissive as "no GL context yet", or a machine Drift
+// known to be one: Unknown must stay as permissive as "no GL context yet", or a machine BASE
 // cannot identify would be told its hardware decoding is slow when it is not.
 void EngineTest::describeRenderMatchFlagsCudaOffTheRenderGpu()
 {
@@ -4086,7 +4086,7 @@ void EngineTest::debugReportListsCommonCodecs()
 
     const QString text = DebugReport::formatPlainText(info);
     QVERIFY(text.contains(QStringLiteral("H264")));
-    QVERIFY(text.contains(QStringLiteral("CutWire Drift debug report")));
+    QVERIFY(text.contains(QStringLiteral("CutWire BASE debug report")));
     QVERIFY(text.contains(QStringLiteral("Video encoders")));
     QVERIFY(text.contains(QStringLiteral("Supported")));
 }
@@ -4969,7 +4969,7 @@ void EngineTest::effectPresetStableIds()
     // absolutePath() because the macro points out of the source tree with a ".." segment, while
     // the catalog stores what QFileInfo::absoluteFilePath() produced — already cleaned.
     const QString addonEffectsDir =
-        QDir(QString::fromUtf8(DRIFT_TEST_ADDON_EFFECTS_DIR)).absolutePath() + QLatin1Char('/');
+        QDir(QString::fromUtf8(BASE_TEST_ADDON_EFFECTS_DIR)).absolutePath() + QLatin1Char('/');
 
     QSet<QString> seen;
     for (const QString &id : ids) {
@@ -5092,7 +5092,7 @@ void EngineTest::compositorOnlyPresetsUseCompositorPath()
 void EngineTest::effectPackageLoaderParsesGaussianBlur()
 {
     const QString pkg =
-        QDir(QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR)).filePath(QStringLiteral("gaussian_blur"));
+        QDir(QString::fromUtf8(BASE_TEST_EFFECTS_DIR)).filePath(QStringLiteral("gaussian_blur"));
     QString error;
     const EffectPresetEntry entry = EffectPackageLoader::loadPackage(pkg, &error);
     QVERIFY2(entry.gpu.valid, qPrintable(error));
@@ -5272,13 +5272,13 @@ void EngineTest::gpuBrokenShaderPassthrough()
     frag.write("#version 330 core\nthis is not valid glsl!!!\n");
     frag.close();
 
-    reloadEffectCatalog({root, QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR)});
+    reloadEffectCatalog({root, QString::fromUtf8(BASE_TEST_EFFECTS_DIR)});
     const EffectPresetEntry *def = effectDefForId(QStringLiteral("test.broken_shader"));
     QVERIFY(def);
     QVERIFY(def->isGpu);
 
     if (!GpuEffectExecutor::instance().isAvailable()) {
-        reloadEffectCatalog({QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR)});
+        reloadEffectCatalog({QString::fromUtf8(BASE_TEST_EFFECTS_DIR)});
         QSKIP("OpenGL offscreen context unavailable");
     }
 
@@ -5293,7 +5293,7 @@ void EngineTest::gpuBrokenShaderPassthrough()
     QCOMPARE(out.pixel(16, 16), image.pixel(16, 16));
 
     // Restore catalog for subsequent tests.
-    reloadEffectCatalog({QString::fromUtf8(DRIFT_TEST_EFFECTS_DIR)});
+    reloadEffectCatalog({QString::fromUtf8(BASE_TEST_EFFECTS_DIR)});
 }
 
 static QImage makeRedBlueSplitTestImage()
@@ -6239,7 +6239,7 @@ void EngineTest::brokenTransitionShaderFallsBackToCrossfade()
     QVERIFY(qRed(center) > 0);
     QVERIFY(qBlue(center) > 0);
 
-    reloadTransitionCatalog({QString::fromUtf8(DRIFT_TEST_TRANSITIONS_DIR)});
+    reloadTransitionCatalog({QString::fromUtf8(BASE_TEST_TRANSITIONS_DIR)});
 }
 
 // The old CPU path never handled ClipType::Text inside drawTransitionFrame, and the main draw
@@ -6360,7 +6360,7 @@ struct TextRasterResult
 TextRasterResult rasterizeText(const drift::Clip &clip, const QString &text, const QRectF &rect, double scale,
                                int word = -1)
 {
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     const drift::skia::TextPainterResult painted = drift::skia::makeTextPainter(clip, text, rect, scale, word);
     return {painted.painter ? drift::skia::SkiaRuntime::rasterize(*painted.painter) : QImage(), painted.rect};
 #else
@@ -6497,7 +6497,7 @@ void EngineTest::fontForStyleResolvesRequestedFace()
 void EngineTest::textRasterIsCached()
 {
     SKIP_WITHOUT_FONTS();
-#ifndef DRIFT_WITH_SKIA
+#ifndef BASE_WITH_SKIA
     QSKIP("text needs Skia");
 #else
     const QRectF rect(0, 0, 400, 200);
@@ -6658,7 +6658,7 @@ void EngineTest::karaokeAccentFollowsThePlayhead()
     QVERIFY(first != third);
 
     // The spoken word still only costs one paint: the same index yields the same cache key.
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     QCOMPARE(drift::skia::makeTextPainter(clip, text, rect, 1.0, 0).painter->cacheKey(),
              drift::skia::makeTextPainter(clip, text, rect, 1.0, 0).painter->cacheKey());
 #endif
@@ -9248,14 +9248,14 @@ void EngineTest::audioEffectRackParameterChangeIsContinuous()
 // ---- DeepFilterNet3 denoiser -------------------------------------------------------------
 //
 // The model directory is gitignored, so every case here skips when it is absent. Point
-// DRIFT_DENOISE_MODEL_DIR elsewhere to test an installed addon instead.
+// BASE_DENOISE_MODEL_DIR elsewhere to test an installed addon instead.
 namespace {
 
 bool denoiseModelAvailable()
 {
-    const QString dir = QString::fromUtf8(DRIFT_TEST_DENOISE_MODEL_DIR);
+    const QString dir = QString::fromUtf8(BASE_TEST_DENOISE_MODEL_DIR);
     if (QDir(dir).exists())
-        qputenv("DRIFT_DENOISE_MODEL_DIR", dir.toUtf8());
+        qputenv("BASE_DENOISE_MODEL_DIR", dir.toUtf8());
     return drift::DeepFilterDenoiser::modelPresent();
 }
 
@@ -9288,7 +9288,7 @@ std::vector<float> whiteNoise(int samples, float amplitude, uint32_t seed)
 void EngineTest::denoiseAuxiliaryConstantsRoundTrip()
 {
     const QString path =
-        QDir(QString::fromUtf8(DRIFT_TEST_DENOISE_MODEL_DIR)).filePath(QStringLiteral("deepfilter-auxiliary.bin"));
+        QDir(QString::fromUtf8(BASE_TEST_DENOISE_MODEL_DIR)).filePath(QStringLiteral("deepfilter-auxiliary.bin"));
     if (!QFile::exists(path))
         QSKIP("DeepFilterNet3 model not installed");
 
@@ -9977,7 +9977,7 @@ void EngineTest::hwAccelDescribesEveryBackend()
 
 void EngineTest::stillImageDecodesWebp()
 {
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/still.webp");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/still.webp");
     QVERIFY2(QFileInfo::exists(path), qPrintable(path));
 
     const QImage image = drift::decodeStillImage(path);
@@ -10002,7 +10002,7 @@ void EngineTest::stillImageDecodesHeicAndAvifViaFfmpeg()
 
     for (const char *name : {"still.heic", "still.avif"}) {
         const QString path =
-            QStringLiteral(DRIFT_TEST_DATA_DIR "/") + QLatin1String(name);
+            QStringLiteral(BASE_TEST_DATA_DIR "/") + QLatin1String(name);
         QVERIFY2(QFileInfo::exists(path), qPrintable(path));
         const QImage image = drift::decodeStillImage(path);
         QVERIFY2(!image.isNull(), name);
@@ -10027,7 +10027,7 @@ void EngineTest::stillImageFallsBackWhenQtCannotRead()
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
     const QString disguised = tmp.filePath(QStringLiteral("still.drift-unknown"));
-    QVERIFY(QFile::copy(QStringLiteral(DRIFT_TEST_DATA_DIR "/still.webp"), disguised));
+    QVERIFY(QFile::copy(QStringLiteral(BASE_TEST_DATA_DIR "/still.webp"), disguised));
 
     QVERIFY(!drift::qtCanDecodeStill(disguised));
     const QImage image = drift::decodeStillImage(disguised);
@@ -10043,7 +10043,7 @@ void EngineTest::stillImagePreservesAlpha()
     QTemporaryDir tmp;
     QVERIFY(tmp.isValid());
     const QString disguised = tmp.filePath(QStringLiteral("alpha.drift-unknown"));
-    QVERIFY(QFile::copy(QStringLiteral(DRIFT_TEST_DATA_DIR "/still.webp"), disguised));
+    QVERIFY(QFile::copy(QStringLiteral(BASE_TEST_DATA_DIR "/still.webp"), disguised));
 
     const QImage viaFfmpeg = drift::decodeStillImage(disguised);
     QVERIFY(!viaFfmpeg.isNull());

@@ -248,7 +248,7 @@ QList<Backend> availableDecodeBackends()
 {
     // Honour the kill switch here, not just at decode time: this is what probes the
     // devices, and a wedged driver would otherwise hang the picker on startup — the
-    // exact case someone sets DRIFT_NO_HWACCEL to get out of.
+    // exact case someone sets BASE_NO_HWACCEL to get out of.
     if (disabledByEnv())
         return {};
 
@@ -385,7 +385,7 @@ bool deviceAvailable(AVHWDeviceType type)
 
 bool disabledByEnv()
 {
-    return qEnvironmentVariableIsSet("DRIFT_NO_HWACCEL");
+    return qEnvironmentVariableIsSet("BASE_NO_HWACCEL");
 }
 
 const AVCodec *findMediaCodecDecoder(AVCodecID codecId)
@@ -412,7 +412,7 @@ bool mediaCodecDecodeAvailable()
 #ifndef Q_OS_ANDROID
     return false;
 #else
-    if (disabledByEnv() || qEnvironmentVariableIsSet("DRIFT_NO_MEDIACODEC"))
+    if (disabledByEnv() || qEnvironmentVariableIsSet("BASE_NO_MEDIACODEC"))
         return false;
     for (const AVCodecID id : {AV_CODEC_ID_H264, AV_CODEC_ID_HEVC, AV_CODEC_ID_VP9,
                                AV_CODEC_ID_VP8, AV_CODEC_ID_AV1}) {

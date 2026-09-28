@@ -27,8 +27,8 @@
 #include <QVariantList>
 #include <utility>
 
-#ifndef DRIFT_VERSION
-#define DRIFT_VERSION "0.0.0"
+#ifndef BASE_VERSION
+#define BASE_VERSION "0.0.0"
 #endif
 
 extern "C" {
@@ -556,7 +556,7 @@ QVariantMap DebugReport::collect()
     }
 
     QVariantList system;
-    system.append(systemRow(trReport("Drift"), QStringLiteral(DRIFT_VERSION)));
+    system.append(systemRow(trReport("BASE"), QStringLiteral(BASE_VERSION)));
     system.append(systemRow(trReport("Package"), package));
     if (const QString flatpakId = qEnvironmentVariable("FLATPAK_ID"); !flatpakId.isEmpty())
         system.append(systemRow(trReport("Flatpak ID"), flatpakId));
@@ -645,10 +645,10 @@ QVariantMap DebugReport::collect()
 #endif
     system.append(systemRow(trReport("Locale"), QLocale::system().name()));
     if (drift::hwaccel::disabledByEnv())
-        system.append(systemRow(QStringLiteral("DRIFT_NO_HWACCEL"), trReport("Set")));
+        system.append(systemRow(QStringLiteral("BASE_NO_HWACCEL"), trReport("Set")));
 #if defined(Q_OS_ANDROID)
-    if (qEnvironmentVariableIsSet("DRIFT_NO_MEDIACODEC"))
-        system.append(systemRow(QStringLiteral("DRIFT_NO_MEDIACODEC"), trReport("Set")));
+    if (qEnvironmentVariableIsSet("BASE_NO_MEDIACODEC"))
+        system.append(systemRow(QStringLiteral("BASE_NO_MEDIACODEC"), trReport("Set")));
 #endif
 
     QVariantList hints;
@@ -658,7 +658,7 @@ QVariantMap DebugReport::collect()
             hints.append(hintRow(
                 QStringLiteral("codecs-extra"), trReport("Missing extra codecs"),
                 trReport("H.264 and H.265 encoding is missing from this Flatpak. Install the extra "
-                         "codecs extension, then restart Drift."),
+                         "codecs extension, then restart BASE."),
                 QStringLiteral("flatpak install org.freedesktop.Platform.codecs-extra")));
         }
         bool nvidia = false;
@@ -673,7 +673,7 @@ QVariantMap DebugReport::collect()
                 QStringLiteral("vaapi-nvidia"), trReport("NVIDIA VAAPI driver not installed"),
                 trReport("VAAPI encode on NVIDIA needs the NVIDIA VAAPI extension, and so does "
                          "hardware decode when NVDEC is unavailable. Install it, then restart "
-                         "Drift."),
+                         "BASE."),
                     QStringLiteral("flatpak install org.freedesktop.Platform.VAAPI.nvidia")));
         }
     }
@@ -688,7 +688,7 @@ QVariantMap DebugReport::collect()
         hints.append(hintRow(
             QStringLiteral("amd-gfx6-8"), trReport("Pre-Vega AMD skips zero-copy preview"),
             trReport("GCN 1–4 GPUs (HD 7000 through Polaris / RX 500) export tiled surfaces "
-                     "without a DRM modifier, so Drift refuses zero-copy preview and copies "
+                     "without a DRM modifier, so BASE refuses zero-copy preview and copies "
                      "each frame through system memory. Vega, Navi and newer can enable "
                      "Settings → Preview → Faster preview.")));
     }
@@ -703,7 +703,7 @@ QVariantMap DebugReport::collect()
             trReport("Windows loaded Qt's bundled software renderer instead of your graphics "
                      "card. It only provides OpenGL 3.0, below the 3.3 the preview needs, so "
                      "the picture stays black. Update your graphics driver; if that does not "
-                     "help, start Drift with QT_OPENGL=desktop."),
+                     "help, start BASE with QT_OPENGL=desktop."),
             QStringLiteral("set QT_OPENGL=desktop")));
 #else
         hints.append(hintRow(
@@ -726,7 +726,7 @@ QVariantMap DebugReport::collect()
     info.insert(QStringLiteral("encoders"), encoders);
     info.insert(QStringLiteral("system"), system);
     info.insert(QStringLiteral("hints"), hints);
-    info.insert(QStringLiteral("version"), QStringLiteral(DRIFT_VERSION));
+    info.insert(QStringLiteral("version"), QStringLiteral(BASE_VERSION));
     info.insert(QStringLiteral("package"), package);
     info.insert(QStringLiteral("hardwareDecodeAvailable"), hwDecodeOk);
     info.insert(QStringLiteral("hardwareDecodeBackend"),
@@ -740,7 +740,7 @@ QVariantMap DebugReport::collect()
 QString DebugReport::formatPlainText(const QVariantMap &info)
 {
     QString text;
-    text += QStringLiteral("CutWire Drift debug report\n\n");
+    text += QStringLiteral("BASE debug report\n\n");
 
     text += QStringLiteral("## System\n");
     const QVariantList system = info.value(QStringLiteral("system")).toList();

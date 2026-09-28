@@ -2,11 +2,11 @@ openapi: 3.1.0
 info:
   title: Cutwire Marketplace API
   version: 1.0.0
-  summary: Store-agnostic stock catalog, search, and normalized downloads for Drift.
+  summary: Store-agnostic stock catalog, search, and normalized downloads for BASE.
   description: |
     Base URL: https://market.cutwire.org/api/v1
 
-    Drift does not know which stores exist. Types, providers, quotas, and prices
+    BASE does not know which stores exist. Types, providers, quotas, and prices
     come from this API. See docs/marketplace/README.md for identity, HMAC
     canonicalization, and client UX rules.
   license:
@@ -413,7 +413,7 @@ components:
         media_kind:
           type: string
           enum: [video, audio, image]
-          description: Required when delivery is media. Maps to Drift MediaKind.
+          description: Required when delivery is media. Maps to BASE MediaKind.
         providers:
           type: array
           items:

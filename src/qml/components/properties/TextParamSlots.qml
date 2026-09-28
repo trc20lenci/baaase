@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import ".."
 
 // Generic editor for a typed parameter list: one control per spec, picked by `type`.

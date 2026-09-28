@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Canvas crop tool. Lives outside the (clipped) canvas rect so the

@@ -1,6 +1,6 @@
 pragma Singleton
 import QtQuick
-import Drift
+import Base
 
 // Design tokens for the app shell and panel surfaces (dark + light), plus
 // shared layout/typography/iconography constants used across the UI.
@@ -113,11 +113,11 @@ QtObject {
 
     // One loader per file: the UI ships static Inter instances under the family "Inter UI",
     // so the Essential Fonts addon's "Inter" cannot shadow them whichever registers last.
-    property FontLoader _interRegular: FontLoader { source: "qrc:/qt/qml/Drift/resources/fonts/InterUI-Regular.ttf" }
-    property FontLoader _interMedium: FontLoader { source: "qrc:/qt/qml/Drift/resources/fonts/InterUI-Medium.ttf" }
-    property FontLoader _interSemiBold: FontLoader { source: "qrc:/qt/qml/Drift/resources/fonts/InterUI-SemiBold.ttf" }
-    property FontLoader _interBold: FontLoader { source: "qrc:/qt/qml/Drift/resources/fonts/InterUI-Bold.ttf" }
-    property FontLoader _interItalic: FontLoader { source: "qrc:/qt/qml/Drift/resources/fonts/InterUI-Italic.ttf" }
+    property FontLoader _interRegular: FontLoader { source: "qrc:/qt/qml/Base/resources/fonts/InterUI-Regular.ttf" }
+    property FontLoader _interMedium: FontLoader { source: "qrc:/qt/qml/Base/resources/fonts/InterUI-Medium.ttf" }
+    property FontLoader _interSemiBold: FontLoader { source: "qrc:/qt/qml/Base/resources/fonts/InterUI-SemiBold.ttf" }
+    property FontLoader _interBold: FontLoader { source: "qrc:/qt/qml/Base/resources/fonts/InterUI-Bold.ttf" }
+    property FontLoader _interItalic: FontLoader { source: "qrc:/qt/qml/Base/resources/fonts/InterUI-Italic.ttf" }
 
     readonly property string fontFamily: _interRegular.name || "sans-serif"
     readonly property string monoFontFamily: "monospace"

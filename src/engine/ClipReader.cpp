@@ -122,7 +122,7 @@ int swsColorspaceFromFrame(const AVFrame *frame)
         return SWS_CS_ITU709;
     case AVCOL_SPC_UNSPECIFIED:
     default:
-        // Drift's SDR pipeline defaults to BT.709 when the bitstream is untagged.
+        // BASE's SDR pipeline defaults to BT.709 when the bitstream is untagged.
         return SWS_CS_ITU709;
     }
 }
@@ -419,12 +419,12 @@ std::atomic<bool> g_mcSurfaceImportFailed{false};
 // Cleared for the duration of an export — see ClipReader::setSurfaceDecodeAllowed.
 std::atomic<bool> g_mcSurfaceAllowed{true};
 
-// Off by default. DRIFT_MEDIACODEC_ZEROCOPY overrides the stored setting either way, mirroring
+// Off by default. BASE_MEDIACODEC_ZEROCOPY overrides the stored setting either way, mirroring
 // how preview/vaapiZeroCopy is gated.
 bool mediaCodecZeroCopyEnabled()
 {
-    if (qEnvironmentVariableIsSet("DRIFT_MEDIACODEC_ZEROCOPY"))
-        return qEnvironmentVariableIntValue("DRIFT_MEDIACODEC_ZEROCOPY") != 0;
+    if (qEnvironmentVariableIsSet("BASE_MEDIACODEC_ZEROCOPY"))
+        return qEnvironmentVariableIntValue("BASE_MEDIACODEC_ZEROCOPY") != 0;
     static const bool enabled =
         QSettings().value(QStringLiteral("preview/mediaCodecZeroCopy"), false).toBool();
     return enabled;
@@ -1019,7 +1019,7 @@ bool ClipReader::tryOpenHardwareDecoder()
 
     // Hardware vs software is a preview preference. Auto keeps the per-clip
     // heuristic (4K / heavy bitrates on the GPU, cheap streams on software);
-    // Software and Hardware force that path. DRIFT_NO_HWACCEL still forces
+    // Software and Hardware force that path. BASE_NO_HWACCEL still forces
     // software on a broken driver regardless of the toggle.
     if (drift::hwaccel::disabledByEnv())
         return false;

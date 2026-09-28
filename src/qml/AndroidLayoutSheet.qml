@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import "components"
 
 // The phone view over LayoutPresets — what Android opens instead of the desktop

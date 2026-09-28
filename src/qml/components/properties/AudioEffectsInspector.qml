@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import ".."
 
 // Applied audio-effect stack for the selected clip. Browse presets in the

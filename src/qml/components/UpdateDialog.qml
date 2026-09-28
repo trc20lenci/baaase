@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Opened from the badge in EditorHeader, never by itself — a dialog over the project someone just
 // launched to work on is an interruption, and the badge is already the notification.

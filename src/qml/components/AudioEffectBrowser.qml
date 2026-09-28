@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import "assets"
 
 // Browsable audio-effect preset picker: category chips + card grid.

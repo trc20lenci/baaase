@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Effect stacks the user saved from the effects inspector or the timeline clip menu. Lives beside

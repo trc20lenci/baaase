@@ -33,7 +33,7 @@ private:
 
 QStringList UiFontTest::faceFiles()
 {
-    const QString dir = QStringLiteral(DRIFT_TEST_UI_FONT_DIR);
+    const QString dir = QStringLiteral(BASE_TEST_UI_FONT_DIR);
     return {dir + QStringLiteral("/InterUI-Regular.ttf"),  dir + QStringLiteral("/InterUI-Medium.ttf"),
             dir + QStringLiteral("/InterUI-SemiBold.ttf"), dir + QStringLiteral("/InterUI-Bold.ttf"),
             dir + QStringLiteral("/InterUI-Italic.ttf")};

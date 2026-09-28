@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import Drift
+import Base
 
 // Canvas size, frame rate, and crop. Shared by the header Video dialog and Android Settings.
 Column {

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Confirm-then-progress for reversing a video clip. Reversing works without a render, but only by
 // asking the decoder for an ever-earlier frame — a keyframe seek and a GOP re-decode per frame.

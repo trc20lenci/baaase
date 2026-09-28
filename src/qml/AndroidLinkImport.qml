@@ -1,11 +1,11 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 import "components/assets"
 
-// A link shared into Drift, resolved through the marketplace.
+// A link shared into BASE, resolved through the marketplace.
 //
 // The provider is chosen, not guessed. A link's host does not reliably say which source can
 // extract it — several providers can advertise the same site, and the catalog is the only thing

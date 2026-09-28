@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // Live playback counters drawn over the preview.
 //

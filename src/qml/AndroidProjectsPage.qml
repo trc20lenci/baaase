@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import "components"
 
 // The project library: every project EditorState knows about (the same recentProjects

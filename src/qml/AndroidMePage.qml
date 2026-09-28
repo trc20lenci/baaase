@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 
 // The home screen's third destination: everything about the app rather than about a project.
@@ -96,7 +96,7 @@ Item {
                 }
             }
 
-            // Account state, when there is one. Per the marketplace contract Drift never shows
+            // Account state, when there is one. Per the marketplace contract BASE never shows
             // a sign-in prompt or the store's URL, so this is a status line and nothing more.
             Rectangle {
                 width: pageColumn.contentWidth

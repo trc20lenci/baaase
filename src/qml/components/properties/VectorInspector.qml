@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Lottie / SVG clip inspector: what the document is, how it plays, and the slots it exposes.

@@ -1,13 +1,13 @@
 # Download a prebuilt ONNX Runtime release when it is not installed locally.
-# On success sets ONNXRUNTIME_ROOT (and DRIFT_ONNXRUNTIME_FETCHED).
+# On success sets ONNXRUNTIME_ROOT (and BASE_ONNXRUNTIME_FETCHED).
 #
-# Only the CPU release is ever fetched, and only two things are taken from it: the headers Drift
-# compiles against, and — when DRIFT_BUNDLE_ONNXRUNTIME is on — a runtime for the build tree to
+# Only the CPU release is ever fetched, and only two things are taken from it: the headers BASE
+# compiles against, and — when BASE_BUNDLE_ONNXRUNTIME is on — a runtime for the build tree to
 # load so a dev build works before any addon is installed. The library is never linked; which
 # runtime the shipped app uses is the user's runtime choice, not a configure-time one
 # (src/engine/OrtRuntime.cpp).
 
-if(DRIFT_ONNXRUNTIME_FETCHED)
+if(BASE_ONNXRUNTIME_FETCHED)
     return()
 endif()
 
@@ -19,7 +19,7 @@ if(ANDROID)
     # C and C++ API headers are identical across platforms and architectures, so the linux-x64
     # tarball is a valid source for them; nothing from its lib/ directory is linked or staged
     # (drift_bundle_onnxruntime is skipped on Android, and scripts/build.sh passes
-    # DRIFT_BUNDLE_ONNXRUNTIME=OFF). Using the official android AAR instead would mean unzipping a
+    # BASE_BUNDLE_ONNXRUNTIME=OFF). Using the official android AAR instead would mean unzipping a
     # second archive format to obtain byte-identical headers.
     set(_onnxruntime_archive "onnxruntime-linux-x64-${_onnxruntime_version}.tgz")
     set(_onnxruntime_sha256 "547e40a48f1fe73e3f812d7c88a948612c23f896b91e4e2ee1e232d7b468246f")
@@ -41,13 +41,13 @@ elseif(APPLE)
     set(_onnxruntime_archive "onnxruntime-osx-arm64-${_onnxruntime_version}.tgz")
     set(_onnxruntime_sha256 "545e81c58152353acb0d1e8bd6ce4b62f830c0961f5b3acfedc790ffd76e477a")
     if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64|ARM64")
-        if(DRIFT_BUNDLE_ONNXRUNTIME)
+        if(BASE_BUNDLE_ONNXRUNTIME)
             message(STATUS
                 "ONNX Runtime publishes no x86_64 macOS build; taking headers from the arm64 "
-                "release and disabling DRIFT_BUNDLE_ONNXRUNTIME. Install an Acceleration addon, "
-                "or point DRIFT_ONNXRUNTIME_DIR at an x86_64 runtime.")
+                "release and disabling BASE_BUNDLE_ONNXRUNTIME. Install an Acceleration addon, "
+                "or point BASE_ONNXRUNTIME_DIR at an x86_64 runtime.")
         endif()
-        set(DRIFT_BUNDLE_ONNXRUNTIME OFF CACHE BOOL
+        set(BASE_BUNDLE_ONNXRUNTIME OFF CACHE BOOL
             "Stage a CPU ONNX Runtime into the build tree for development" FORCE)
     endif()
 elseif(WIN32)
@@ -118,7 +118,7 @@ set(ONNXRUNTIME_ROOT "${_onnxruntime_prefix}" CACHE PATH
     "ONNX Runtime install prefix (auto-downloaded)" FORCE)
 set(OnnxRuntime_ROOT "${_onnxruntime_prefix}" CACHE PATH
     "ONNX Runtime install prefix (auto-downloaded)" FORCE)
-set(DRIFT_ONNXRUNTIME_VERSION "${_onnxruntime_version}" CACHE STRING
+set(BASE_ONNXRUNTIME_VERSION "${_onnxruntime_version}" CACHE STRING
     "Version of the fetched ONNX Runtime" FORCE)
-set(DRIFT_ONNXRUNTIME_FETCHED TRUE)
+set(BASE_ONNXRUNTIME_FETCHED TRUE)
 message(STATUS "ONNX Runtime ${_onnxruntime_version} headers ready at ${ONNXRUNTIME_ROOT}")

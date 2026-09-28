@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Essential packs + update nudge. Never opens by itself — the Extras icon in the header pulses
 // while there is something to show, and the user opens this from there (same pattern as the

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Panel-themed slider that keeps parent Flickables from stealing mouse drags.
 Slider {

@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // The application root. It is deliberately NOT a window.
 //

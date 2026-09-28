@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Fixed left-hand track header column: per-track mute/hide/waveform toggles,

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // The shape clip's inspector: which shape, its shading stack (the same layer rows text uses,

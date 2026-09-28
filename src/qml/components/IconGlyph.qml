@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.impl
-import Drift
+import Base
 
 // Renders a Lucide icon from resources/icons/<name>.svg. IconImage applies its
 // color property directly to the SVG icon.
@@ -23,7 +23,7 @@ Item {
         width: root.iconSize
         height: root.iconSize
         source: root.glyph.length > 0
-                ? "qrc:/qt/qml/Drift/resources/icons/" + root.glyph + ".svg"
+                ? "qrc:/qt/qml/Base/resources/icons/" + root.glyph + ".svg"
                 : ""
 
         fillMode: Image.PreserveAspectFit

@@ -1515,7 +1515,7 @@ void EditorStateTest::projectJsonImportRejectsGarbageAndLeavesTimeline()
 
     state.loadProjectJson(QUrl::fromLocalFile(path));
     QCOMPARE(state.lastMessageSeverity(), QStringLiteral("error"));
-    QCOMPARE(state.lastMessage(), QStringLiteral("This file isn’t a Drift project."));
+    QCOMPARE(state.lastMessage(), QStringLiteral("This file isn’t a BASE project."));
     QCOMPARE(state.tracks().size(), 2);
     QCOMPARE(state.tracks().at(0).toMap().value(QStringLiteral("clips")).toList().size(), 1);
 }
@@ -3478,10 +3478,10 @@ void EditorStateTest::keyframesCanBeDisabledPerProperty()
 // and the result lands on a new audio track directly above the source, as one undoable edit.
 void EditorStateTest::denoiseAddsCleanedClipOnTrackAbove()
 {
-    const QString modelDir = QString::fromUtf8(DRIFT_TEST_DENOISE_MODEL_DIR);
+    const QString modelDir = QString::fromUtf8(BASE_TEST_DENOISE_MODEL_DIR);
     if (!QDir(modelDir).exists())
         QSKIP("DeepFilterNet3 model not installed");
-    qputenv("DRIFT_DENOISE_MODEL_DIR", modelDir.toUtf8());
+    qputenv("BASE_DENOISE_MODEL_DIR", modelDir.toUtf8());
 
     const QString ffmpeg = QStandardPaths::findExecutable(QStringLiteral("ffmpeg"));
     if (ffmpeg.isEmpty())

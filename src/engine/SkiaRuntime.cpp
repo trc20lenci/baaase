@@ -41,7 +41,7 @@ void main() {
 )";
 
 // Qt's GLES2 headers stop short of these ES 3.0 constants; the functions exist on every
-// context Drift creates.
+// context BASE creates.
 #ifndef GL_FRAMEBUFFER_SRGB
 #define GL_FRAMEBUFFER_SRGB 0x8DB9
 #endif

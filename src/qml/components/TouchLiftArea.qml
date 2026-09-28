@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // Hold-to-lift gesture for the asset browsers' cards: picks the card up into
 // TouchDrag, follows the finger, and drops it on the timeline underneath.

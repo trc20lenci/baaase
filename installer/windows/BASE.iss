@@ -6,9 +6,9 @@
   #define MyAppSource "dist\\bin"
 #endif
 
-#define MyAppName "Drift"
-#define MyAppPublisher "CutWire Studios"
-#define MyAppExeName "drift.exe"
+#define MyAppName "BASE"
+#define MyAppPublisher "BASE"
+#define MyAppExeName "base.exe"
 
 [Setup]
 ; Never change AppId: it is what lets an installer upgrade an existing install
@@ -17,7 +17,7 @@ AppId={{1FC80696-7700-464A-8E35-CCBB3239EDFB}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-AppSupportURL=https://github.com/CutWire-Studios/Drift/issues
+AppSupportURL=https://github.com/trc20lenci/baaase/issues
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 ArchitecturesAllowed=x64compatible
@@ -27,11 +27,11 @@ SolidCompression=yes
 WizardStyle=modern
 ; Path is relative to this script. Without these two, setup runs under the stock
 ; Inno icon and the Apps & Features entry falls back to a generic one.
-SetupIconFile=..\..\resources\windows\drift.ico
+SetupIconFile=..\..\resources\windows\base.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 ChangesAssociations=yes
 OutputDir=output
-OutputBaseFilename=Drift-Setup-x64
+OutputBaseFilename=BASE-Setup-x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -50,10 +50,10 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Registry]
-Root: HKCR; Subkey: ".drift"; ValueType: string; ValueName: ""; ValueData: "CutWire.Drift.Project"; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "CutWire.Drift.Project"; ValueType: string; ValueName: ""; ValueData: "Drift Project"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "CutWire.Drift.Project\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKCR; Subkey: "CutWire.Drift.Project\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKCR; Subkey: ".drift"; ValueType: string; ValueName: ""; ValueData: "BASE.Project"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "BASE.Project"; ValueType: string; ValueName: ""; ValueData: "BASE Project"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "BASE.Project\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKCR; Subkey: "BASE.Project\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent

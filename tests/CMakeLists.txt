@@ -5,7 +5,7 @@ add_test(NAME MediaProbe COMMAND tst_mediaprobe)
 qt_add_executable(tst_core tst_core.cpp)
 target_include_directories(tst_core PRIVATE ../src)
 target_link_libraries(tst_core PRIVATE Qt6::Test driftcore)
-target_compile_definitions(tst_core PRIVATE DRIFT_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+target_compile_definitions(tst_core PRIVATE BASE_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 add_test(NAME Core COMMAND tst_core)
 
 qt_add_executable(tst_editorstate
@@ -47,8 +47,8 @@ qt_add_executable(tst_editorstate
 target_include_directories(tst_editorstate PRIVATE ../src)
 target_link_libraries(tst_editorstate PRIVATE Qt6::Test Qt6::Gui Qt6::Quick Qt6::Multimedia Qt6::Concurrent Qt6::Network driftcore driftengine)
 target_compile_definitions(tst_editorstate PRIVATE
-    DRIFT_TEST_DENOISE_MODEL_DIR="${CMAKE_SOURCE_DIR}/models/deepfilternet3"
-    DRIFT_VERSION="${PROJECT_VERSION}")
+    BASE_TEST_DENOISE_MODEL_DIR="${CMAKE_SOURCE_DIR}/models/deepfilternet3"
+    BASE_VERSION="${PROJECT_VERSION}")
 add_test(NAME EditorState COMMAND tst_editorstate)
 drift_copy_effects(tst_editorstate)
 drift_copy_audio_effects(tst_editorstate)
@@ -77,7 +77,7 @@ set_tests_properties(LayoutStore PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscre
 qt_add_executable(tst_uifont tst_uifont.cpp)
 target_link_libraries(tst_uifont PRIVATE Qt6::Test Qt6::Gui)
 target_compile_definitions(tst_uifont PRIVATE
-    DRIFT_TEST_UI_FONT_DIR="${CMAKE_SOURCE_DIR}/resources/fonts")
+    BASE_TEST_UI_FONT_DIR="${CMAKE_SOURCE_DIR}/resources/fonts")
 add_test(NAME UiFont COMMAND tst_uifont)
 # Font matching only, no window: offscreen keeps the result the same on a dev machine as in CI.
 set_tests_properties(UiFont PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
@@ -86,7 +86,7 @@ qt_add_executable(tst_addonpackage tst_addonpackage.cpp)
 target_include_directories(tst_addonpackage PRIVATE ../src)
 target_link_libraries(tst_addonpackage PRIVATE Qt6::Test driftengine)
 target_compile_definitions(tst_addonpackage PRIVATE
-    DRIFT_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+    BASE_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 add_test(NAME AddonPackage COMMAND tst_addonpackage)
 
 qt_add_executable(tst_marketidentity
@@ -96,16 +96,16 @@ qt_add_executable(tst_marketidentity
 target_include_directories(tst_marketidentity PRIVATE ../src)
 target_link_libraries(tst_marketidentity PRIVATE Qt6::Test Qt6::Core)
 target_compile_definitions(tst_marketidentity PRIVATE
-    DRIFT_MARKET_API_URL=""
+    BASE_MARKET_API_URL=""
     # Valid hex on purpose: it is the shape that used to be silently decoded.
-    DRIFT_MARKET_CLIENT_KEY="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-    DRIFT_VERSION="0")
+    BASE_MARKET_CLIENT_KEY="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    BASE_VERSION="0")
 add_test(NAME MarketIdentity COMMAND tst_marketidentity)
 
 qt_add_executable(tst_projectbundle tst_projectbundle.cpp)
 target_include_directories(tst_projectbundle PRIVATE ../src)
 # zstd directly: the test forges a manifest to exercise the format version gate.
-target_link_libraries(tst_projectbundle PRIVATE Qt6::Test driftengine ${DRIFT_ZSTD_TARGET})
+target_link_libraries(tst_projectbundle PRIVATE Qt6::Test driftengine ${BASE_ZSTD_TARGET})
 add_test(NAME ProjectBundle COMMAND tst_projectbundle)
 
 qt_add_executable(tst_engine
@@ -118,40 +118,40 @@ qt_add_executable(tst_engine
 target_include_directories(tst_engine PRIVATE ../src)
 target_link_libraries(tst_engine PRIVATE Qt6::Test Qt6::Gui Qt6::OpenGL driftengine driftcore)
 target_compile_definitions(tst_engine PRIVATE
-    DRIFT_TEST_EFFECTS_DIR="${CMAKE_SOURCE_DIR}/effects"
+    BASE_TEST_EFFECTS_DIR="${CMAKE_SOURCE_DIR}/effects"
     # Beauty / makeup packages live in the effects.core addon (drift-addons staging), not the
     # bundled VideoEd/effects tree. Optional so a checkout without the sibling repo still builds.
-    DRIFT_TEST_ADDON_EFFECTS_DIR="${CMAKE_SOURCE_DIR}/../drift-addons/staging/effects-core/effects"
-    DRIFT_TEST_TRANSITIONS_DIR="${CMAKE_SOURCE_DIR}/transitions"
-    DRIFT_TEST_FONTS_DIR="${CMAKE_SOURCE_DIR}/fonts"
-    DRIFT_TEST_EMOJI_FONT_DIR="${CMAKE_SOURCE_DIR}/emoji-fonts"
-    DRIFT_TEST_AUDIO_EFFECTS_DIR="${CMAKE_SOURCE_DIR}/audio-effects"
-    DRIFT_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data"
+    BASE_TEST_ADDON_EFFECTS_DIR="${CMAKE_SOURCE_DIR}/../drift-addons/staging/effects-core/effects"
+    BASE_TEST_TRANSITIONS_DIR="${CMAKE_SOURCE_DIR}/transitions"
+    BASE_TEST_FONTS_DIR="${CMAKE_SOURCE_DIR}/fonts"
+    BASE_TEST_EMOJI_FONT_DIR="${CMAKE_SOURCE_DIR}/emoji-fonts"
+    BASE_TEST_AUDIO_EFFECTS_DIR="${CMAKE_SOURCE_DIR}/audio-effects"
+    BASE_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data"
     # Not committed (models/ is gitignored). The denoise tests skip when it is absent so a
     # checkout without the model still passes.
-    DRIFT_TEST_DENOISE_MODEL_DIR="${CMAKE_SOURCE_DIR}/models/deepfilternet3"
+    BASE_TEST_DENOISE_MODEL_DIR="${CMAKE_SOURCE_DIR}/models/deepfilternet3"
 )
-if(DRIFT_WITH_SKIA)
-    target_compile_definitions(tst_engine PRIVATE DRIFT_WITH_SKIA)
+if(BASE_WITH_SKIA)
+    target_compile_definitions(tst_engine PRIVATE BASE_WITH_SKIA)
 endif()
 add_test(NAME Engine COMMAND tst_engine)
 drift_copy_effects(tst_engine)
 drift_copy_transitions(tst_engine)
 
-if(DRIFT_WITH_SKIA)
+if(BASE_WITH_SKIA)
     qt_add_executable(tst_skia tst_skia.cpp)
     target_include_directories(tst_skia PRIVATE ../src)
     # Skia::Skia directly: the test's painters draw with SkCanvas themselves.
     target_link_libraries(tst_skia PRIVATE Qt6::Test Qt6::Gui Qt6::OpenGL driftengine Skia::Skia)
     target_compile_definitions(tst_skia PRIVATE
-        DRIFT_TEST_FONTS_DIR="${CMAKE_SOURCE_DIR}/fonts"
-        DRIFT_TEST_EMOJI_FONT_DIR="${CMAKE_SOURCE_DIR}/emoji-fonts")
+        BASE_TEST_FONTS_DIR="${CMAKE_SOURCE_DIR}/fonts"
+        BASE_TEST_EMOJI_FONT_DIR="${CMAKE_SOURCE_DIR}/emoji-fonts")
     add_test(NAME Skia COMMAND tst_skia)
 
     qt_add_executable(tst_vector tst_vector.cpp)
     target_include_directories(tst_vector PRIVATE ../src)
     target_link_libraries(tst_vector PRIVATE Qt6::Test Qt6::Gui Qt6::OpenGL driftengine driftcore)
-    target_compile_definitions(tst_vector PRIVATE DRIFT_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+    target_compile_definitions(tst_vector PRIVATE BASE_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
     add_test(NAME Vector COMMAND tst_vector)
 endif()
 
@@ -189,8 +189,8 @@ qt_add_executable(tst_mcp
 )
 target_include_directories(tst_mcp PRIVATE ../src)
 target_link_libraries(tst_mcp PRIVATE Qt6::Test Qt6::Gui Qt6::Network Qt6::Multimedia Qt6::Concurrent driftcore driftengine)
-target_compile_definitions(tst_mcp PRIVATE DRIFT_VERSION="${PROJECT_VERSION}"
-    DRIFT_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+target_compile_definitions(tst_mcp PRIVATE BASE_VERSION="${PROJECT_VERSION}"
+    BASE_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 add_test(NAME Mcp COMMAND tst_mcp)
 drift_copy_effects(tst_mcp)
 drift_copy_transitions(tst_mcp)
@@ -199,7 +199,7 @@ drift_copy_transitions(tst_mcp)
 # did not run `cmake --build build --target update_translations`. Skipped where lupdate cannot
 # parse QML: there the test would rewrite the checkout's catalogs without their QML strings
 # before failing on the diff it caused itself (#167).
-if(DRIFT_LUPDATE_HAS_QML)
+if(BASE_LUPDATE_HAS_QML)
     add_test(NAME Translations
         COMMAND ${CMAKE_COMMAND}
             -DSOURCE_DIR=${CMAKE_SOURCE_DIR}

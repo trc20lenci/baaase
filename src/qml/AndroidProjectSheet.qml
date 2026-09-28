@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import "components"
 
 // What the editor's project title opens: everything that acts on the project as a whole.

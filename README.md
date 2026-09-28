@@ -1,27 +1,27 @@
 <p align="center">
-  <img src="Drift_icon.png" alt="Drift icon" width="128" height="128">
+  <img src="BASE_icon.png" alt="BASE icon" width="128" height="128">
 </p>
 
-<h1 align="center">Drift</h1>
+<h1 align="center">BASE</h1>
 
 <p align="center">
   <strong>The free desktop editor that makes your videos look finished — not “good enough.”</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/CutWire-Studios/Drift/releases/latest"><img src="https://img.shields.io/github/v/release/CutWire-Studios/Drift?label=release" alt="Latest release"></a>
+  <a href="https://github.com/trc20lenci/baaase/releases/latest"><img src="https://img.shields.io/github/v/release/trc20lenci/baaase?label=release" alt="Latest release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue.svg" alt="License: GPL-3.0"></a>
   <img src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS%20%7C%20Android-lightgrey" alt="Platform: Linux | Windows | macOS | Android">
 </p>
 
 <p align="center">
-  <a href="https://github.com/CutWire-Studios/Drift">GitHub</a> ·
-  <a href="https://github.com/CutWire-Studios/Drift/releases/latest">Download</a> ·
-  <a href="https://github.com/CutWire-Studios/Drift/issues">Issues</a> ·
+  <a href="https://github.com/trc20lenci/baaase">GitHub</a> ·
+  <a href="https://github.com/trc20lenci/baaase/releases/latest">Download</a> ·
+  <a href="https://github.com/trc20lenci/baaase/issues">Issues</a> ·
   <a href="LICENSE">License</a>
 </p>
 
-Drift is a desktop video editor from CutWire Studios. Drop in clips, add effects, captions, stickers,
+BASE is a desktop video editor from BASE. Drop in clips, add effects, captions, stickers,
 and music, then export a polished video — with **no subscription, no watermark, and no account**.
 
 It is built for the edits people actually make: Reels and Shorts, game clips, school projects,
@@ -33,7 +33,7 @@ What you see in the preview is what you export. One compositor, one look, no sur
 ## Download
 
 <p align="center">
-  <a href="https://flathub.org/apps/org.cutwire.Drift">
+  <a href="https://flathub.org/apps/app.base.editor">
     <img src="https://flathub.org/api/badge?locale=en" alt="Get it on Flathub" width="240">
   </a>
 </p>
@@ -41,28 +41,28 @@ What you see in the preview is what you export. One compositor, one look, no sur
 **Linux** — install from Flathub:
 
 ```bash
-flatpak install flathub org.cutwire.Drift
-flatpak run org.cutwire.Drift
+flatpak install flathub app.base.editor
+flatpak run app.base.editor
 ```
 
 Or grab a build for your platform from the
-[latest release](https://github.com/CutWire-Studios/Drift/releases/latest):
+[latest release](https://github.com/trc20lenci/baaase/releases/latest):
 
 | Platform | Package |
 |----------|---------|
-| Linux | [Flathub](https://flathub.org/apps/org.cutwire.Drift) · [AppImage](https://github.com/CutWire-Studios/Drift/releases/latest) |
-| Windows | [Installer (.exe)](https://github.com/CutWire-Studios/Drift/releases/latest) · [Portable zip](https://github.com/CutWire-Studios/Drift/releases/latest) |
-| macOS | [Disk image (.dmg, Apple Silicon)](https://github.com/CutWire-Studios/Drift/releases/latest) |
-| Android | [APK (arm64-v8a)](https://github.com/CutWire-Studios/Drift/releases/latest) · [APK (armeabi-v7a)](https://github.com/CutWire-Studios/Drift/releases/latest) · [APK (x86_64)](https://github.com/CutWire-Studios/Drift/releases/latest) |
+| Linux | [Flathub](https://flathub.org/apps/app.base.editor) · [AppImage](https://github.com/trc20lenci/baaase/releases/latest) |
+| Windows | [Installer (.exe)](https://github.com/trc20lenci/baaase/releases/latest) · [Portable zip](https://github.com/trc20lenci/baaase/releases/latest) |
+| macOS | [Disk image (.dmg, Apple Silicon)](https://github.com/trc20lenci/baaase/releases/latest) |
+| Android | [APK (arm64-v8a)](https://github.com/trc20lenci/baaase/releases/latest) · [APK (armeabi-v7a)](https://github.com/trc20lenci/baaase/releases/latest) · [APK (x86_64)](https://github.com/trc20lenci/baaase/releases/latest) |
 
-On a phone, grab `Drift-*-arm64-v8a.apk` from the latest release and install it (or `adb install Drift-*-arm64-v8a.apk`). Use `x86_64` for emulators.
+On a phone, grab `BASE-*-arm64-v8a.apk` from the latest release and install it (or `adb install BASE-*-arm64-v8a.apk`). Use `x86_64` for emulators.
 
-See [all releases](https://github.com/CutWire-Studios/Drift/releases) for previous versions and full changelogs.
+See [all releases](https://github.com/trc20lenci/baaase/releases) for previous versions and full changelogs.
 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/main-window.png" alt="The Drift editor: media bin on the left, video preview in the centre, clip inspector on the right, timeline below" width="900">
+  <img src="docs/screenshots/main-window.png" alt="The BASE editor: media bin on the left, video preview in the centre, clip inspector on the right, timeline below" width="900">
 </p>
 
 <p align="center"><em>Everything in one window — media, preview, inspector, and timeline</em></p>
@@ -170,7 +170,7 @@ an In/Out work area. What you signed off on is what you get.
 
 ## Agent access — let an AI edit with you
 
-Drift has a built-in **MCP server** for local AI tools. Turn on Agent access and Cursor, Claude Code,
+BASE has a built-in **MCP server** for local AI tools. Turn on Agent access and Cursor, Claude Code,
 or another compatible agent can work in the open project: import media, place and trim clips, change
 effects, capture a still of the composition, and export.
 
@@ -182,22 +182,18 @@ and safety notes live in the [MCP guide](docs/MCP.md).
 
 ## Addons, without bloating the install
 
-Fonts, stickers, extra effects, and speech models download inside Drift when you need them. Keep the
+Fonts, stickers, extra effects, and speech models download inside BASE when you need them. Keep the
 app light, then grab only the packs that match the video you are making.
 
 Open the Addon Manager from the header, or follow the install prompt when a feature needs a pack.
 
-## Why people pick Drift
+## Why people pick BASE
 
 Most “free” editors want an account, a watermark, or a subscription the moment the video starts
-looking good. Drift is the opposite: **yours, on your computer, GPLv3, no login wall.**
+looking good. BASE is the opposite: **yours, on your computer, GPLv3, no login wall.**
 
 It is fast enough for a 30-second social cut and deep enough for a real project — captions, effects,
 audio, cutouts, multicam, and an AI-assisted timeline if you want one.
-
-## Help us translate Drift
-
-[![Translation status](https://hosted.weblate.org/widget/cutwire-drift/drift-desktop/multi-auto.svg)](https://hosted.weblate.org/engage/cutwire-drift/)
 
 ## For developers
 
@@ -212,18 +208,9 @@ Build, packaging, architecture, and agent protocol live in `docs/`:
 ## Help and feedback
 
 Found a bug or have an idea? Open an
-[issue on GitHub](https://github.com/CutWire-Studios/Drift/issues).
+[issue on GitHub](https://github.com/trc20lenci/baaase/issues).
 
 ## License
 
 GPLv3 — see [LICENSE](LICENSE).
 
-## Star History
-
-<a href="https://www.star-history.com/?repos=CutWire-Studios%2FDrift&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=CutWire-Studios/Drift&type=date&theme=dark&legend=top-left&sealed_token=zHW_d2jon9Wn-HYP2SWQWLC7qDRaY7qwsvHS0Cp0Ywk1Rf1UvyxhWsakIrx2c11OijPJQ9o52W99jdigV7MOz5RuvLsyWQmBiMvMdk99mcfbgb591WtzNXQO8_K2YhgdbiPD9by00lwl69ZgCZnThFKBwhRbK7IQzIeFkIFnb2o0r5GhJh0HAX6Q8yTM" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=CutWire-Studios/Drift&type=date&legend=top-left&sealed_token=zHW_d2jon9Wn-HYP2SWQWLC7qDRaY7qwsvHS0Cp0Ywk1Rf1UvyxhWsakIrx2c11OijPJQ9o52W99jdigV7MOz5RuvLsyWQmBiMvMdk99mcfbgb591WtzNXQO8_K2YhgdbiPD9by00lwl69ZgCZnThFKBwhRbK7IQzIeFkIFnb2o0r5GhJh0HAX6Q8yTM" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=CutWire-Studios/Drift&type=date&legend=top-left&sealed_token=zHW_d2jon9Wn-HYP2SWQWLC7qDRaY7qwsvHS0Cp0Ywk1Rf1UvyxhWsakIrx2c11OijPJQ9o52W99jdigV7MOz5RuvLsyWQmBiMvMdk99mcfbgb591WtzNXQO8_K2YhgdbiPD9by00lwl69ZgCZnThFKBwhRbK7IQzIeFkIFnb2o0r5GhJh0HAX6Q8yTM" />
- </picture>
-</a>

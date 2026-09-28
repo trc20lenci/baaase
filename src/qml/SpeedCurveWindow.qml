@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import Drift 1.0
+import Base 1.0
 import "components"
 
 // Speed-ramp editor for one clip. The clip is auditioned on its own — raw decode, no effects,

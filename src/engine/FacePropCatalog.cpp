@@ -74,7 +74,7 @@ void ensureLoadedLocked()
 
 QStringList facePropSearchPaths()
 {
-    return GpuPackageParse::defaultSearchPaths(QStringLiteral("DRIFT_FACE_PROPS_DIR"),
+    return GpuPackageParse::defaultSearchPaths(QStringLiteral("BASE_FACE_PROPS_DIR"),
                                                QStringLiteral("face-props"),
                                                QStringLiteral("face-props"));
 }

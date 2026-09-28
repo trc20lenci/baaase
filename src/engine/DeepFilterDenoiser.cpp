@@ -56,7 +56,7 @@ constexpr int kWindowFrames = 2000; // 20 s of output per Run
 QString resolveModelDir()
 {
     const QStringList roots = GpuPackageParse::defaultSearchPaths(
-        QStringLiteral("DRIFT_DENOISE_MODEL_DIR"), QStringLiteral("models/deepfilternet3"),
+        QStringLiteral("BASE_DENOISE_MODEL_DIR"), QStringLiteral("models/deepfilternet3"),
         QStringLiteral("denoise-model"));
 
     // A directory only counts as a model when every piece is there — a half-downloaded folder must
@@ -209,7 +209,7 @@ bool DeepFilterDenoiser::Impl::ensureLoaded()
     modelDir = resolveModelDir();
     if (modelDir.isEmpty()) {
         error = QStringLiteral("Noise removal model not found. Install it from the Addon Manager, "
-                               "place it in models/deepfilternet3, or set DRIFT_DENOISE_MODEL_DIR.");
+                               "place it in models/deepfilternet3, or set BASE_DENOISE_MODEL_DIR.");
         return false;
     }
 

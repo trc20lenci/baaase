@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Shapes
 import QtQuick.Window
-import Drift
+import Base
 import ".."
 import "."
 

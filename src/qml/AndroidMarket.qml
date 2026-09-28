@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import "components"
 import "components/assets"
 

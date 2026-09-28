@@ -12,7 +12,7 @@
 // (document hash, slot overrides) and shared between the two compositor workers, the export
 // thread and the thumbnail pool; each document renders under its own mutex because Skottie's
 // Animation is not thread-safe. Skia-free header: FrameCompositor includes this without seeing
-// Skia, and without DRIFT_WITH_SKIA every call returns nothing.
+// Skia, and without BASE_WITH_SKIA every call returns nothing.
 
 namespace drift::vec {
 

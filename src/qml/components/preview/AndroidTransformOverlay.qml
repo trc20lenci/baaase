@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Touch transform overlay: move/scale/rotate the clips visible at the playhead.

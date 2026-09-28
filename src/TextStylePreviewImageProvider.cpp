@@ -4,7 +4,7 @@
 #include "core/TextAnimationPreset.h"
 #include "core/TextLook.h"
 #include "core/TextStyle.h"
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "engine/SkiaRuntime.h"
 #include "engine/SkiaTextPainter.h"
 #endif
@@ -70,7 +70,7 @@ QImage renderTextCard(const drift::Clip &clip, const QString &text, const QSize 
 {
     QImage card(size, QImage::Format_ARGB32_Premultiplied);
     card.fill(Qt::transparent);
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     const QRectF layoutRect(0, 0, size.width(), size.height());
     // Same painter the compositor draws, rasterised on the CPU: no GL on the image provider.
     const drift::skia::TextPainterResult painted =

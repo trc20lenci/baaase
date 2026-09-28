@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bake MediaPipe's canonical face model into Drift head space (mediapipe_face.bin).
+"""Bake MediaPipe's canonical face model into BASE head space (mediapipe_face.bin).
 
 The Face Swap effect draws MediaPipe's own 468-vertex tessellation with the tracked
 mesh supplying vertex positions, so only the triangle list is read at runtime. The
@@ -80,7 +80,7 @@ def parse_obj(path: Path):
 
 
 def check_axes(verts) -> None:
-    """The canonical model already uses Drift head space axes. Assert it rather than
+    """The canonical model already uses BASE head space axes. Assert it rather than
     remap, so a changed upstream export fails loudly instead of rendering mirrored."""
     if verts[33][0] >= 0 or verts[263][0] <= 0:
         raise SystemExit("x is not image-right: eye outer corners 33/263 are wrong-signed")

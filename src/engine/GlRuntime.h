@@ -143,7 +143,7 @@ public:
 
     // Skia's Ganesh context, attached lazily by SkiaRuntime::acquire() and torn down first in
     // shutdown() — it holds GL objects of its own. shared_ptr rather than unique_ptr so this
-    // header needs only the forward declaration. Null when DRIFT_WITH_SKIA is off.
+    // header needs only the forward declaration. Null when BASE_WITH_SKIA is off.
     std::shared_ptr<skia::SkiaRuntime> skia;
 
     // Face-prop GPU uploads. Bounded LRU; destroyed in shutdown() alongside staticTextures.

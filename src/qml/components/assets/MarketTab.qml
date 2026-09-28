@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtMultimedia
-import Drift
+import Base
 import ".."
 
 // Catalog-driven stock browser. Types and providers come from the marketplace API;

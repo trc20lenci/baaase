@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // Header Video button. Canvas size, frame rate, layout templates, and crop.
 ThemedDialog {

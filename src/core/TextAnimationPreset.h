@@ -58,7 +58,7 @@ public:
     QList<TextAnimationPreset> presetsFor(TextAnimSlotKind kind) const;
     std::optional<TextAnimationPreset> presetForId(const QString &id) const;
 
-    // Built-in resources, then $DRIFT_TEXT_ANIMATIONS (':'-separated dirs), then the user dir;
+    // Built-in resources, then $BASE_TEXT_ANIMATIONS (':'-separated dirs), then the user dir;
     // later roots override earlier ids.
     void reload();
     static QString userDir();

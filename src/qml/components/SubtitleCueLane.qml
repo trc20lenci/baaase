@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // Subtitle-cue lane aligned with the timeline (like KeyframeGraph): left gutter matches
 // the track labels, the scrolling viewport shares the timeline's contentX / pxPerSecond.

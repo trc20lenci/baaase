@@ -5,17 +5,17 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleExecutable</key>
-    <string>@DRIFT_MACOS_EXECUTABLE@</string>
+    <string>@BASE_MACOS_EXECUTABLE@</string>
     <key>CFBundleIconFile</key>
-    <string>@DRIFT_MACOS_ICON_FILE@</string>
+    <string>@BASE_MACOS_ICON_FILE@</string>
     <key>CFBundleIdentifier</key>
-    <string>@DRIFT_MACOS_BUNDLE_ID@</string>
+    <string>@BASE_MACOS_BUNDLE_ID@</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Drift</string>
+    <string>BASE</string>
     <key>CFBundleDisplayName</key>
-    <string>Drift</string>
+    <string>BASE</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -34,19 +34,19 @@
     <key>NSSupportsAutomaticGraphicsSwitching</key>
     <true/>
     <key>NSHumanReadableCopyright</key>
-    <string>Copyright © CutWire Studios. GPL-3.0-or-later.</string>
+    <string>Copyright © BASE. GPL-3.0-or-later.</string>
     <key>CFBundleDocumentTypes</key>
     <array>
         <dict>
             <key>CFBundleTypeName</key>
-            <string>Drift Project</string>
+            <string>BASE Project</string>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>LSHandlerRank</key>
             <string>Owner</string>
             <key>LSItemContentTypes</key>
             <array>
-                <string>org.cutwire.drift.project</string>
+                <string>app.base.editor.project</string>
             </array>
         </dict>
     </array>
@@ -54,9 +54,9 @@
     <array>
         <dict>
             <key>UTTypeIdentifier</key>
-            <string>org.cutwire.drift.project</string>
+            <string>app.base.editor.project</string>
             <key>UTTypeDescription</key>
-            <string>Drift Project</string>
+            <string>BASE Project</string>
             <key>UTTypeConformsTo</key>
             <array>
                 <string>public.data</string>
@@ -74,7 +74,7 @@
     <array>
         <dict>
             <key>CFBundleURLName</key>
-            <string>org.cutwire.drift.market</string>
+            <string>app.base.editor.market</string>
             <key>CFBundleURLSchemes</key>
             <array>
                 <string>cutwire</string>

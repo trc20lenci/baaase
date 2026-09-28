@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import Drift 1.0
+import Base 1.0
 import "components"
 
 // Multicam punching surface: every camera at the current time, side by side. Clicks and number

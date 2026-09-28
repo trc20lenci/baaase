@@ -12,7 +12,7 @@ effects/
     └── main.frag
 ```
 
-Search order: `DRIFT_EFFECTS_DIR`, `<applicationDir>/effects`, `<AppDataLocation>/effects`.
+Search order: `BASE_EFFECTS_DIR`, `<applicationDir>/effects`, `<AppDataLocation>/effects`.
 
 ## effect.json
 

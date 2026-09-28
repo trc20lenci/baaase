@@ -10,7 +10,7 @@
 #include <optional>
 
 // After Effects text animators as Lottie exports them (a text layer's "t.a" array) turned into
-// a Drift animation preset: range selectors → Curves selectors, animated props → animator props
+// a BASE animation preset: range selectors → Curves selectors, animated props → animator props
 // with their keyframes re-based onto the slot's progress. Pure QJson; nothing here needs Skottie.
 
 namespace drift::lottie {

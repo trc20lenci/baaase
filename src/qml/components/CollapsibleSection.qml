@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // Reusable inspector block: optional chevron collapse, optional enable switch,
 // hairline separator, and a default-property content slot.

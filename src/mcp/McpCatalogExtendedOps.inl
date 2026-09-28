@@ -438,7 +438,7 @@
                                   clipRefProps()),
                        {QStringLiteral("which")}) },
         { "import_text_animation", "text", "Import an After Effects / Lottie text animation as a preset",
-          "Reads a Lottie JSON (or .lottie) whose text layer carries animators, or a Drift preset "
+          "Reads a Lottie JSON (or .lottie) whose text layer carries animators, or a BASE preset "
           "file, and saves it as a user preset in the given slot's Imported category. Returns {id, "
           "unsupported:[…]} — the list says what the importer had to drop (expressions, 3D rotation…).",
           objectSchema({{QStringLiteral("path"), stringProp(QStringLiteral("Absolute path to a .json / .lottie / .drifttextanim file"))},
@@ -1394,7 +1394,7 @@
           "not_found.",
           objectSchema({{QStringLiteral("id"), stringProp(QStringLiteral("Item id from market_search or market_resolve"))},
                         {QStringLiteral("variant"), stringProp(QStringLiteral("Variant id from market_item (default: the provider's default)"))},
-                        {QStringLiteral("dir"), stringProp(QStringLiteral("Absolute folder to write the file into (default: Drift's own media area)"))},
+                        {QStringLiteral("dir"), stringProp(QStringLiteral("Absolute folder to write the file into (default: BASE's own media area)"))},
                         {QStringLiteral("wait"), propWithDefault(integerProp(QStringLiteral("Seconds to block for completion; 0 returns immediately"), 0, 600), 0)}},
                        {QStringLiteral("id")}),
           false, false, false },

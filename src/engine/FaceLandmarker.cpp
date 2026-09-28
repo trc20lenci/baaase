@@ -50,7 +50,7 @@ using mpidx::kLipInner;
 //
 // HANDEDNESS: everything here is named in *image* space, matching FaceAnchors — "left" means the
 // low-x side of the frame, not the subject's own left. MediaPipe names its sets from the subject's
-// point of view, so Drift's kEyeLeft is MediaPipe's FACEMESH_RIGHT_EYE and vice versa. The
+// point of view, so BASE's kEyeLeft is MediaPipe's FACEMESH_RIGHT_EYE and vice versa. The
 // existing kIdxMouthLeft = 61 already follows this convention. Swapping a pair here produces
 // mirrored liner and shadow, which a symmetric test face will not reveal — check the overlay.
 constexpr std::array<int, 20> kLipOuter{61,  185, 40,  39,  37,  0,   267, 269, 270, 409,
@@ -82,7 +82,7 @@ struct Detection
 QString resolveFaceModelDir()
 {
     const QStringList roots = GpuPackageParse::defaultSearchPaths(
-        QStringLiteral("DRIFT_FACE_MODEL_DIR"), QStringLiteral("models/face"),
+        QStringLiteral("BASE_FACE_MODEL_DIR"), QStringLiteral("models/face"),
         QStringLiteral("face-model"));
 
     // A directory only counts as a model when every piece is there — a half-downloaded folder
@@ -289,7 +289,7 @@ bool FaceLandmarker::Impl::ensureLoaded()
         // app is running, and latching here would make it need a restart. A model that is present
         // but fails to load is latched below, since retrying that just repeats the failure.
         error = QStringLiteral("Face model not found. Install the face model addon, place it in "
-                               "models/face, or set DRIFT_FACE_MODEL_DIR.");
+                               "models/face, or set BASE_FACE_MODEL_DIR.");
         return false;
     }
     // The runtime is an addon too. Unlike the model it cannot be picked up mid-session — the

@@ -6,7 +6,7 @@ import QtQuick.Controls.Basic
 // Window was used (fullscreen toggle) without being imported.
 import QtQuick.Window
 import QtQuick.Layouts
-import Drift
+import Base
 import "components"
 import "components/preview"
 

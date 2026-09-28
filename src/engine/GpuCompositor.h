@@ -39,7 +39,7 @@ struct GpuLayer
     QImage source; // null => fully transparent layer (unless video or vector is set)
     PreviewVideoFrame video;
     // Skia-drawn content (text, shapes, Lottie). Declared whether or not Skia is compiled in so
-    // the struct has one layout; without DRIFT_WITH_SKIA nothing ever sets it. When Skia cannot
+    // the struct has one layout; without BASE_WITH_SKIA nothing ever sets it. When Skia cannot
     // draw it, `source` is the fallback if the builder filled one.
     std::shared_ptr<const drift::skia::VectorPainter> vector;
     // A glTF model drawn by GlModelRenderer straight into a full-canvas layer target.

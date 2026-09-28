@@ -2,7 +2,7 @@
 
 #include "VectorInspect.h"
 
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "SkiaFonts.h"
 #include "SkiaRuntime.h"
 #include "SkiaVectorResources.h"
@@ -35,7 +35,7 @@
 
 namespace drift::vec {
 
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 
 namespace {
 
@@ -451,7 +451,7 @@ void clearVectorDocumentCache()
     documentCache().clear();
 }
 
-#else // !DRIFT_WITH_SKIA
+#else // !BASE_WITH_SKIA
 
 std::shared_ptr<const skia::VectorPainter> makePainter(const RenderRequest &)
 {

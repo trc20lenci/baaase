@@ -308,7 +308,7 @@ drift::MediaAsset buildProbedAsset(const QString &absolutePath, const QString &n
 }
 
 // nullopt when neither Qt nor the FFmpeg fallback can read the file. The suffix is on the import
-// whitelist, so reaching that means a format Drift claims to support has no decoder here at all.
+// whitelist, so reaching that means a format BASE claims to support has no decoder here at all.
 // Returning a zero-sized asset instead, which is what this used to do, left a row in the bin that
 // silently rendered as nothing.
 std::optional<drift::MediaAsset> buildImageAsset(const QString &absolutePath, const QString &name)

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // One slot in a bottom navigation bar: pill, glyph, label.
 //

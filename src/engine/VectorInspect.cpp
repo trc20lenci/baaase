@@ -7,7 +7,7 @@
 #include <QSet>
 #include <QXmlStreamReader>
 
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "SkiaFonts.h"
 #include "SkiaVectorObservers.h"
 #include "SkiaVectorResources.h"
@@ -64,7 +64,7 @@ void collectExpressions(const QJsonValue &value, const QString &path, QStringLis
         collectExpressions(it.value(), path + QLatin1Char('/') + it.key(), out);
 }
 
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 
 void inspectLottie(const QByteArray &data, InspectReport *report)
 {
@@ -201,7 +201,7 @@ void inspectSvg(const QByteArray &data, InspectReport *report)
         report->hints.append(QStringLiteral("Elements with ids can be restyled per clip through the svg.<id>.<fill|stroke|strokeWidth|opacity|visible> slots; svg.fill / svg.stroke / svg.strokeWidth / svg.opacity restyle the whole drawing."));
 }
 
-#endif // DRIFT_WITH_SKIA
+#endif // BASE_WITH_SKIA
 
 } // namespace
 
@@ -388,13 +388,13 @@ InspectReport inspectVector(const QByteArray &data, VectorKind kind)
         report.error = QStringLiteral("empty document");
         return report;
     }
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     if (kind == VectorKind::Svg)
         inspectSvg(data, &report);
     else
         inspectLottie(data, &report);
 #else
-    report.error = QStringLiteral("this build has no vector renderer (DRIFT_WITH_SKIA is off)");
+    report.error = QStringLiteral("this build has no vector renderer (BASE_WITH_SKIA is off)");
 #endif
     return report;
 }

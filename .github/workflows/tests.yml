@@ -172,7 +172,7 @@ jobs:
       - name: Verify ffmpeg is on PATH
         run: ffmpeg -hide_banner -encoders | grep -E "libx264|aac" | head -3
 
-      # DRIFT_BUNDLE_ONNXRUNTIME=OFF: only the headers are needed to compile. The runtime is
+      # BASE_BUNDLE_ONNXRUNTIME=OFF: only the headers are needed to compile. The runtime is
       # dlopened from whichever Acceleration addon the user installs.
       - name: Configure
         run: |
@@ -251,7 +251,7 @@ jobs:
           test -f "${GITHUB_WORKSPACE}/../drift-addons/staging/effects-core/effects/turbulent_displace/effect.json"
 
       # Homebrew, not install-qt-action, and not the pinned FFmpeg the Linux job uses: Homebrew's
-      # Qt links the same FFmpeg Drift does, so there is no second libavcodec in the process to
+      # Qt links the same FFmpeg BASE does, so there is no second libavcodec in the process to
       # keep ABI-compatible. This is what package.yml's macos job does; keep the two in step.
       # Note the consequence — this job tests against Homebrew's FFmpeg 8.x while Linux tests
       # against the n7.1 pin.

@@ -14,10 +14,10 @@
 #   ANDROID_NDK_ROOT the NDK version the Qt kit was built against, NOT simply the newest installed.
 #                    Mixing NDK majors between Qt, FFmpeg and the app produces libc++ symbol
 #                    errors and dlopen failures that get misattributed to something else.
-#   DRIFT_ANDROID_PACKAGE_NAME  application id (default org.cutwire.drift.debug for a local
-#                               non-Release build, org.cutwire.drift for Release; CI uses .ci)
-#   DRIFT_ANDROID_APP_NAME      launcher label (default "Drift Debug" / "Drift", same rule)
-#   DRIFT_ANDROID_VERSION_CODE  optional Play-Store integer; unset → CMake derives from
+#   BASE_ANDROID_PACKAGE_NAME  application id (default app.base.editor.debug for a local
+#                               non-Release build, app.base.editor for Release; CI uses .ci)
+#   BASE_ANDROID_APP_NAME      launcher label (default "BASE Debug" / "BASE", same rule)
+#   BASE_ANDROID_VERSION_CODE  optional Play-Store integer; unset → CMake derives from
 #                               PROJECT_VERSION (same semver as desktop)
 #   QT_ANDROID_ABIS             semicolon-separated ABI list packaged into the APK/AAB.
 #                               Defaults to the abi argument. A Play Store AAB wants every
@@ -63,11 +63,11 @@ esac
 # Both CI workflows set these explicitly, and a local `build.sh <abi> Release` still builds the
 # release identity.
 if [ "$BUILD_TYPE" = "Release" ]; then
-    : "${DRIFT_ANDROID_PACKAGE_NAME:=org.cutwire.drift}"
-    : "${DRIFT_ANDROID_APP_NAME:=Drift}"
+    : "${BASE_ANDROID_PACKAGE_NAME:=app.base.editor}"
+    : "${BASE_ANDROID_APP_NAME:=BASE}"
 else
-    : "${DRIFT_ANDROID_PACKAGE_NAME:=org.cutwire.drift.debug}"
-    : "${DRIFT_ANDROID_APP_NAME:=Drift Debug}"
+    : "${BASE_ANDROID_PACKAGE_NAME:=app.base.editor.debug}"
+    : "${BASE_ANDROID_APP_NAME:=BASE Debug}"
 fi
 : "${QT_ANDROID_ABIS:=$ABI}"
 : "${BUILD_AAB:=0}"
@@ -117,11 +117,11 @@ CMAKE_ARGS=(
     -DQT_ANDROID_ABIS="$QT_ANDROID_ABIS"
     -DDRIFT_BUNDLE_ONNXRUNTIME=OFF
     -DDRIFT_WITH_SKIA=ON
-    -DDRIFT_ANDROID_PACKAGE_NAME="$DRIFT_ANDROID_PACKAGE_NAME"
-    -DDRIFT_ANDROID_APP_NAME="$DRIFT_ANDROID_APP_NAME"
+    -DDRIFT_ANDROID_PACKAGE_NAME="$BASE_ANDROID_PACKAGE_NAME"
+    -DDRIFT_ANDROID_APP_NAME="$BASE_ANDROID_APP_NAME"
 )
-if [ -n "${DRIFT_ANDROID_VERSION_CODE:-}" ]; then
-    CMAKE_ARGS+=(-DDRIFT_ANDROID_VERSION_CODE="$DRIFT_ANDROID_VERSION_CODE")
+if [ -n "${BASE_ANDROID_VERSION_CODE:-}" ]; then
+    CMAKE_ARGS+=(-DDRIFT_ANDROID_VERSION_CODE="$BASE_ANDROID_VERSION_CODE")
 fi
 
 "$QT_CMAKE" "${CMAKE_ARGS[@]}"

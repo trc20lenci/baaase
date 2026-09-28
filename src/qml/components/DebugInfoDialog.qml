@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 
 // Header bug button. Decoder/encoder capability plus host facts to paste into a GitHub issue.
 ThemedDialog {
@@ -758,7 +758,7 @@ ThemedDialog {
                     tone: "default"
                     textFormat: Text.RichText
                     linkColor: Theme.primary
-                    text: "<a href=\"https://github.com/CutWire-Studios/Drift/issues\">%1</a>"
+                    text: "<a href=\"https://github.com/trc20lenci/baaase/issues\">%1</a>"
                           .arg(qsTr("Report a bug"))
                     onLinkActivated: (link) => Qt.openUrlExternally(link)
                     HoverHandler {

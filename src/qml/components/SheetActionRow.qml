@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // The 64dp labelled row every phone bottom sheet is built from: icon tile, label, and a
 // detail line that says what the thing does.

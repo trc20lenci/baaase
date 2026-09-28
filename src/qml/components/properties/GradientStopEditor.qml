@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Dialogs
-import Drift
+import Base
 import ".."
 
 // Gradient paint editor for one shading layer of a text or shape clip: a live preview bar,

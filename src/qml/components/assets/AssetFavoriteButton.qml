@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 import ".."
 
 // Star toggle for marking an asset-browser item as a favorite.

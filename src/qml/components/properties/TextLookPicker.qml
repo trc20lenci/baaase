@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Text-effect selector for the Style page: shows the active look (Shadow, Neon, …) rendered on

@@ -1,4 +1,4 @@
-app-id: org.cutwire.Drift
+app-id: app.base.editor
 runtime: org.kde.Platform
 runtime-version: "6.11"
 sdk: org.kde.Sdk
@@ -6,7 +6,7 @@ sdk: org.kde.Sdk
 # for clang. The extension is build-time only; nothing from it ends up in /app.
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm20
-command: drift
+command: base
 
 finish-args:
   - --share=ipc
@@ -33,7 +33,7 @@ cleanup:
   - "*.la"
 
 modules:
-  # Headers only. Drift does not link ONNX Runtime — it dlopens whichever build the user
+  # Headers only. BASE does not link ONNX Runtime — it dlopens whichever build the user
   # installed from the Acceleration category, so the app ships none and neither does this
   # manifest. The library in this archive is deliberately discarded. Built with
   # -DDRIFT_FETCH_ONNXRUNTIME=OFF so the sandboxed build never downloads anything itself.
@@ -64,7 +64,7 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_SHARED_LIBS=ON
       - -DSOUNDSTRETCH=OFF
-      # Without this it lands in /app/lib64, where two things fail to look: pkg-config (so Drift
+      # Without this it lands in /app/lib64, where two things fail to look: pkg-config (so BASE
       # falls through to SoundTouch's own broken CMake config) and the runtime linker, whose path
       # inside the sandbox is /app/lib.
       - -DCMAKE_INSTALL_LIBDIR=lib
@@ -98,7 +98,7 @@ modules:
   # buildsystem: simple rather than cmake-ninja because Skia has to be compiled first, from the
   # script inside this very source tree (third_party/build-skia.sh), against the Skia tarball
   # declared below — flatpak-builder has no hook for a pre-configure step.
-  - name: drift
+  - name: base
     buildsystem: simple
     build-options:
       append-path: /usr/lib/sdk/llvm20/bin
@@ -118,12 +118,12 @@ modules:
       - cmake --build build -j${FLATPAK_BUILDER_N_JOBS}
       - cmake --install build
     # Option notes:
-    #   DRIFT_FETCH_JUCE=OFF — JUCE is checked out as a source below rather than fetched by CMake:
+    #   BASE_FETCH_JUCE=OFF — JUCE is checked out as a source below rather than fetched by CMake:
     #     the build runs with no network, so FetchContent would fail here.
-    #   DRIFT_UPDATE_FEED_URL= — Flathub updates this build, so the in-app update check is compiled
+    #   BASE_UPDATE_FEED_URL= — Flathub updates this build, so the in-app update check is compiled
     #     out: an app that nags about a version flatpak will fetch on its own is noise the user
     #     cannot act on.
-    #   DRIFT_AUTO_UPDATE_TRANSLATIONS=OFF — a package build compiles the committed catalogs and
+    #   BASE_AUTO_UPDATE_TRANSLATIONS=OFF — a package build compiles the committed catalogs and
     #     never regenerates them. org.kde.Sdk's lupdate has no QML parser, so a refresh here strips
     #     every QML string from i18n/*.ts and ships .qm files that only translate the C++ side
     #     (#167). CMake also detects this on its own; the flag makes the intent explicit, since

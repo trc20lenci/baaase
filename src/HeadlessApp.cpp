@@ -80,7 +80,7 @@ QString describeOpenGl()
 void printBanner(std::FILE *out, const QString &glLine, bool stdioServing,
                  const drift::mcp::McpServer *http, const QString &projectPath)
 {
-    QString text = QStringLiteral("Drift %1 — headless\n").arg(QStringLiteral(DRIFT_VERSION));
+    QString text = QStringLiteral("BASE %1 — headless\n").arg(QStringLiteral(BASE_VERSION));
     text += QStringLiteral("  platform  %1\n").arg(QGuiApplication::platformName());
     text += QStringLiteral("  opengl    %1\n").arg(glLine);
     text += QStringLiteral("  project   %1\n")
@@ -124,7 +124,7 @@ int runHeadless(int argc, char *argv[])
     // started with stdin on /dev/null does not quit the instant it reads EOF.
     const bool serveStdio = stdioRequested || httpPort == 0;
     if (httpToken.isEmpty())
-        httpToken = qEnvironmentVariable("DRIFT_MCP_TOKEN");
+        httpToken = qEnvironmentVariable("BASE_MCP_TOKEN");
 
     // Deliberately not QQuickWindow::setGraphicsApi / AA_ShareOpenGLContexts, which the
     // GUI path sets here: with the attribute on and no QQuickWindow to build a share

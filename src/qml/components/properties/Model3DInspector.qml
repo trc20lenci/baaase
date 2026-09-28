@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // 3D model clip inspector: which .glb it is, which animation plays, and the pose and lighting

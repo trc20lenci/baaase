@@ -101,10 +101,10 @@ int main(int argc, char *argv[])
 
     project.tracks() << top << bottom;
 
-    // DRIFT_BENCH_SAVE=<path> writes the stress timeline out as a project file,
+    // BASE_BENCH_SAVE=<path> writes the stress timeline out as a project file,
     // so the same scene can be opened in the app.
-    if (qEnvironmentVariableIsSet("DRIFT_BENCH_SAVE")) {
-        const QString path = qEnvironmentVariable("DRIFT_BENCH_SAVE");
+    if (qEnvironmentVariableIsSet("BASE_BENCH_SAVE")) {
+        const QString path = qEnvironmentVariable("BASE_BENCH_SAVE");
         QFile file(path);
         if (file.open(QIODevice::WriteOnly)) {
             file.write(QJsonDocument(project.toJson()).toJson());
@@ -130,11 +130,11 @@ int main(int argc, char *argv[])
     std::vector<double> samples;
     samples.reserve(frames);
 
-    // DRIFT_BENCH_TEXTURE=1 times the preview path (composite to a GL texture,
+    // BASE_BENCH_TEXTURE=1 times the preview path (composite to a GL texture,
     // no readback) instead of the export path (composite and read back).
-    // DRIFT_BENCH_NV12=1 times compose + GPU RGBA→NV12 + async PBO map.
-    const bool texturePath = qEnvironmentVariableIsSet("DRIFT_BENCH_TEXTURE");
-    const bool nv12Path = qEnvironmentVariableIsSet("DRIFT_BENCH_NV12");
+    // BASE_BENCH_NV12=1 times compose + GPU RGBA→NV12 + async PBO map.
+    const bool texturePath = qEnvironmentVariableIsSet("BASE_BENCH_TEXTURE");
+    const bool nv12Path = qEnvironmentVariableIsSet("BASE_BENCH_NV12");
 
     QElapsedTimer timer;
     std::vector<uint8_t> nv12Y;

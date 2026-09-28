@@ -60,6 +60,6 @@ QString audioEffectCategoryLabel(const QString &categoryId);
 // Reload from the given roots, or defaultAudioEffectSearchPaths() when empty.
 void reloadAudioEffectCatalog(const QStringList &packageRoots = {});
 
-// Default roots: DRIFT_AUDIO_EFFECTS_DIR, installed "audio-effects" addons, <appDir>/audio-effects
+// Default roots: BASE_AUDIO_EFFECTS_DIR, installed "audio-effects" addons, <appDir>/audio-effects
 // and <AppDataLocation>/audio-effects — same precedence GPU effects use.
 QStringList defaultAudioEffectSearchPaths();

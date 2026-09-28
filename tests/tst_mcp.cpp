@@ -462,7 +462,7 @@ void McpTest::sessionFileRoundTrip()
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     const QString path = dir.filePath(QStringLiteral("session.json"));
-    qputenv("DRIFT_MCP_SESSION_PATH", path.toUtf8());
+    qputenv("BASE_MCP_SESSION_PATH", path.toUtf8());
     QVERIFY(drift::mcp::writeSessionFile(4731, QStringLiteral("abc123")));
     quint16 port = 0;
     QString token;
@@ -472,22 +472,22 @@ void McpTest::sessionFileRoundTrip()
     QCOMPARE(token, QStringLiteral("abc123"));
     drift::mcp::removeSessionFile();
     QVERIFY(!QFile::exists(path));
-    qunsetenv("DRIFT_MCP_SESSION_PATH");
+    qunsetenv("BASE_MCP_SESSION_PATH");
 }
 
 void McpTest::sessionFileMissing()
 {
-    qputenv("DRIFT_MCP_SESSION_PATH", "/tmp/drift-mcp-does-not-exist-test.json");
+    qputenv("BASE_MCP_SESSION_PATH", "/tmp/drift-mcp-does-not-exist-test.json");
     QString error;
     QVERIFY(!drift::mcp::readSessionFile(nullptr, nullptr, &error));
     QVERIFY(error.contains(QStringLiteral("Agent access")));
-    qunsetenv("DRIFT_MCP_SESSION_PATH");
+    qunsetenv("BASE_MCP_SESSION_PATH");
 }
 
 void McpTest::serverRequiresBearerToken()
 {
     QTemporaryDir dir;
-    qputenv("DRIFT_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
+    qputenv("BASE_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
     AssetLibrary library;
     AppController state(&library);
     state.setMcpEnabled(true);
@@ -498,13 +498,13 @@ void McpTest::serverRequiresBearerToken()
     QCOMPARE(status, 401);
     state.setMcpEnabled(false);
     QVERIFY(!state.mcpRunning());
-    qunsetenv("DRIFT_MCP_SESSION_PATH");
+    qunsetenv("BASE_MCP_SESSION_PATH");
 }
 
 void McpTest::serverInitializeWithToken()
 {
     QTemporaryDir dir;
-    qputenv("DRIFT_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
+    qputenv("BASE_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
     AssetLibrary library;
     AppController state(&library);
     state.setMcpEnabled(true);
@@ -523,13 +523,13 @@ void McpTest::serverInitializeWithToken()
     QVERIFY(QFile::exists(dir.filePath(QStringLiteral("s.json"))));
     state.setMcpEnabled(false);
     QVERIFY(!QFile::exists(dir.filePath(QStringLiteral("s.json"))));
-    qunsetenv("DRIFT_MCP_SESSION_PATH");
+    qunsetenv("BASE_MCP_SESSION_PATH");
 }
 
 void McpTest::serverNotificationReturns202()
 {
     QTemporaryDir dir;
-    qputenv("DRIFT_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
+    qputenv("BASE_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
     AssetLibrary library;
     AppController state(&library);
     state.setMcpEnabled(true);
@@ -544,7 +544,7 @@ void McpTest::serverNotificationReturns202()
              &status);
     QCOMPARE(status, 202);
     state.setMcpEnabled(false);
-    qunsetenv("DRIFT_MCP_SESSION_PATH");
+    qunsetenv("BASE_MCP_SESSION_PATH");
 }
 
 // Regression for the constructor starting the server itself: that raced headless mode's
@@ -555,7 +555,7 @@ void McpTest::serverNotificationReturns202()
 void McpTest::mcpStartOnLaunchAppliesOnlyWhenInvoked()
 {
     QTemporaryDir dir;
-    qputenv("DRIFT_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
+    qputenv("BASE_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
     QSettings().setValue(QStringLiteral("mcp/startOnLaunch"), true);
 
     AssetLibrary library;
@@ -568,7 +568,7 @@ void McpTest::mcpStartOnLaunchAppliesOnlyWhenInvoked()
 
     state.setMcpEnabled(false);
     QSettings().remove(QStringLiteral("mcp/startOnLaunch"));
-    qunsetenv("DRIFT_MCP_SESSION_PATH");
+    qunsetenv("BASE_MCP_SESSION_PATH");
 }
 
 // The preference is a standing intent to reopen access unattended, so an explicit
@@ -577,7 +577,7 @@ void McpTest::mcpStartOnLaunchAppliesOnlyWhenInvoked()
 void McpTest::mcpDisablingResetsStartOnLaunch()
 {
     QTemporaryDir dir;
-    qputenv("DRIFT_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
+    qputenv("BASE_MCP_SESSION_PATH", dir.filePath(QStringLiteral("s.json")).toUtf8());
     QSettings().remove(QStringLiteral("mcp/startOnLaunch"));
 
     AssetLibrary library;
@@ -591,7 +591,7 @@ void McpTest::mcpDisablingResetsStartOnLaunch()
     QVERIFY(!state.mcpStartOnLaunch());
     QVERIFY(!QSettings().value(QStringLiteral("mcp/startOnLaunch")).toBool());
 
-    qunsetenv("DRIFT_MCP_SESSION_PATH");
+    qunsetenv("BASE_MCP_SESSION_PATH");
 }
 
 void McpTest::applyUnknownOp()
@@ -2153,7 +2153,7 @@ namespace {
 
 QString lottieFixture()
 {
-    QFile file(QStringLiteral(DRIFT_TEST_DATA_DIR "/vector/slide.json"));
+    QFile file(QStringLiteral(BASE_TEST_DATA_DIR "/vector/slide.json"));
     if (!file.open(QIODevice::ReadOnly))
         return {};
     return QString::fromUtf8(file.readAll());
@@ -2488,7 +2488,7 @@ void McpTest::importGlbBecomesModel3dAsset()
     AppController state(&library);
     drift::mcp::McpDispatcher dispatcher(&state);
 
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/cube.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/cube.glb");
     QVERIFY(QFileInfo::exists(path));
     const QJsonObject imported = dispatcher.applyOne(QStringLiteral("import_media"),
                                                      {{QStringLiteral("paths"), QJsonArray{path}}});
@@ -2541,7 +2541,7 @@ void McpTest::model3dKeyframesAndOptions()
     AppController state(&library);
     drift::mcp::McpDispatcher dispatcher(&state);
 
-    const QString path = QStringLiteral(DRIFT_TEST_DATA_DIR "/cube.glb");
+    const QString path = QStringLiteral(BASE_TEST_DATA_DIR "/cube.glb");
     const QJsonObject missing = dispatcher.applyOne(QStringLiteral("add_model3d"),
                                                     {{QStringLiteral("path"), QStringLiteral("/nope/none.glb")}});
     QVERIFY(!missing.value(QStringLiteral("ok")).toBool());
@@ -2960,7 +2960,7 @@ QByteArray readAllFrom(std::FILE *f)
 
 } // namespace
 
-// #135: Drift used to answer with LSP-style "Content-Length: N\r\n\r\n{...}". The MCP
+// #135: BASE used to answer with LSP-style "Content-Length: N\r\n\r\n{...}". The MCP
 // stdio transport is newline-delimited JSON, so the official SDK's reader choked on the
 // header line and then stalled forever on a body with no trailing newline.
 void McpTest::stdioFramingIsNewlineDelimited()
@@ -4016,7 +4016,7 @@ public:
                                {QStringLiteral("title"), QStringLiteral("Test tone")},
                                {QStringLiteral("duration_ms"), 1000},
                                {QStringLiteral("price_coins"), 0},
-                               {QStringLiteral("creator"), QJsonObject{{QStringLiteral("name"), QStringLiteral("Drift")}}},
+                               {QStringLiteral("creator"), QJsonObject{{QStringLiteral("name"), QStringLiteral("BASE")}}},
                                {QStringLiteral("thumb_url"), base() + QStringLiteral("/thumb.jpg")},
                                {QStringLiteral("variants"), QJsonArray{QJsonObject{{QStringLiteral("id"), QStringLiteral("wav")}, {QStringLiteral("label"), QStringLiteral("WAV")}}}}};
         const QJsonObject quota{{QStringLiteral("limit"), 5}, {QStringLiteral("remaining"), 4}, {QStringLiteral("window"), QStringLiteral("day")}};
@@ -4106,8 +4106,8 @@ void McpTest::marketOpsGateOnConsent()
     QVERIFY(reply.value(QStringLiteral("ok")).toBool());
     QVERIFY(!reply.value(QStringLiteral("configured")).toBool());
 
-    qputenv("DRIFT_MARKET_API_URL", "http://127.0.0.1:9/api/v1");
-    const auto unset = qScopeGuard([] { qunsetenv("DRIFT_MARKET_API_URL"); });
+    qputenv("BASE_MARKET_API_URL", "http://127.0.0.1:9/api/v1");
+    const auto unset = qScopeGuard([] { qunsetenv("BASE_MARKET_API_URL"); });
     MarketClient client;
     client.setAssetLibrary(&library);
     state.setMarketClient(&client);
@@ -4128,8 +4128,8 @@ void McpTest::marketSearchAndDownloadImportsAsset()
     QStandardPaths::setTestModeEnabled(true);
     FakeMarket fake;
     QVERIFY(fake.start());
-    qputenv("DRIFT_MARKET_API_URL", (fake.base() + QStringLiteral("/api/v1")).toUtf8());
-    const auto unset = qScopeGuard([] { qunsetenv("DRIFT_MARKET_API_URL"); });
+    qputenv("BASE_MARKET_API_URL", (fake.base() + QStringLiteral("/api/v1")).toUtf8());
+    const auto unset = qScopeGuard([] { qunsetenv("BASE_MARKET_API_URL"); });
 
     AssetLibrary library;
     AppController state(&library);
@@ -4161,7 +4161,7 @@ void McpTest::marketSearchAndDownloadImportsAsset()
     const QJsonObject row = items.at(0).toObject();
     QCOMPARE(row.value(QStringLiteral("id")).toString(), QStringLiteral("tone-1"));
     QCOMPARE(row.value(QStringLiteral("dur")).toDouble(), 1.0);
-    QCOMPARE(row.value(QStringLiteral("by")).toString(), QStringLiteral("Drift"));
+    QCOMPARE(row.value(QStringLiteral("by")).toString(), QStringLiteral("BASE"));
     QVERIFY(!row.contains(QStringLiteral("coins")));
     QCOMPARE(row.value(QStringLiteral("variants")).toInt(), 1);
     QVERIFY(found.value(QStringLiteral("has_more")).toBool());

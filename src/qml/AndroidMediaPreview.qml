@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 
 // Phone preview-and-edit for one media-bin row: watch it, keep a range, crop the picture,

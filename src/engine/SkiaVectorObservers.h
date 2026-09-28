@@ -8,7 +8,7 @@
 #include "modules/skottie/include/Skottie.h"
 #include "modules/skottie/include/SkottieProperty.h"
 
-// Skottie build-time observers behind Drift-shaped accessors, keeping the Skia subclasses out of
+// Skottie build-time observers behind BASE-shaped accessors, keeping the Skia subclasses out of
 // the Vector*.cpp callers.
 
 namespace drift::skia {

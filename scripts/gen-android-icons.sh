@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Regenerate Android launcher mipmaps + splash logo from resources/Drift_icon.png.
+# Regenerate Android launcher mipmaps + splash logo from resources/BASE_icon.png.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$ROOT/resources/Drift_icon.png"
+SRC="$ROOT/resources/BASE_icon.png"
 RES="$ROOT/android/res"
 
 if [[ ! -f "$SRC" ]]; then
@@ -10,7 +10,7 @@ if [[ ! -f "$SRC" ]]; then
   exit 1
 fi
 
-magick "$SRC" -resize 256x256 "$ROOT/resources/drift.png"
+magick "$SRC" -resize 256x256 "$ROOT/resources/base.png"
 
 declare -A SIZES=([mdpi]=48 [hdpi]=72 [xhdpi]=96 [xxhdpi]=144 [xxxhdpi]=192)
 declare -A FG=([mdpi]=108 [hdpi]=162 [xhdpi]=216 [xxhdpi]=324 [xxxhdpi]=432)

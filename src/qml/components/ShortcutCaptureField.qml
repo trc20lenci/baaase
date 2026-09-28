@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Click or focus and press Space/Enter to arm, then press a chord (modifiers + key).
 // Esc cancels; Backspace clears.

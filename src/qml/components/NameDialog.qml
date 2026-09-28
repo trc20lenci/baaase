@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 
 // Name prompt shared by every "save this as a preset" and "rename a preset" flow — text styles
 // and effect stacks alike. All of them are a single short field, so they are one dialog rather

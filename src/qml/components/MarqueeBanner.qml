@@ -1,5 +1,5 @@
 import QtQuick
-import Drift
+import Base
 
 // A continuously scrolling strip of short feature/privilege callouts ("Export in 4K",
 // "Auto captions", ...), used at the top of the Home destination the way CapCut-style

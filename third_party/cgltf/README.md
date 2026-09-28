@@ -1,6 +1,6 @@
 # cgltf
 
-Single-header glTF 2.0 loader used by Drift's face-prop (`.glb`) pipeline.
+Single-header glTF 2.0 loader used by BASE's face-prop (`.glb`) pipeline.
 
 - Upstream: https://github.com/jkuhlmann/cgltf
 - Tag: `v1.15`

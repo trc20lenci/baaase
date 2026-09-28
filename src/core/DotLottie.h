@@ -4,7 +4,7 @@
 #include <QStringList>
 
 // .lottie (dotLottie) bundles: a zip holding manifest.json, the animations (animations/<id>.json
-// or, in the v2 layout, a/<id>.json) and their images (images/ or i/). Drift does not render the
+// or, in the v2 layout, a/<id>.json) and their images (images/ or i/). BASE does not render the
 // bundle itself — it unpacks it once into a persistent folder and imports the plain Lottie JSON
 // inside, so everything downstream (probe, renderer, MCP) sees an ordinary .json.
 

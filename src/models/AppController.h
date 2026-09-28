@@ -127,7 +127,7 @@ class AppController : public QObject
     Q_PROPERTY(bool mediaCodecZeroCopy READ mediaCodecZeroCopy WRITE setMediaCodecZeroCopy NOTIFY
                    mediaCodecZeroCopyChanged)
     Q_PROPERTY(bool mediaCodecZeroCopySupported READ mediaCodecZeroCopySupported CONSTANT)
-    // Hybrid-graphics Windows laptops: which GPU Drift asks to run on — "auto", "integrated" or
+    // Hybrid-graphics Windows laptops: which GPU BASE asks to run on — "auto", "integrated" or
     // "discrete". The driver picks the GPU when it loads, so this takes effect on the next
     // launch. Hidden on single-GPU machines and off Windows.
     Q_PROPERTY(QString preferredGpu READ preferredGpu WRITE setPreferredGpu NOTIFY preferredGpuChanged)
@@ -152,7 +152,7 @@ class AppController : public QObject
     Q_PROPERTY(bool mcpStartOnLaunch READ mcpStartOnLaunch WRITE setMcpStartOnLaunch
                    NOTIFY mcpStartOnLaunchChanged)
     // App-wide interface language, QSettings("ui/language"). Empty means follow the OS locale.
-    // "en" is the source catalog (no .qm). Other codes match i18n/drift_<code>.qm.
+    // "en" is the source catalog (no .qm). Other codes match i18n/base_<code>.qm.
     // needsUiLanguagePrompt is true only on a brand-new install, before the first-launch chooser
     // (or a later language pick from the header / Android Settings) has written ui/languageChosen.
     Q_PROPERTY(QString uiLanguage READ uiLanguage WRITE setUiLanguage NOTIFY uiLanguageChanged)
@@ -1547,7 +1547,7 @@ public:
     // Same publish-to-gallery step as shareLastExport, handed to a player instead of a share
     // sheet. Shares the m_sharingExport guard, so the two cannot run the copy twice at once.
     Q_INVOKABLE void playLastExport();
-    // Copies a file into the shared media collection (Movies/Music/Pictures under "Drift") so it
+    // Copies a file into the shared media collection (Movies/Music/Pictures under "BASE") so it
     // outlives the app's own storage. Marketplace downloads land in AppDataLocation, which is gone
     // on uninstall or a "clear data" and invisible to every file manager — for something the user
     // spent quota on, that is a file they can lose without ever having seen it.
@@ -1606,7 +1606,7 @@ signals:
     void exportInProgressChanged();
     void exportProgressChanged();
     void canShareExportChanged();
-    // `location` is a human-readable folder ("Movies/Drift"), empty when ok is false.
+    // `location` is a human-readable folder ("Movies/BASE"), empty when ok is false.
     void savedToGallery(const QString &displayName, bool ok, const QString &location,
                         const QString &error);
     void subtitleGeneratingChanged();

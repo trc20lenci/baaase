@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Drift
+import Base
 import ".."
 
 // Shared media browser: the kinds-filtered AssetLibrary grid/list used by the

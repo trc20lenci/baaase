@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Copyright 2026 CutWire Studios -->
+<!-- Copyright 2026 BASE -->
 <component type="desktop-application">
-  <id>org.cutwire.Drift</id>
-  <name>Drift</name>
+  <id>app.base.editor</id>
+  <name>BASE</name>
   <summary>Edit and export videos easily</summary>
   <description>
     <p>
-      Drift is a free desktop video editor that feels simple from the first cut.
+      BASE is a free desktop video editor that feels simple from the first cut.
       Drop in video, photos, and music, add effects and stickers, generate captions
       automatically, and export — no subscription, no watermark, and no account
       required.
@@ -34,12 +34,12 @@
     <color type="primary" scheme_preference="light">#ffc780</color>
     <color type="primary" scheme_preference="dark">#5c3300</color>
   </branding>
-  <launchable type="desktop-id">org.cutwire.Drift.desktop</launchable>
+  <launchable type="desktop-id">app.base.editor.desktop</launchable>
   <provides>
     <mediatype>application/x-drift-project</mediatype>
   </provides>
-  <developer id="org.cutwire">
-    <name>CutWire Studios</name>
+  <developer id="app.base">
+    <name>BASE</name>
   </developer>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
@@ -49,48 +49,48 @@
     <category>Video</category>
     <category>AudioVideoEditing</category>
   </categories>
-  <url type="homepage">https://cutwire.org/drift</url>
-  <url type="bugtracker">https://github.com/CutWire-Studios/Drift/issues</url>
-  <url type="vcs-browser">https://github.com/CutWire-Studios/Drift</url>
+  <url type="homepage">https://github.com/trc20lenci/baaase</url>
+  <url type="bugtracker">https://github.com/trc20lenci/baaase/issues</url>
+  <url type="vcs-browser">https://github.com/trc20lenci/baaase</url>
   <!-- Screenshot URLs are pinned to the release tag: Flathub rejects branch-based git URLs
        because their contents change under the published listing. -->
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/main-window.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/main-window.png</image>
       <caption>The editor with the preview, timeline and panels</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/effects-panel.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/effects-panel.png</image>
       <caption>Browsing effects to drop onto a clip</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/transitions-panel.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/transitions-panel.png</image>
       <caption>Choosing a transition between two clips</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/text-styles.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/text-styles.png</image>
       <caption>Styling a title with presets and colors</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/stickers-panel.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/stickers-panel.png</image>
       <caption>Adding stickers and emoji to a shot</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/subtitle-editor.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/subtitle-editor.png</image>
       <caption>Editing captions generated from speech</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/subject-cutout.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/subject-cutout.png</image>
       <caption>Cutting a subject out of the frame</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/CutWire-Studios/Drift/v0.1.1/docs/screenshots/addon-manager.png</image>
+      <image>https://raw.githubusercontent.com/trc20lenci/baaase/v0.1.1/docs/screenshots/addon-manager.png</image>
       <caption>Installing optional fonts, stickers and models</caption>
     </screenshot>
   </screenshots>
   <releases>
     <release version="0.6.0" date="2026-09-13">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.6.0</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.6.0</url>
       <description>
         <p>Text and shapes are redrawn through Skia with layered styles, gradients and a new
         animation engine, Lottie and SVG clips arrive on the timeline, over a hundred new
@@ -142,7 +142,7 @@
       </description>
     </release>
     <release version="0.5.1" date="2026-08-31">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.5.1</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.5.1</url>
       <description>
         <p>A quick bug-fix release for NVIDIA users. If playback looks fine on your machine,
         you can skip this update.</p>
@@ -152,9 +152,9 @@
       </description>
     </release>
     <release version="0.5.0" date="2026-08-30">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.5.0</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.5.0</url>
       <description>
-        <p>This is the first public release of Drift for Android. On the desktop, preview and
+        <p>This is the first public release of BASE for Android. On the desktop, preview and
         export stay on the GPU, the media bin gets folders, and Face Swap, video
         stabilization, and several new languages land in this version.</p>
         <ul>
@@ -183,12 +183,12 @@
       </description>
     </release>
     <release version="0.4.0" date="2026-08-25">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.4.0</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.4.0</url>
       <description>
         <p>GPU decoding and encoding on every platform, effect and text presets you can reuse
         across projects, and a fix for NVIDIA on Wayland.</p>
         <ul>
-          <li>Fixed the black preview on NVIDIA under Wayland — Drift now runs as a native
+          <li>Fixed the black preview on NVIDIA under Wayland — BASE now runs as a native
           Wayland app instead of falling back to X11</li>
           <li>Video decoding for the preview now uses the GPU on Windows and macOS too, not
           only Linux, and you can pick the backend from the preview toolbar</li>
@@ -208,7 +208,7 @@
       </description>
     </release>
     <release version="0.3.0" date="2026-08-20">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.3.0</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.3.0</url>
       <description>
         <p>A big update with macOS support, AI agent control, new editing tools, and a batch of
         everyday fixes.</p>
@@ -237,9 +237,9 @@
       </description>
     </release>
     <release version="0.2.2" date="2026-08-15">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.2.2</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.2.2</url>
       <description>
-        <p>A quick bug-fix release for AppImage users only. If you installed Drift from Flathub,
+        <p>A quick bug-fix release for AppImage users only. If you installed BASE from Flathub,
         the Arch package or the Windows installer, nothing changes for you and there is no need
         to update.</p>
         <ul>
@@ -251,7 +251,7 @@
       </description>
     </release>
     <release version="0.2.1" date="2026-08-12">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.2.1</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.2.1</url>
       <description>
         <p>A polish release focused on export options, playback controls, and everyday
         editing quality-of-life.</p>
@@ -268,7 +268,7 @@
       </description>
     </release>
     <release version="0.2.0" date="2026-08-07">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.2.0</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.2.0</url>
       <description>
         <p>A feature release with new editing tools, timeline and asset-browser improvements,
         UI polish, performance work, and a batch of bug fixes.</p>
@@ -291,7 +291,7 @@
       </description>
     </release>
     <release version="0.1.2" date="2026-08-01">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.1.2</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.1.2</url>
       <description>
         <p>Fixes for saving and exporting through the desktop file picker.</p>
         <ul>
@@ -301,7 +301,7 @@
       </description>
     </release>
     <release version="0.1.1" date="2026-07-31">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.1.1</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.1.1</url>
       <description>
         <p>A small fix-up release on top of the first public version.</p>
         <ul>
@@ -310,9 +310,9 @@
       </description>
     </release>
     <release version="0.1.0" date="2026-07-27">
-      <url type="details">https://github.com/CutWire-Studios/Drift/releases/tag/v0.1.0</url>
+      <url type="details">https://github.com/trc20lenci/baaase/releases/tag/v0.1.0</url>
       <description>
-        <p>The first public release of Drift — a free, open-source desktop video editor with no
+        <p>The first public release of BASE — a free, open-source desktop video editor with no
         subscription, no watermark and no account.</p>
         <ul>
           <li>Multi-track timeline with trim, split, snap, ripple and full undo</li>

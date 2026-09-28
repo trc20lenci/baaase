@@ -55,7 +55,7 @@ QDir graphDir(const QString &root)
 QString resolveSam2ModelDir()
 {
     const QStringList roots = GpuPackageParse::defaultSearchPaths(
-        QStringLiteral("DRIFT_SAM2_MODEL_DIR"), QStringLiteral("models/sam2"),
+        QStringLiteral("BASE_SAM2_MODEL_DIR"), QStringLiteral("models/sam2"),
         QStringLiteral("sam2-model"));
 
     for (const QString &root : roots) {
@@ -175,7 +175,7 @@ bool Sam2Segmenter::Impl::ensureLoaded()
         // app is running, and latching here would make it need a restart. A model that is present
         // but fails to load is latched below, since retrying that just repeats the failure.
         error = QStringLiteral("SAM2 model not found. Place the sam2.1 video export in models/sam2 "
-                               "or set DRIFT_SAM2_MODEL_DIR.");
+                               "or set BASE_SAM2_MODEL_DIR.");
         return false;
     }
     // The runtime is an addon too. Unlike the model it cannot be picked up mid-session — the

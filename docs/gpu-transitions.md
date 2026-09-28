@@ -16,7 +16,7 @@ transitions/
     └── main.frag
 ```
 
-Search order: `DRIFT_TRANSITIONS_DIR`, `<applicationDir>/transitions`, `<AppDataLocation>/transitions`.
+Search order: `BASE_TRANSITIONS_DIR`, `<applicationDir>/transitions`, `<AppDataLocation>/transitions`.
 
 ## transition.json
 
@@ -88,7 +88,7 @@ so `u_progress` still reaches exactly 0 and 1.
 Upstream [gl-transitions](https://github.com/gl-transitions/gl-transitions) packages are converted
 by `recipes/import-gl-transitions.py` in the Drift-Addons repository — do not hand-port them. The
 generated preamble supplies upstream's `progress` / `ratio` / `getFromColor()` / `getToColor()`
-contract and flips between its bottom-left uv space and Drift's top-left `v_texCoord`.
+contract and flips between its bottom-left uv space and BASE's top-left `v_texCoord`.
 
 Four upstream quirks the converter repairs, all of which are easy to get wrong by hand:
 
@@ -101,7 +101,7 @@ Four upstream quirks the converter repairs, all of which are easy to get wrong b
   loader's `precision highp` and silently downgrade the rest of the shader.
 - `texture2D()` is rewritten to `texture()`.
 
-Drift binds only `float` and `bool` parameters by name, so upstream `int` / `ivec2` / `vec2` / `vec4`
+BASE binds only `float` and `bool` parameters by name, so upstream `int` / `ivec2` / `vec2` / `vec4`
 uniforms bind as floats under a mangled name and are `#define`d back to a primary expression
 (`#define steps int(p_steps)`). Rewriting the use sites instead would break `In ? a : b`, since a
 float is not a legal ternary condition. Colours ship in `fixedParams` rather than as an editable

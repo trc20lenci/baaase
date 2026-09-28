@@ -1,4 +1,4 @@
-# Contributing to Drift
+# Contributing to BASE
 
 Thanks for taking the time to help. This is a short guide — the rules that matter are all here.
 
@@ -37,7 +37,7 @@ If a test is already broken on `main`, say so in the PR rather than working arou
 **Changes to effects and transitions are not accepted in this repository.** Although they are
 bundled here so the editor works out of the box, they are maintained as addons — submit new or
 updated effects, transitions, templates, and audio effects to
-[CutWire-Studios/Drift-Addons](https://github.com/CutWire-Studios/Drift-Addons) instead.
+the addons repository instead.
 
 This applies to the `effects/`, `transitions/`, `effect-templates/`, and `audio-effects/` trees.
 Changes to the *engine* that runs them — `src/engine/`, the shader host, the catalog loader — do
@@ -94,6 +94,6 @@ write the message yourself.
 
 ## Licence
 
-Drift is GPL-3.0. By contributing, you agree that your contributions are licensed under the same
+BASE is GPL-3.0. By contributing, you agree that your contributions are licensed under the same
 terms. Do not submit code you do not have the right to relicense — including code copied from
 projects under an incompatible licence.

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Templates as T
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 
 // CapCut-style phone editor: top bar, resizable preview | tools+timeline, bottom rail.

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 
 // Modal bottom sheet host for Assets / Properties on phone.

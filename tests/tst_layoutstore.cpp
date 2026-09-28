@@ -30,7 +30,7 @@ private:
 };
 
 // Every test writes real settings, so they go to a throwaway organisation under the
-// test-mode config root rather than over the user's own Drift layout.
+// test-mode config root rather than over the user's own BASE layout.
 void LayoutStoreTest::init()
 {
     m_org = QCoreApplication::organizationName();

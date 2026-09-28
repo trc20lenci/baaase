@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Cross-builds the native dependencies Drift links that have no Android package: FFmpeg, x264,
+# Cross-builds the native dependencies BASE links that have no Android package: FFmpeg, x264,
 # dav1d, zstd, OpenSSL (libcrypto) and SoundTouch. Output goes to
 # third_party/prebuilt/android/<abi>/{include,lib}, which is where the root CMakeLists looks.
 #

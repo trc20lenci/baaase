@@ -1,6 +1,6 @@
 # Cutwire Marketplace API
 
-Contract for `https://market.cutwire.org/api/v1`. Drift consumes this API; it never talks to Pexels, Unsplash, YouTube, Pixabay, or any other source directly. Types, providers, quotas, and prices are **backend configuration**. Enabling a source or changing a daily cap does not require a Drift release.
+Contract for `https://market.cutwire.org/api/v1`. BASE consumes this API; it never talks to Pexels, Unsplash, YouTube, Pixabay, or any other source directly. Types, providers, quotas, and prices are **backend configuration**. Enabling a source or changing a daily cap does not require a BASE release.
 
 The OpenAPI description is [openapi.yaml](openapi.yaml). This document is the architecture and the rules that YAML cannot say clearly.
 
@@ -11,7 +11,7 @@ The marketplace website and the API implementation live outside this repository.
 - The client is store-agnostic. It renders whatever `GET /catalog` returns.
 - Anonymous use is the default. Accounts exist for later paid quotas and coin-priced items.
 - Every request is tied to a stable, signed client identity so the backend can rate-limit per machine (for example one YouTube download per day) without an account.
-- Drift never shows Sign in, Create account, or `market.cutwire.org`. Informed users connect a client from the website via a redirect into the app.
+- BASE never shows Sign in, Create account, or `market.cutwire.org`. Informed users connect a client from the website via a redirect into the app.
 - Free listings are unmarked. Coin prices appear only when `price_coins > 0`.
 
 ## Base URL and versioning
@@ -24,11 +24,11 @@ JSON request and response bodies are UTF-8 `application/json`. File bytes travel
 
 ## Client identity
 
-The HMAC key ships in official Drift binaries (`DRIFT_MARKET_CLIENT_KEY`). It is **not** a user secret: anyone who rebuilds from source can extract it. Its job is to raise the bar above deleting app data or editing a JSON file. Treat it as a mild obstacle, and keep IP / account-level backstops for abuse.
+The HMAC key ships in official BASE binaries (`BASE_MARKET_CLIENT_KEY`). It is **not** a user secret: anyone who rebuilds from source can extract it. Its job is to raise the bar above deleting app data or editing a JSON file. Treat it as a mild obstacle, and keep IP / account-level backstops for abuse.
 
 ### Key encoding
 
-`key` is the bytes of the configured `DRIFT_MARKET_CLIENT_KEY` string, with no interpretation — a 64-character hex value is 64 ASCII bytes, not the 32 bytes it encodes. Nothing on either side decodes it. The service hex-decoded it once, which made a hex-looking key silently a different key than the client signed with, and the API can only report that as `invalid_client`.
+`key` is the bytes of the configured `BASE_MARKET_CLIENT_KEY` string, with no interpretation — a 64-character hex value is 64 ASCII bytes, not the 32 bytes it encodes. Nothing on either side decodes it. The service hex-decoded it once, which made a hex-looking key silently a different key than the client signed with, and the API can only report that as `invalid_client`.
 
 ### Client id
 
@@ -39,7 +39,7 @@ client_id  = lowercase hex( HMAC-SHA256(key, UTF-8(material)) )
 
 `platform` is one of `linux`, `windows`, `macos`, `android`.
 
-`fingerprint` is a stable machine+user string. It is **not** a random UUID in app data — wiping config must not mint a new quota. Drift hashes it with the key, so the server never sees raw hardware ids.
+`fingerprint` is a stable machine+user string. It is **not** a random UUID in app data — wiping config must not mint a new quota. BASE hashes it with the key, so the server never sees raw hardware ids.
 
 | OS | Fingerprint |
 |---|---|
@@ -62,7 +62,7 @@ Every call to `/api/v1` carries:
 | `X-Cutwire-Timestamp` | Unix seconds, decimal, no leading zeros |
 | `X-Cutwire-Nonce` | 32 lowercase hex chars (16 random bytes) |
 | `X-Cutwire-Signature` | lowercase hex HMAC-SHA256 of the canonical string |
-| `X-Cutwire-App` | `Drift/<version> (<os>)` |
+| `X-Cutwire-App` | `BASE/<version> (<os>)` |
 | `Authorization` | `Bearer <access_token>` when the device is linked; omit otherwise |
 
 Canonical string, UTF-8, `\n` separators, no trailing newline:
@@ -83,7 +83,7 @@ Do **not** require these headers on short-lived file URLs handed back in a downl
 
 `GET /catalog` is the only list of types and providers the client is allowed to know. Hide YouTube, add Pixabay, introduce `greenscreen`, or change a quota here.
 
-- `delivery`: `media` means Drift imports the file into the media bin. Reserve `file` for later non-bin assets (for example a raw `.glb`) without teaching Drift new stores. Drift v1 shows types with `delivery: media` only.
+- `delivery`: `media` means BASE imports the file into the media bin. Reserve `file` for later non-bin assets (for example a raw `.glb`) without teaching BASE new stores. BASE v1 shows types with `delivery: media` only.
 - `media_kind`: `video` | `audio` | `image`. Greenscreen clips are a separate `id` (e.g. `greenscreen`) with `media_kind: video`.
 - No `free` flag. A type or provider that should not appear is omitted.
 - `filters` is a closed set (`enum`, `toggle`, `text`) so the client can render them without per-store widgets. Search sends each filter `id` as a query parameter.
@@ -95,9 +95,9 @@ Suggested type ids: `video`, `photo`, `audio`, `greenscreen`. Video/audio effect
 
 `GET /search?type=…&provider=…&q=…&limit=30&cursor=…` plus declared filter ids.
 
-Item ids are opaque. Drift treats them as strings and never parses provider prefixes.
+Item ids are opaque. BASE treats them as strings and never parses provider prefixes.
 
-`thumb_url` and `preview_url` are market-hosted or proxied and short-lived. Drift must not be given raw Pexels/YouTube URLs that need API keys.
+`thumb_url` and `preview_url` are market-hosted or proxied and short-lived. BASE must not be given raw Pexels/YouTube URLs that need API keys.
 
 **Pricing**
 
@@ -133,7 +133,7 @@ are never a hard dependency.
 
 ## Downloads
 
-Backend fetches from the source, normalizes to a clean file, and returns that file. Drift only downloads the result.
+Backend fetches from the source, normalizes to a clean file, and returns that file. BASE only downloads the result.
 
 Preferred containers: `video/mp4`, `audio/wav` or `audio/aac`, `image/jpeg` / `image/png` / `image/webp`.
 
@@ -141,13 +141,13 @@ Preferred containers: `video/mp4`, `audio/wav` or `audio/aac`, `image/jpeg` / `i
 
 Consume quota (and coins, later) at job **create**, not on poll. Failed jobs refund.
 
-When `ready`, `file.url` is a short-lived GET. `file.sha256` is lowercase hex; Drift verifies when present.
+When `ready`, `file.url` is a short-lived GET. `file.sha256` is lowercase hex; BASE verifies when present.
 
 ## Errors
 
-RFC 7807 `application/problem+json` plus a stable `code` Drift switches on:
+RFC 7807 `application/problem+json` plus a stable `code` BASE switches on:
 
-| code | HTTP | Drift copy (no URLs, no Sign in) |
+| code | HTTP | BASE copy (no URLs, no Sign in) |
 |---|---|---|
 | `invalid_client` | 401 | Could not reach the marketplace. |
 | `rate_limited` | 429 | Daily limit reached for this source. Try again later. |
@@ -157,7 +157,7 @@ RFC 7807 `application/problem+json` plus a stable `code` Drift switches on:
 | `not_found` | 404 | That item is no longer available. |
 | `download_failed` | 422 or 500 | Could not prepare that file. |
 
-Include `Retry-After` and/or `reset_at` on 429. Do not put `https://market.cutwire.org` in `detail` — Drift may show that string.
+Include `Retry-After` and/or `reset_at` on 429. Do not put `https://market.cutwire.org` in `detail` — BASE may show that string.
 
 ### `reason`
 
@@ -177,14 +177,14 @@ Responses may also carry a `reason`: a finer-grained cause than `code`, because 
 
 Anonymous signed identity is enough for free downloads the backend allows.
 
-The website (not Drift) owns register, login, and later coin purchase. “Connect Drift” on the site redirects to:
+The website (not BASE) owns register, login, and later coin purchase. “Connect BASE” on the site redirects to:
 
 ```
 cutwire://market/auth/callback?code=…&state=…
 https://market.cutwire.org/app/auth/callback?code=…&state=…
 ```
 
-Drift exchanges `code` at `POST /auth/token` **with the signed client headers**, so the account binds to that device. Response: `access_token`, `refresh_token`, `expires_in`, `account`.
+BASE exchanges `code` at `POST /auth/token` **with the signed client headers**, so the account binds to that device. Response: `access_token`, `refresh_token`, `expires_in`, `account`.
 
 `POST /auth/refresh` and `POST /auth/logout` follow. `GET /me` returns the account when the Bearer token is valid, and `401` when anonymous (normal — not an error toast).
 
@@ -193,11 +193,11 @@ When a Bearer token is present, apply quotas to the **account** if you want paid
 ### Website checklist
 
 1. User logs in on the website.
-2. “Connect Drift” issues a one-time `code` and redirects to the callback URL.
-3. Drift redeems the code; you store `account_id ↔ client_id`.
-4. Later: coin balance, paid providers, per-download prices. No payment UI in Drift.
+2. “Connect BASE” issues a one-time `code` and redirects to the callback URL.
+3. BASE redeems the code; you store `account_id ↔ client_id`.
+4. Later: coin balance, paid providers, per-download prices. No payment UI in BASE.
 
-## Client UX rules (Drift)
+## Client UX rules (BASE)
 
 - No Sign in, Create account, or marketplace URL anywhere in the app.
 - Settings may show “Marketplace account connected” and Disconnect only after a successful callback.

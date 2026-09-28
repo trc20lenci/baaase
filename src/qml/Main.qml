@@ -1,17 +1,17 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Window
-import Drift
+import Base
 import "components"
 
 ApplicationWindow {
     id: window
 
     // Qt creates some chrome itself — most visibly the Undo/Cut/Copy/Paste menu on every
-    // TextField and TextArea (Basic/TextField.qml declares ContextMenu.menu). Drift styles
+    // TextField and TextArea (Basic/TextField.qml declares ContextMenu.menu). BASE styles
     // none of that, so it fell through to the palette the platform theme supplies and picked
     // up the desktop's colour scheme: on a KDE session with a custom scheme the editing menu
-    // rendered in that scheme's colours next to Drift's own. Palette propagates down the item
+    // rendered in that scheme's colours next to BASE's own. Palette propagates down the item
     // hierarchy, popups included, so setting the roles the Basic style reads brings Qt's own
     // chrome under Theme — and binding them keeps it following the light/dark toggle.
     palette.window: Theme.panelBackground

@@ -6,7 +6,7 @@
 
 #include <onnxruntime_cxx_api.h>
 
-// Loading ONNX Runtime, which Drift does not link.
+// Loading ONNX Runtime, which BASE does not link.
 //
 // The runtime is an addon like any other bulky optional thing: the app ships headers only and
 // dlopens whichever build the user installed, so the CPU / CUDA / WebGPU decision is theirs and
@@ -76,7 +76,7 @@ QString activeVersion();
 QStringList selectableVariants();
 
 // The user's choice, from the "ort/variant" setting: "auto" (the default), "cpu", "cuda",
-// "webgpu", … DRIFT_ORT_EP overrides it, since it exists to investigate exactly this.
+// "webgpu", … BASE_ORT_EP overrides it, since it exists to investigate exactly this.
 QString preferredVariant();
 void setPreferredVariant(const QString &variant);
 

@@ -1,7 +1,7 @@
 #include "ShapePreviewImageProvider.h"
 
 #include "core/ShapeStyle.h"
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
 #include "engine/SkiaRuntime.h"
 #include "engine/SkiaShapePainter.h"
 #endif
@@ -50,7 +50,7 @@ QImage ShapePreviewImageProvider::requestImage(const QString &id, QSize *size, c
 
     QImage card(cardW, cardH, QImage::Format_ARGB32_Premultiplied);
     card.fill(Qt::transparent);
-#ifdef DRIFT_WITH_SKIA
+#ifdef BASE_WITH_SKIA
     // The shape box is fitted inside the card with room for the bleed (stroke, shadow) around it.
     const double aspect = entry->aspect > 0.01 ? entry->aspect : 1.0;
     double boxH = cardH;
